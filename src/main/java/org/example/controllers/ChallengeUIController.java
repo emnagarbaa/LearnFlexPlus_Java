@@ -375,17 +375,14 @@ public class ChallengeUIController implements Initializable {
     private void ouvrirExamen(Examen examen) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/org/example/fxml/ExamenView.fxml")
-            );
+                    getClass().getResource("/org/example/fxml/ExamenFront.fxml"));
             Parent root = loader.load();
-
-            // Si ton ExamenController a un setExamen(), appelle-le ici
-            // ExamenController ctrl = loader.getController();
-            // ctrl.setExamen(examen);
-
-            Stage stage = (Stage) questionContainer.getScene().getWindow();
-            stage.setScene(new Scene(root));
+            ExamenFrontController ctrl = loader.getController();
+            ctrl.setExamen(examen);
+            Stage stage = new Stage();
             stage.setTitle("Examen : " + examen.getTitre());
+            stage.setScene(new Scene(root, 900, 700));
+            stage.show();
         } catch (IOException e) {
             System.err.println("Erreur ouverture examen : " + e.getMessage());
         }

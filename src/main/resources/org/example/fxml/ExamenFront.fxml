@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.ExamenFrontController"
+      prefWidth="900" prefHeight="700"
+      style="-fx-background-color:#f4f8f7;">
+
+    <!-- HERO -->
+    <VBox fx:id="heroSection" alignment="CENTER" spacing="8"
+          style="-fx-background-color:#1f4f65; -fx-padding:25 60 20 60;">
+
+        <Label text="📝  Examen" style="-fx-font-size:12px; -fx-text-fill:rgba(255,255,255,0.6);
+               -fx-background-color:rgba(255,255,255,0.15); -fx-background-radius:20;
+               -fx-padding:4 14;"/>
+
+        <Label fx:id="lblTitre"
+               style="-fx-font-size:28px; -fx-font-weight:bold; -fx-text-fill:white;"
+               wrapText="true" alignment="CENTER"/>
+
+        <Label fx:id="lblDescription"
+               style="-fx-font-size:13px; -fx-text-fill:rgba(255,255,255,0.75);"
+               wrapText="true" maxWidth="650" alignment="CENTER"/>
+
+        <!-- META CARDS -->
+        <HBox spacing="20" alignment="CENTER" style="-fx-padding:15 0 0 0;">
+            <VBox alignment="CENTER" spacing="3"
+                  style="-fx-background-color:rgba(255,255,255,0.12);
+                         -fx-background-radius:12; -fx-padding:12 22;">
+                <Label text="📚" style="-fx-font-size:20px;"/>
+                <Label fx:id="lblMatiere"
+                       style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+                <Label text="Matière"
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.65);"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="3"
+                  style="-fx-background-color:rgba(255,255,255,0.12);
+                         -fx-background-radius:12; -fx-padding:12 22;">
+                <Label text="🎯" style="-fx-font-size:20px;"/>
+                <Label fx:id="lblNiveau"
+                       style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#97c3a2;"/>
+                <Label text="Niveau"
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.65);"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="3"
+                  style="-fx-background-color:rgba(255,255,255,0.12);
+                         -fx-background-radius:12; -fx-padding:12 22;">
+                <Label text="⏱️" style="-fx-font-size:20px;"/>
+                <Label fx:id="lblDuree"
+                       style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#facc15;"/>
+                <Label text="Durée"
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.65);"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="3"
+                  style="-fx-background-color:rgba(255,255,255,0.12);
+                         -fx-background-radius:12; -fx-padding:12 22;">
+                <Label text="❓" style="-fx-font-size:20px;"/>
+                <Label fx:id="lblNbQuestions"
+                       style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+                <Label text="Questions"
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.65);"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- CONTENU -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background:transparent; -fx-background-color:#f4f8f7;
+                       -fx-border-color:transparent;">
+        <VBox style="-fx-padding:30 80 30 80; -fx-background-color:#f4f8f7;" spacing="20">
+
+            <!-- SECTION START -->
+            <VBox fx:id="startSection" alignment="CENTER" spacing="20"
+                  style="-fx-background-color:white; -fx-background-radius:16;
+                         -fx-padding:50; -fx-border-color:#e0e0e0;
+                         -fx-border-radius:16; -fx-border-width:1;">
+                <Label text="Prêt à commencer ?"
+                       style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+                <Label text="Lisez bien les questions et répondez avec soin. Une fois soumis, vous ne pourrez plus modifier vos réponses."
+                       wrapText="true" alignment="CENTER" maxWidth="500"
+                       style="-fx-font-size:13px; -fx-text-fill:#666; -fx-text-alignment:CENTER;"/>
+                <HBox spacing="15" alignment="CENTER">
+                    <Button fx:id="btnCommencer" text="▶  Commencer l'examen"
+                            onAction="#handleCommencer"
+                            style="-fx-background-color:#1f4f65; -fx-text-fill:white;
+                                   -fx-font-size:15px; -fx-font-weight:bold;
+                                   -fx-background-radius:12; -fx-padding:13 35; -fx-cursor:hand;"/>
+                    <Button text="✖  Fermer" onAction="#handleFermer"
+                            style="-fx-background-color:#e5e7eb; -fx-text-fill:#374151;
+                                   -fx-font-size:14px; -fx-background-radius:12;
+                                   -fx-padding:13 25; -fx-cursor:hand;"/>
+                </HBox>
+            </VBox>
+
+            <!-- QUESTIONS (cachées au départ) -->
+            <VBox fx:id="questionContainer" spacing="20"
+                  visible="false" managed="false"/>
+
+        </VBox>
+    </ScrollPane>
+</VBox>
