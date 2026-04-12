@@ -12,7 +12,11 @@ public class MyDatabase {
     private Connection connection;
     private static MyDatabase instance;
 
-    public MyDatabase() {
+    private MyDatabase() {
+        connect();
+    }
+
+    private void connect() {
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             System.out.println("Connected to database successfully");
@@ -28,7 +32,16 @@ public class MyDatabase {
         return instance;
     }
 
+    // ✅ Reconnexion automatique si connexion fermée/expirée
     public Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed() || !connection.isValid(2)) {
+                System.out.println("Reconnecting to database...");
+                connect();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error checking connection: " + e.getMessage());
+        }
         return connection;
     }
 }

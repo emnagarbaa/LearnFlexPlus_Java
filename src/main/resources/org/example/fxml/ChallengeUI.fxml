@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.ChallengeUIController"
+      prefWidth="1000" prefHeight="700"
+      stylesheets="@../css/front.css">
+
+    <!-- HERO -->
+    <VBox fx:id="heroSection" alignment="CENTER" spacing="10"
+          style="-fx-background-color:#0f3d4f; -fx-padding:30 60 25 60;">
+        <Label fx:id="lblTitre"
+               style="-fx-font-size:26px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+        <Label fx:id="lblDescription"
+               style="-fx-font-size:13px; -fx-text-fill:rgba(255,255,255,0.75);"
+               wrapText="true" maxWidth="700"/>
+        <HBox spacing="30" alignment="CENTER" style="-fx-padding:15 0 0 0;">
+            <VBox alignment="CENTER" spacing="3"
+                  style="-fx-background-color:rgba(255,255,255,0.15); -fx-background-radius:10; -fx-padding:10 20 10 20;">
+                <Label fx:id="lblObjectif"
+                       style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+                <Label text="Objectif"
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.7);"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="3"
+                  style="-fx-background-color:rgba(255,255,255,0.15); -fx-background-radius:10; -fx-padding:10 20 10 20;">
+                <Label fx:id="lblScore"  text="0"
+                       style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#4ade80;"/>
+                <Label text="Score"
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.7);"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="3"
+                  style="-fx-background-color:rgba(255,255,255,0.15); -fx-background-radius:10; -fx-padding:10 20 10 20;">
+                <Label fx:id="lblTimer" text="60s"
+                       style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#facc15;"/>
+                <Label text="Temps"
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.7);"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="3"
+                  style="-fx-background-color:rgba(255,255,255,0.15); -fx-background-radius:10; -fx-padding:10 20 10 20;">
+                <Label fx:id="lblQuestion" text="1/?"
+                       style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+                <Label text="Question"
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.7);"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- ZONE QUESTION -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background:transparent; -fx-background-color:#f4f8f7;
+                       -fx-border-color:transparent;">
+        <VBox style="-fx-padding:30 100 30 100; -fx-background-color:#f4f8f7;">
+            <VBox fx:id="questionContainer" spacing="15"
+                  style="-fx-background-color:white; -fx-background-radius:16;
+                         -fx-padding:30; -fx-border-color:#e0e0e0;
+                         -fx-border-radius:16; -fx-border-width:1;"/>
+        </VBox>
+    </ScrollPane>
+
+</VBox>

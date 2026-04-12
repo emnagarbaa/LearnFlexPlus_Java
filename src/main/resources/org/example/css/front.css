@@ -1,0 +1,237 @@
+/* ===== BASE ===== */
+.root {
+    -fx-font-family: "Segoe UI";
+    -fx-background-color: #f8fafc;
+}
+
+.front-root {
+    -fx-background-color: #f8fafc;
+    -fx-spacing: 0;
+}
+
+/* ===== HEADER ===== */
+.header {
+    -fx-background-color: #1f4f65;
+    -fx-padding: 12 30 12 30;
+    -fx-spacing: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3);
+}
+
+.logo-text {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.header .nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6;
+    -fx-padding: 7 14;
+    -fx-border-color: transparent;
+}
+
+.header .nav-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-text-fill: white;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+    -fx-background-color: #97c3a2;
+    -fx-text-fill: #1f4f65;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 10 22;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.btn-primary:hover {
+    -fx-background-color: #7db38a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);
+}
+
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1f4f65;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-border-color: #1f4f65;
+    -fx-border-radius: 25;
+    -fx-border-width: 2;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.btn-outline:hover {
+    -fx-background-color: #1f4f65;
+    -fx-text-fill: white;
+}
+
+.btn-outline-white {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+    -fx-background-radius: 25;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 10 22;
+    -fx-cursor: hand;
+}
+
+.btn-outline-white:hover {
+    -fx-background-color: rgba(255,255,255,0.15);
+}
+
+.btn-white {
+    -fx-background-color: white;
+    -fx-text-fill: #1f4f65;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 12 30;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);
+}
+
+.btn-white:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* ===== FEATURES SECTION ===== */
+.features-section {
+    -fx-background-color: #f0f4f8;
+    -fx-padding: 50 80;
+    -fx-spacing: 30;
+}
+
+.feature-card {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-padding: 30 25;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
+}
+
+.feature-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 16, 0, 0, 6);
+}
+
+.feature-icon {
+    -fx-font-size: 38px;
+}
+
+/* ===== BENEFITS SECTION ===== */
+.benefits-section {
+    -fx-background-color: linear-gradient(to bottom right, #1f4f65, #2980b9);
+    -fx-padding: 50 80;
+    -fx-spacing: 20;
+}
+
+.section-badge {
+    -fx-background-color: rgba(255,255,255,0.2);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 5 14;
+}
+
+.benefit-card {
+    -fx-background-color: rgba(255,255,255,0.12);
+    -fx-background-radius: 14;
+    -fx-padding: 28 20;
+    -fx-border-color: rgba(255,255,255,0.2);
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+}
+
+.benefit-card:hover {
+    -fx-background-color: rgba(255,255,255,0.2);
+}
+
+/* ===== SERVICES SECTION ===== */
+.services-section {
+    -fx-background-color: #f0f4f8;
+    -fx-padding: 60 80;
+    -fx-spacing: 25;
+}
+
+.service-card {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-padding: 35;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 4);
+}
+
+.service-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f4f65;
+}
+
+.service-desc {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666;
+    -fx-line-spacing: 4;
+    -fx-wrap-text: true;
+}
+
+/* ===== CTA SECTION ===== */
+.cta-section {
+    -fx-background-color: linear-gradient(to right, #1f4f65, #2980b9);
+    -fx-padding: 60 80;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    -fx-background-color: #152d3b;
+    -fx-padding: 40 60 30 60;
+    -fx-spacing: 15;
+}
+
+.footer-logo {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.footer-link {
+    -fx-text-fill: rgba(255,255,255,0.6);
+    -fx-font-size: 13px;
+    -fx-border-color: transparent;
+}
+
+.footer-link:hover {
+    -fx-text-fill: white;
+}
+
+/* ===== SCROLL PANE ===== */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.btn-outline-dark {
+    -fx-background-color: transparent;
+    -fx-border-color: #1a3d4f;
+    -fx-border-radius: 25;
+    -fx-background-radius: 25;
+    -fx-text-fill: #1a3d4f;
+    -fx-font-size: 14px;
+    -fx-padding: 10 25 10 25;
+    -fx-cursor: hand;
+}
+.btn-outline-dark:hover {
+    -fx-background-color: rgba(26,61,79,0.1);
+}
