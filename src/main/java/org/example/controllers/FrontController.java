@@ -32,7 +32,6 @@ public class FrontController {
             return;
         }
         imageView.setImage(new Image(stream));
-        System.out.println("✅ Image chargée : " + path);
     }
 
     @FXML private void goToCours()         { navigateTo("/org/example/fxml/cours.fxml", "Cours"); }
@@ -43,9 +42,7 @@ public class FrontController {
     @FXML private void goToConnexion()     { navigateTo("/org/example/fxml/login.fxml", "Connexion"); }
     @FXML private void goToAccueil()       {}
     @FXML
-    private void goToEvaluation() {
-        navigateTo("/org/example/fxml/EvaluationFront.fxml", "Évaluation");
-    }
+    private void goToEvaluation()          { navigateTo("/org/example/fxml/EvaluationFront.fxml", "Évaluation"); }
     @FXML private void goToQuestionnaire() { navigateTo("/org/example/fxml/questionnaire.fxml", "Questionnaire"); }
     @FXML private void goToOrientation()   { navigateTo("/org/example/fxml/orientation.fxml", "Orientation"); }
     @FXML private void goToForum()         { navigateTo("/org/example/fxml/forum.fxml", "Forum"); }

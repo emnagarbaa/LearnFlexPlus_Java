@@ -39,10 +39,13 @@
 
             <!-- ===== HERO SECTION ===== -->
             <StackPane prefHeight="520">
-                <ImageView fx:id="heroImage" fitWidth="1200" fitHeight="520"
+
+                <!-- Image hero -->
+                <ImageView fx:id="heroImage"
+                           fitWidth="1200" fitHeight="520"
                            preserveRatio="false" pickOnBounds="true"/>
 
-                <!-- Texte aligné à GAUCHE, illustration reste visible à droite -->
+                <!-- Texte aligné à GAUCHE -->
                 <HBox alignment="CENTER_LEFT" prefHeight="520" prefWidth="1200">
                     <padding><Insets top="0" right="0" bottom="0" left="80"/></padding>
 
