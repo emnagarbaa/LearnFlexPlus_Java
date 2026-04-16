@@ -33,7 +33,7 @@
     <TextField fx:id="fieldContenuRecompense"/>
 
     <Label text="ID Examen lié :"/>
-    <TextField fx:id="fieldExamenId"/>
+    <ComboBox fx:id="cbExamenId" promptText="Choisir un examen" prefWidth="200"/>
 
     <Label fx:id="lblErreur" style="-fx-text-fill:red;"/>
 

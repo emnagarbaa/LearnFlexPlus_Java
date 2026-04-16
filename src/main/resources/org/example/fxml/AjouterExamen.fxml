@@ -106,10 +106,20 @@
             <!-- PDF -->
             <VBox spacing="4">
                 <Label text="PDF (chemin ou URL)" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
-                <TextField fx:id="fieldPdf" promptText="Ex: /documents/examen.pdf"
-                           style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                <HBox spacing="8">
+                    <TextField fx:id="fieldPdf" promptText="Sélectionnez un fichier PDF..."
+                               HBox.hgrow="ALWAYS"
+                               style="-fx-background-color: white; -fx-border-color: #ccd;
+                          -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                    <Button text="📂  Parcourir" onAction="#handleParcourirPdf"
+                            style="-fx-background-color:#1f4f65; -fx-text-fill:white;
+                       -fx-font-weight:bold; -fx-background-radius:6;
+                       -fx-padding:8 16; -fx-cursor:hand;"/>
+                </HBox>
+                <!-- Aperçu nom fichier -->
+                <Label fx:id="lblPdfNom" text=""
+                       style="-fx-text-fill:#1f4f65; -fx-font-size:11px;"/>
             </VBox>
-
             <!-- Message d'erreur -->
             <Label fx:id="lblErreur" text=""
                    style="-fx-text-fill: #dc3545; -fx-font-size: 12px; -fx-font-weight: bold;"/>

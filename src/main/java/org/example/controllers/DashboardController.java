@@ -37,7 +37,7 @@ public class DashboardController {
     @FXML public void showContenu()       { loadPage("contenu.fxml"); }
     @FXML public void showExamens()       { loadPage("ExamenView.fxml"); }
     @FXML public void showChallenges()    { loadPage("ChallengeView.fxml"); }
-    @FXML public void showQuestionnaire() { loadPage("questionnaire.fxml"); }
+    @FXML public void showQuestionnaire() { loadPage("quiz.fxml"); }
     @FXML public void showForum()         { loadPage("forum.fxml"); }
     @FXML public void logout()            { System.exit(0); }
 

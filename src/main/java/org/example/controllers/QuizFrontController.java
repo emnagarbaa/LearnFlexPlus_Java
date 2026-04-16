@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import org.example.Services.ServiceQuiz;
 import org.example.Services.ServiceReponse;
 import org.example.entities.Quiz;
+import org.example.entities.Reponse;
 
 import java.net.URL;
 import java.util.List;

@@ -1,6 +1,7 @@
 package org.example.Services;
 
 import org.example.entities.Quiz;
+import org.example.entities.Reponse;
 import org.example.utils.MyDatabase;
 
 import java.sql.*;

@@ -48,7 +48,7 @@ public class FrontController {
 
     @FXML
     private void goToOrientation() {
-        navigateTo("/org/example/fxml/Orientationfront.fxml", "Orientation");
+        navigateTo("/org/example/fxml/OrientationFront.fxml", "Orientation");
     }
 
     // ── Switch vers le back-office au clic sur le logo ───────────────

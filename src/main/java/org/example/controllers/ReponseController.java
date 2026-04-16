@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -12,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.entities.Quiz;
+import org.example.entities.Reponse;
 import org.example.Services.ServiceReponse;
 
 import java.util.Optional;
@@ -73,9 +75,9 @@ public class ReponseController {
                 Label badge = new Label("true".equals(val) ? "✅ Oui" : "❌ Non");
                 badge.setStyle("true".equals(val)
                         ? "-fx-background-color:#eaf3de; -fx-text-fill:#3b6d11;" +
-                        "-fx-padding:3 10; -fx-background-radius:10; -fx-font-size:11px;"
+                          "-fx-padding:3 10; -fx-background-radius:10; -fx-font-size:11px;"
                         : "-fx-background-color:#fcebeb; -fx-text-fill:#a32d2d;" +
-                        "-fx-padding:3 10; -fx-background-radius:10; -fx-font-size:11px;"
+                          "-fx-padding:3 10; -fx-background-radius:10; -fx-font-size:11px;"
                 );
                 setGraphic(badge);
                 setAlignment(Pos.CENTER);
