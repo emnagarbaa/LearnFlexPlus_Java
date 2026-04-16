@@ -45,7 +45,7 @@
         </VBox>
     </HBox>
 
-    <!-- ===== BARRE ACTIONS EXAMENS ===== -->
+    <!-- ===== BARRE ACTIONS ===== -->
     <HBox alignment="CENTER_LEFT" spacing="15">
         <TextField fx:id="searchField"
                    promptText="Rechercher un examen..."
@@ -58,13 +58,13 @@
 
     <!-- ===== FILTRES ===== -->
     <HBox spacing="8" alignment="CENTER_LEFT">
-        <ToggleButton fx:id="tabTous"      text="Tous"     styleClass="tab-btn,active" onAction="#filterTous"/>
-        <ToggleButton fx:id="tabFacile"    text="Facile"   styleClass="tab-btn"        onAction="#filterFacile"/>
-        <ToggleButton fx:id="tabMoyen"     text="Moyen"    styleClass="tab-btn"        onAction="#filterMoyen"/>
-        <ToggleButton fx:id="tabDifficile" text="Difficile" styleClass="tab-btn"       onAction="#filterDifficile"/>
+        <ToggleButton fx:id="tabTous"      text="Tous"      styleClass="tab-btn,active" onAction="#filterTous"/>
+        <ToggleButton fx:id="tabFacile"    text="Facile"    styleClass="tab-btn"        onAction="#filterFacile"/>
+        <ToggleButton fx:id="tabMoyen"     text="Moyen"     styleClass="tab-btn"        onAction="#filterMoyen"/>
+        <ToggleButton fx:id="tabDifficile" text="Difficile" styleClass="tab-btn"        onAction="#filterDifficile"/>
     </HBox>
 
-    <!-- ===== TABLE DES EXAMENS ===== -->
+    <!-- ===== TABLE ===== -->
     <VBox styleClass="section-box" spacing="0" VBox.vgrow="ALWAYS">
         <TableView fx:id="examenTable"
                    styleClass="parcels-table"
@@ -73,17 +73,17 @@
                    prefHeight="420">
             <columns>
                 <TableColumn fx:id="colId"          text="ID"           prefWidth="50"/>
-                <TableColumn fx:id="colTitre"       text="Titre"        prefWidth="160"/>
-                <TableColumn fx:id="colMatiere"     text="Matière"      prefWidth="120"/>
-                <TableColumn fx:id="colNiveau"      text="Niveau"       prefWidth="90"/>
-                <TableColumn fx:id="colDateDebut"   text="Date Début"   prefWidth="110"/>
-                <TableColumn fx:id="colDateFin"     text="Date Fin"     prefWidth="110"/>
-                <TableColumn fx:id="colDuree"       text="Durée (min)"  prefWidth="90"/>
-                <TableColumn fx:id="colNbQuestions" text="Nb Questions" prefWidth="95"/>
-                <TableColumn fx:id="colScoreTotal"  text="Score Total"  prefWidth="85"/>
-                <TableColumn fx:id="colType"        text="Type"         prefWidth="90"/>
-                <TableColumn fx:id="colEtat"        text="État"         prefWidth="90"/>
-                <TableColumn fx:id="colActions"     text="Actions"      prefWidth="260"/>
+                <TableColumn fx:id="colTitre"       text="Titre"        prefWidth="150"/>
+                <TableColumn fx:id="colMatiere"     text="Matière"      prefWidth="110"/>
+                <TableColumn fx:id="colNiveau"      text="Niveau"       prefWidth="85"/>
+                <TableColumn fx:id="colDateDebut"   text="Date Début"   prefWidth="100"/>
+                <TableColumn fx:id="colDateFin"     text="Date Fin"     prefWidth="100"/>
+                <TableColumn fx:id="colDuree"       text="Durée (min)"  prefWidth="85"/>
+                <TableColumn fx:id="colNbQuestions" text="Nb Questions" prefWidth="90"/>
+                <TableColumn fx:id="colScoreTotal"  text="Score Total"  prefWidth="80"/>
+                <TableColumn fx:id="colType"        text="Type"         prefWidth="85"/>
+                <TableColumn fx:id="colEtat"        text="État"         prefWidth="85"/>
+                <TableColumn fx:id="colActions"     text="Actions"      prefWidth="340"/>
             </columns>
             <placeholder>
                 <Label text="Aucun examen trouvé." styleClass="stat-label"/>

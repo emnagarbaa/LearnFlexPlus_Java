@@ -81,11 +81,13 @@ public class AjouterExamenController implements Initializable {
 
     private String nvl(String s) { return s != null ? s : ""; }
 
-    // ── Parcourir PDF ─────────────────────────────────────────
+    // ── Parcourir PDF (version améliorée) ───────────────────────
     @FXML
     private void handleParcourirPdf() {
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choisir un fichier PDF");
+
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf")
         );
@@ -93,23 +95,60 @@ public class AjouterExamenController implements Initializable {
         Stage stage = (Stage) fieldTitre.getScene().getWindow();
         File fichier = fileChooser.showOpenDialog(stage);
 
-        if (fichier != null) {
-            try {
-                String destDir = "src/main/resources/org/example/pdfs/";
-                new File(destDir).mkdirs();
-                File dest = new File(destDir + fichier.getName());
-                java.nio.file.Files.copy(
-                        fichier.toPath(),
-                        dest.toPath(),
-                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
-                );
-                fieldPdf.setText(dest.getAbsolutePath());
-                lblPdfNom.setText("✅ " + fichier.getName());
-                lblPdfNom.setStyle("-fx-text-fill:#16a34a; -fx-font-size:11px;");
-            } catch (Exception e) {
-                lblPdfNom.setText("❌ Erreur : " + e.getMessage());
+        if (fichier == null) {
+            lblPdfNom.setText("❌ Aucun fichier sélectionné");
+            lblPdfNom.setStyle("-fx-text-fill:#dc2626; -fx-font-size:11px;");
+            return;
+        }
+
+        try {
+
+            // 📁 Dialogue ENREGISTREMENT (IMPORTANT)
+            FileChooser saveChooser = new FileChooser();
+            saveChooser.setTitle("Enregistrer le PDF");
+            saveChooser.setInitialFileName(fichier.getName());
+
+            File dest = saveChooser.showSaveDialog(stage);
+
+            if (dest == null) {
+                lblPdfNom.setText("❌ Enregistrement annulé");
                 lblPdfNom.setStyle("-fx-text-fill:#dc2626; -fx-font-size:11px;");
+                return;
             }
+
+            // 📦 copie du fichier
+            java.nio.file.Files.copy(
+                    fichier.toPath(),
+                    dest.toPath(),
+                    java.nio.file.StandardCopyOption.REPLACE_EXISTING
+            );
+
+            // 🧠 infos fichier
+            long tailleKo = dest.length() / 1024;
+
+            // UI update
+            fieldPdf.setText(dest.getAbsolutePath());
+
+            lblPdfNom.setText(
+                    "✅ PDF enregistré\n" +
+                            "Nom : " + dest.getName() + "\n" +
+                            "Taille : " + tailleKo + " KB\n" +
+                            "Chemin : " + dest.getAbsolutePath()
+            );
+
+            lblPdfNom.setStyle(
+                    "-fx-text-fill:#16a34a;" +
+                            "-fx-font-size:11px;" +
+                            "-fx-wrap-text:true;"
+            );
+
+            // debug console
+            System.out.println("PDF enregistré ici : " + dest.getAbsolutePath());
+
+        } catch (Exception e) {
+            lblPdfNom.setText("❌ Erreur : " + e.getMessage());
+            lblPdfNom.setStyle("-fx-text-fill:#dc2626; -fx-font-size:11px;");
+            e.printStackTrace();
         }
     }
 

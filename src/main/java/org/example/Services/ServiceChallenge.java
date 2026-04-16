@@ -1,6 +1,7 @@
 package org.example.Services;
 
 import org.example.entities.Challenge;
+import org.example.entities.Quiz;
 import org.example.utils.MyDatabase;
 
 import java.sql.*;
@@ -212,6 +213,7 @@ public class ServiceChallenge implements Iservice<Challenge> {
         }
         return list;
     }
+
 
     public void supprimerParExamenId(int examenId) throws SQLException {
         Connection connection = MyDatabase.getInstance().getConnection();

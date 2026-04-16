@@ -60,7 +60,6 @@ public class EvaluationFrontController implements Initializable {
         for (Challenge c : liste) {
             cardsContainer.getChildren().add(creerCarte(c));
         }
-
     }
 
     private StackPane creerCarte(Challenge challenge) {
@@ -100,7 +99,6 @@ public class EvaluationFrontController implements Initializable {
         front.getChildren().addAll(badge, titre, desc, spacer, hint);
 
         // ── FACE ARRIÈRE ──────────────────────────────────────
-        // ✅ PAS de setRotate(180), PAS de setRotationAxis
         VBox back = new VBox(10);
         back.setPrefSize(260, 300);
         back.setPadding(new Insets(20));
@@ -112,7 +110,7 @@ public class EvaluationFrontController implements Initializable {
                         "-fx-border-radius:14;" +
                         "-fx-border-width:1.5;"
         );
-        back.setVisible(false); // ✅ cachée au départ
+        back.setVisible(false);
 
         Label titrBack = new Label(challenge.getTitrec());
         titrBack.setStyle("-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#1a3d4f;");
@@ -145,7 +143,7 @@ public class EvaluationFrontController implements Initializable {
                         "-fx-pref-width:220px; -fx-pref-height:36px;"
         );
         btnChoisir.setOnAction(e -> choisirChallenge(challenge));
-        btnChoisir.setOnMouseClicked(e -> e.consume()); // ✅ empêche le flip
+        btnChoisir.setOnMouseClicked(e -> e.consume());
 
         back.getChildren().addAll(titrBack, lblExamen, lblObjectif, lblRecompense, lblProg, pb, spacerBack, btnChoisir);
 
@@ -154,12 +152,11 @@ public class EvaluationFrontController implements Initializable {
         card.setPrefSize(260, 300);
         card.setStyle("-fx-cursor:hand;");
 
-        // ── ANIMATION FLIP simple (fade + scale) ─────────────
+        // ── ANIMATION FLIP ────────────────────────────────────
         final boolean[] flipped = {false};
 
         card.setOnMouseClicked(e -> {
             if (flipped[0]) {
-                // ✅ retour face avant
                 RotateTransition r1 = new RotateTransition(Duration.millis(150), back);
                 r1.setFromAngle(0); r1.setToAngle(90);
                 r1.setOnFinished(ev -> {
@@ -171,7 +168,6 @@ public class EvaluationFrontController implements Initializable {
                 });
                 r1.play();
             } else {
-                // ✅ flip vers face arrière
                 RotateTransition r1 = new RotateTransition(Duration.millis(150), front);
                 r1.setFromAngle(0); r1.setToAngle(90);
                 r1.setOnFinished(ev -> {
@@ -209,9 +205,11 @@ public class EvaluationFrontController implements Initializable {
 
     private void resetFiltres(Button actif) {
         for (Button b : new Button[]{btnTous, btnFacile, btnMoyen, btnDifficile}) {
-            b.setStyle("-fx-background-color:white; -fx-text-fill:#1a3d4f; -fx-border-color:#ccc; -fx-border-radius:20; -fx-background-radius:20; -fx-padding:6 16; -fx-cursor:hand;");
+            b.setStyle("-fx-background-color:white; -fx-text-fill:#1a3d4f; -fx-border-color:#ccc;" +
+                    " -fx-border-radius:20; -fx-background-radius:20; -fx-padding:6 16; -fx-cursor:hand;");
         }
-        actif.setStyle("-fx-background-color:#1D9E75; -fx-text-fill:white; -fx-border-color:#1D9E75; -fx-border-radius:20; -fx-background-radius:20; -fx-padding:6 16; -fx-cursor:hand;");
+        actif.setStyle("-fx-background-color:#1D9E75; -fx-text-fill:white; -fx-border-color:#1D9E75;" +
+                " -fx-border-radius:20; -fx-background-radius:20; -fx-padding:6 16; -fx-cursor:hand;");
     }
 
     // ── Action choisir ────────────────────────────────────────
@@ -238,22 +236,42 @@ public class EvaluationFrontController implements Initializable {
     }
 
     // ── Navigation ────────────────────────────────────────────
+    // Fichiers FXML disponibles :
+    // front.fxml, EvaluationFront.fxml, ExamenFront.fxml, ExamenView.fxml,
+    // quiz.fxml, quiz_front.fxml, reponse.fxml, dashboard.fxml, home.fxml
+
     @FXML private void goToAccueil()       { naviguer("/org/example/fxml/front.fxml"); }
-    @FXML private void goToCours()         { naviguer("/org/example/fxml/cours.fxml"); }
-    @FXML private void goToEvaluation()    { }
-    @FXML private void goToQuestionnaire() { naviguer("/org/example/fxml/questionnaire.fxml"); }
-    @FXML private void goToOrientation()   { naviguer("/org/example/fxml/orientation.fxml"); }
-    @FXML private void goToForum()         { naviguer("/org/example/fxml/forum.fxml"); }
-    @FXML private void goToConnexion()     { naviguer("/org/example/fxml/Connexion.fxml"); }
+    @FXML private void goToCours()         { pageEnDeveloppement("Cours"); }           // cours.fxml n'existe pas
+    @FXML private void goToEvaluation()    { naviguer("/org/example/fxml/EvaluationFront.fxml"); }
+    @FXML private void goToQuestionnaire() { naviguer("/org/example/fxml/quiz_front.fxml"); }  // ✅ quiz_front.fxml
+    @FXML private void goToOrientation()   { pageEnDeveloppement("Orientation"); }     // orientation.fxml n'existe pas
+    @FXML private void goToForum()         { pageEnDeveloppement("Forum"); }            // forum.fxml n'existe pas
+    @FXML private void goToConnexion()     { naviguer("/org/example/fxml/home.fxml"); } // ✅ home.fxml
 
     private void naviguer(String fxml) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource(fxml));
+            // ✅ FIX : vérification null avant FXMLLoader.load()
+            URL url = getClass().getResource(fxml);
+            if (url == null) {
+                System.err.println("❌ FXML introuvable : " + fxml);
+                new Alert(Alert.AlertType.ERROR,
+                        "Page introuvable : " + fxml, ButtonType.OK).showAndWait();
+                return;
+            }
+            Parent root = FXMLLoader.load(url);
             Stage stage = (Stage) cardsContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (IOException e) {
-            System.err.println("Erreur navigation : " + e.getMessage());
+            System.err.println("Erreur navigation vers " + fxml + " : " + e.getMessage());
+            new Alert(Alert.AlertType.ERROR,
+                    "Erreur lors de la navigation : " + e.getMessage(), ButtonType.OK).showAndWait();
         }
+    }
+
+    private void pageEnDeveloppement(String nomPage) {
+        new Alert(Alert.AlertType.INFORMATION,
+                "La page « " + nomPage + " » est en cours de développement.",
+                ButtonType.OK).showAndWait();
     }
 
     // ── Helpers ───────────────────────────────────────────────

@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MyDatabase {
-    private final String URL = "jdbc:mysql://localhost:3306/learnflexplus";
+    private final String URL      = "jdbc:mysql://localhost:3306/learnflexplus";
     private final String USERNAME = "root";
     private final String PASSWORD = "";
 
@@ -19,13 +19,17 @@ public class MyDatabase {
     private void connect() {
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("Connected to database successfully");
+            System.out.println("✅ Connecté à : " + URL);
         } catch (SQLException e) {
-            System.out.println("Error: failed to connect to database" + e.getMessage());
+            // ✅ FIX : on affiche l'erreur complète et on met connection à null explicitement
+            System.err.println("❌ Erreur de connexion DB : " + e.getMessage());
+            e.printStackTrace();
+            connection = null;
         }
     }
 
-    public static MyDatabase getInstance() {
+    // ✅ FIX : synchronized pour éviter les problèmes multi-thread
+    public static synchronized MyDatabase getInstance() {
         if (instance == null) {
             instance = new MyDatabase();
         }
@@ -36,12 +40,22 @@ public class MyDatabase {
     public Connection getConnection() {
         try {
             if (connection == null || connection.isClosed() || !connection.isValid(2)) {
-                System.out.println("Reconnecting to database...");
+                System.out.println("🔄 Reconnexion à la base de données...");
                 connect();
             }
         } catch (SQLException e) {
-            System.out.println("Error checking connection: " + e.getMessage());
+            System.err.println("❌ Erreur vérification connexion : " + e.getMessage());
+            connect(); // tentative de reconnexion
         }
+
+        // ✅ FIX : on lève une exception claire si la connexion est toujours null
+        if (connection == null) {
+            throw new RuntimeException(
+                    "❌ Impossible de se connecter à la base de données : " + URL +
+                            "\nVérifiez que MySQL est démarré et que les credentials sont corrects."
+            );
+        }
+
         return connection;
     }
 }

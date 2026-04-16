@@ -1,6 +1,7 @@
 package org.example.Services;
 
 import org.example.entities.Commentaire;
+import org.example.entities.Quiz;
 import org.example.utils.MyDatabase;
 
 import java.sql.*;
@@ -134,6 +135,7 @@ public class ServiceCommentaire implements Iservice<Commentaire> {
         }
         return list;
     }
+
 
     // ══════════════════════════════════════════════
     //  MÉTHODES SUPPLÉMENTAIRES
