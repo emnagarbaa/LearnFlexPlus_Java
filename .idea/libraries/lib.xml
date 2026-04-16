@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../../../../javafx-sdk-25/lib" />
+      <root url="jar://$USER_HOME$/Downloads/jbcrypt-0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../../../../javafx-sdk-25/lib" recursive="false" />
+  </library>
+</component>

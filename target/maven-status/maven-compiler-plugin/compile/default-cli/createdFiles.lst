@@ -1,0 +1,15 @@
+Controllers\UserController.class
+Services\ServiceUsers.class
+Main\MainApp.class
+Controllers\SignupController.class
+Main\java\Utils\NotificationUtil.class
+Controllers\LoginController.class
+Controllers\DashboardController.class
+entities\Users.class
+Controllers\ForgotPasswordController.class
+Controllers\FrontController.class
+Main\java\Models\User.class
+Services\Iservice.class
+Controllers\Database.class
+Main\java\Utils\SessionManager.class
+Utils\MyDatabase.class

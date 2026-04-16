@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.ProfileController"
+      alignment="CENTER" spacing="15" styleClass="root"
+      stylesheets="@/Styles/profile.css">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Label styleClass="view-title" text="User Profile"/>
+
+    <VBox alignment="CENTER" spacing="8">
+        <ImageView fx:id="profileImageView"
+                   fitWidth="120" fitHeight="120"
+                   preserveRatio="true"
+                   styleClass="profile-image-view"/>
+        <Button text="Change Picture" styleClass="change-pic-button" onAction="#handleChangePicture"/>
+    </VBox>
+
+    <VBox alignment="CENTER_LEFT" maxWidth="300" spacing="5">
+        <Label styleClass="input-label" text="Username"/>
+        <TextField fx:id="usernameField" styleClass="input-field"/>
+    </VBox>
+
+    <VBox alignment="CENTER_LEFT" maxWidth="300" spacing="5">
+        <Label styleClass="input-label" text="Email Address"/>
+        <TextField fx:id="emailField" styleClass="input-field"/>
+    </VBox>
+
+    <VBox alignment="CENTER_LEFT" maxWidth="300" spacing="5">
+        <Label styleClass="input-label" text="Role"/>
+        <Label fx:id="roleLabel" styleClass="role-display" text="User"/>
+    </VBox>
+
+    <HBox alignment="CENTER" spacing="10">
+        <padding>
+            <Insets top="10.0"/>
+        </padding>
+        <Button onAction="#handleSaveChanges" styleClass="save-button" text="Save Changes"/>
+        <Button onAction="#handleCancel" styleClass="cancel-button" text="Cancel"/>
+    </HBox>
+
+</VBox>

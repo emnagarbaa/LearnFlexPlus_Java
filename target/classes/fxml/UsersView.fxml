@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.UserController"
+      spacing="10" style="-fx-padding: 15;">
+
+    <Label text="Gestion des utilisateurs"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="txtNom" promptText="Nom"/>
+    <Label fx:id="errNom" style="-fx-text-fill: red;"/>
+
+    <TextField fx:id="txtPrenom" promptText="Prénom"/>
+    <Label fx:id="errPrenom" style="-fx-text-fill: red;"/>
+
+    <TextField fx:id="txtEmail" promptText="Email"/>
+    <Label fx:id="errEmail" style="-fx-text-fill: red;"/>
+
+    <ComboBox fx:id="cmbRole" promptText="Select role"/>
+    <Label fx:id="errRole" style="-fx-text-fill: red;"/>
+
+    <PasswordField fx:id="txtPassword" promptText="Mot de passe"/>
+    <Label fx:id="errPassword" style="-fx-text-fill: red;"/>
+
+    <HBox spacing="10">
+        <Button text="Ajouter" onAction="#addUser"/>
+        <Button text="Modifier" onAction="#editUser"/>
+        <Button text="Supprimer" onAction="#deleteUser"/>
+        <Button text="Actualiser" onAction="#loadUsers"/>
+    </HBox>
+    <!-- TABLE -->
+    <TableView fx:id="usersTable" prefHeight="400">
+
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colNom" text="Nom"/>
+            <TableColumn fx:id="colPrenom" text="Prénom"/>
+            <TableColumn fx:id="colEmail" text="Email"/>
+            <TableColumn fx:id="colRole" text="Rôle"/>
+        </columns>
+
+    </TableView>
+
+    <!-- CRUD BUTTONS -->
+    <HBox spacing="10">
+
+        <Button text="Supprimer" onAction="#deleteUser"/>
+
+    </HBox>
+
+</VBox>

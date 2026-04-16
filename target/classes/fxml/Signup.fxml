@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.SignupController"
+            style="-fx-background-color: #f5f7fb;">
+
+    <!-- LEFT SIDE -->
+    <left>
+        <StackPane prefWidth="450"
+                   style="-fx-background-color: linear-gradient(to bottom right, #1f4f65, #2e7d9f);">
+
+            <VBox alignment="CENTER" spacing="10">
+                <ImageView fx:id="logoImage" fitWidth="120" preserveRatio="true"/>
+
+                <Label text="LearnFlexPlus"
+                       style="-fx-text-fill: white; -fx-font-size: 26px; -fx-font-weight: bold;"/>
+
+                <Label text="Créer un compte"
+                       style="-fx-text-fill: #dfefff; -fx-font-size: 14px;"/>
+            </VBox>
+
+        </StackPane>
+    </left>
+
+    <!-- RIGHT SIDE FORM -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+            <VBox spacing="12"
+                  alignment="CENTER"
+                  maxWidth="500"
+                  style="-fx-background-color: white;
+                         -fx-padding: 30;
+                         -fx-background-radius: 18;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 20, 0.2, 0, 6);">
+
+                <Label text="Inscription"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;"/>
+
+                <!-- PRENOM + NOM -->
+                <HBox spacing="10">
+                    <TextField fx:id="prenomField" promptText="Prénom" HBox.hgrow="ALWAYS"/>
+                    <TextField fx:id="nomField" promptText="Nom" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <!-- EMAIL -->
+                <TextField fx:id="emailField" promptText="Email"/>
+
+                <!-- PHONE -->
+                <TextField fx:id="phoneField" promptText="Téléphone"/>
+
+                <!-- ROLE -->
+                <ComboBox fx:id="roleCombo" promptText="Choisir rôle"/>
+
+                <!-- PASSWORD -->
+                <PasswordField fx:id="passwordField" promptText="Mot de passe"/>
+
+                <!-- AGE -->
+                <TextField fx:id="ageField" promptText="Âge"/>
+
+                <!-- ADDRESS -->
+                <TextField fx:id="addressField" promptText="Adresse"/>
+
+                <!-- PROFILE IMAGE -->
+                <HBox spacing="10">
+                    <Button text="Choisir image" onAction="#chooseImage"/>
+                    <Label fx:id="imageLabel" text="Aucune image"/>
+                </HBox>
+
+                <!-- FACE ID -->
+                <Button text="Enregistrer Face ID (optionnel)"
+                        onAction="#openFaceModal"
+                        style="-fx-background-color: #1f4f65; -fx-text-fill: white;"/>
+
+                <!-- REGISTER BUTTON -->
+                <Button text="S'inscrire"
+                        onAction="#register"
+                        prefWidth="400"
+                        style="-fx-background-color: linear-gradient(to right, #1f4f65, #2e7d9f);
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;"/>
+
+                <!-- LOGIN LINK -->
+                <HBox alignment="CENTER">
+                    <Label text="Déjà un compte ? "/>
+                    <Label text="Se connecter"
+                           style="-fx-text-fill: #2e7d9f; -fx-cursor: hand;"
+                           onMouseClicked="#goToLogin"/>
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
