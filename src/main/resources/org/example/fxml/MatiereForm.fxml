@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.MatiereFormController"
+      spacing="15" style="-fx-background-color: #f8fafc; -fx-padding: 20;"
+      prefWidth="700" VBox.vgrow="ALWAYS">
+
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Button text="← Retour" onAction="#goBack"
+                style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-cursor: hand; -fx-font-weight: bold;"/>
+        <Label fx:id="formTitle" text="Ajouter une matière" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+    </HBox>
+
+    <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 5);" 
+          VBox.vgrow="ALWAYS">
+        
+        <VBox spacing="6">
+            <Label text="Nom de la matière *" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+            <TextField fx:id="tfNom" promptText="Ex: Mathématiques" style="-fx-padding: 10; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;"/>
+            <Label fx:id="errNom" text="Le nom est requis (min 3 chars)" textFill="#ef4444" visible="false" managed="false" style="-fx-font-size: 11px;"/>
+        </VBox>
+
+        <VBox spacing="6">
+            <Label text="Description *" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+            <TextArea fx:id="taDesc" promptText="Décrivez le contenu de la matière..." prefRowCount="3" wrapText="true" style="-fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;"/>
+            <Label fx:id="errDesc" text="La description est requise" textFill="#ef4444" visible="false" managed="false" style="-fx-font-size: 11px;"/>
+        </VBox>
+
+        <HBox spacing="15">
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="Section *" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+                <TextField fx:id="tfSection" promptText="Ex: Sciences" style="-fx-padding: 10; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;"/>
+                <Label fx:id="errSection" text="La section est requise" textFill="#ef4444" visible="false" managed="false" style="-fx-font-size: 11px;"/>
+            </VBox>
+            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                <Label text="Code matière *" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+                <TextField fx:id="tfCode" promptText="Ex: MATH101" style="-fx-padding: 10; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;"/>
+                <Label fx:id="errCode" text="Le code est requis" textFill="#ef4444" visible="false" managed="false" style="-fx-font-size: 11px;"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="6">
+            <Label text="Niveau *" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+            <ComboBox fx:id="cbNiveau" maxWidth="Infinity" style="-fx-padding: 5; -fx-background-radius: 8; -fx-border-color: #e2e8f0; -fx-border-radius: 8;"/>
+            <Label fx:id="errNiveau" text="Veuillez choisir un niveau" textFill="#ef4444" visible="false" managed="false" style="-fx-font-size: 11px;"/>
+        </VBox>
+
+        <VBox spacing="6">
+            <Label text="Image de couverture" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="📁 Choisir un fichier" onAction="#chooseImage"
+                        style="-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-background-radius: 8; -fx-padding: 10 20; -fx-cursor: hand;"/>
+                <Label fx:id="lblImageName" text="Aucun fichier sélectionné" style="-fx-text-fill: #94a3b8; -fx-font-size: 12px;"/>
+            </HBox>
+        </VBox>
+
+        <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+            <Button text="Annuler" onAction="#goBack"
+                    style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            <Button text="Enregistrer la matière" onAction="#saveMatiere"
+                    style="-fx-background-color: #2563eb; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 25; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        </HBox>
+
+    </VBox>
+</VBox>

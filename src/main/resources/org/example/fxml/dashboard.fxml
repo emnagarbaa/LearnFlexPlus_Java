@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<HBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.DashboardController"
+      prefWidth="1280" prefHeight="800"
+      stylesheets="@../css/dashboard.css">
+
+    <!-- ===== SIDEBAR ===== -->
+    <VBox styleClass="sidebar" prefWidth="260" minWidth="260" maxWidth="260">
+
+        <!-- Logo -->
+        <HBox styleClass="sidebar-header" alignment="CENTER_LEFT" spacing="10">
+            <ImageView fx:id="logoImage" fitHeight="60" fitWidth="60"
+                       pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#goToFront"
+            style="-fx-cursor:hand;"/>
+            <HBox alignment="CENTER_LEFT" spacing="4">
+                <Label text="LearnFlex" styleClass="logo-main"/>
+                <Label text="+" styleClass="logo-highlight"/>
+            </HBox>
+        </HBox>
+
+        <!-- Navigation -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+            <VBox styleClass="sidebar-menu">
+                <Button fx:id="btnDashboard" text="  Dashboard"
+                        styleClass="nav-btn,active" onAction="#showDashboard"/>
+                <Button fx:id="btnUsers" text="  Utilisateurs"
+                        styleClass="nav-btn" onAction="#showUtilisateurs"/>
+                <!-- Contenu pédagogique avec sous-menu -->
+                <VBox>
+                    <Button fx:id="btnContenu" text="  Contenu pédagogique  ▾"
+                            styleClass="nav-btn" onAction="#toggleContenuSubmenu"/>
+                    <VBox fx:id="contenuSubmenu" styleClass="submenu"
+                          managed="false" visible="false">
+                        <Button text="      Matières"
+                                styleClass="nav-btn-sub" onAction="#showMatieres"/>
+                        <Button text="      Cours"
+                                styleClass="nav-btn-sub" onAction="#showCours"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Evaluation avec sous-menu -->
+                <VBox>
+                    <Button fx:id="btnEvaluation" text="  Evaluation  ▾"
+                            styleClass="nav-btn" onAction="#toggleEvaluation"/>
+                    <VBox fx:id="evaluationSubmenu" styleClass="submenu"
+                          managed="false" visible="false">
+                        <Button text="      Examen"
+                                styleClass="nav-btn-sub" onAction="#showExamens"/>
+                        <Button text="      Challenge"
+                                styleClass="nav-btn-sub" onAction="#showChallenges"/>
+                    </VBox>
+                </VBox>
+
+                <Button text="  Questionnaire"
+                        styleClass="nav-btn" onAction="#showQuestionnaire"/>
+                <Button text="  Orientation"
+                        styleClass="nav-btn" onAction="#showOrientation"/>
+                <Button text="  Forum"
+                        styleClass="nav-btn" onAction="#showForum"/>
+            </VBox>
+        </ScrollPane>
+
+        <!-- Footer -->
+        <VBox styleClass="sidebar-footer" spacing="10">
+            <HBox styleClass="user-profile" alignment="CENTER_LEFT" spacing="12">
+                <Label text="👤" styleClass="user-avatar"/>
+                <VBox spacing="2">
+                    <Label text="Admin User" styleClass="user-name"/>
+                    <Label text="Administrateur" styleClass="user-role"/>
+                </VBox>
+            </HBox>
+            <Button text="  Déconnexion" styleClass="logout-btn"
+                    onAction="#logout"/>
+        </VBox>
+    </VBox>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <VBox styleClass="main-content" HBox.hgrow="ALWAYS">
+
+        <!-- Header -->
+        <HBox fx:id="dashboardHeader" styleClass="dashboard-header" alignment="CENTER_LEFT">
+            <VBox HBox.hgrow="ALWAYS" spacing="4">
+                <Label text="Dashboard" styleClass="header-title"/>
+                <Label text="Bienvenue sur la plateforme d'apprentissage LearnFlex+"
+                       styleClass="header-subtitle"/>
+            </VBox>
+            <HBox styleClass="header-right" alignment="CENTER_RIGHT" spacing="15">
+                <HBox styleClass="search-bar" alignment="CENTER">
+                    <TextField promptText="Rechercher..." styleClass="search-input"/>
+                    <Button text="🔍" styleClass="search-btn"/>
+                </HBox>
+                <StackPane>
+                    <Button text="🔔" styleClass="notif-btn"/>
+                    <Label text="3" styleClass="badge"
+                           StackPane.alignment="TOP_RIGHT"/>
+                </StackPane>
+            </HBox>
+        </HBox>
+
+        <!-- Scrollable content -->
+        <ScrollPane fitToWidth="true" fitToHeight="true"
+                    VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+            <VBox spacing="25" styleClass="dashboard-content" fillWidth="true" maxWidth="Infinity">
+                
+                <!-- ZONE DYNAMIQUE (Higher priority for Matière/Cours) -->
+                <StackPane fx:id="mainContent" styleClass="content-area"
+                           minHeight="100" VBox.vgrow="ALWAYS" maxWidth="Infinity" />
+
+                <!-- DASHBOARD SPECIFIC CONTENT (Visible only on Dashboard) -->
+                <VBox fx:id="dashboardView" spacing="25">
+                    <!-- STAT CARDS -->
+                    <HBox spacing="20" fillHeight="true">
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="👥" styleClass="stat-icon-users"/>
+                            <VBox spacing="4">
+                                <Label text="1,423" styleClass="stat-number"/>
+                                <Label text="Utilisateurs" styleClass="stat-label"/>
+                                <Label text="▲ +12.5%" styleClass="stat-progress-up"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="📚" styleClass="stat-icon-courses"/>
+                            <VBox spacing="4">
+                                <Label text="856" styleClass="stat-number"/>
+                                <Label text="Cours disponibles" styleClass="stat-label"/>
+                                <Label text="▲ +8.2%" styleClass="stat-progress-up"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="💻" styleClass="stat-icon-eval"/>
+                            <VBox spacing="4">
+                                <Label text="128" styleClass="stat-number"/>
+                                <Label text="Evaluation" styleClass="stat-label"/>
+                                <Label text="▼ -3.1%" styleClass="stat-progress-down"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="❓" styleClass="stat-icon-quiz"/>
+                            <VBox spacing="4">
+                                <Label text="24" styleClass="stat-number"/>
+                                <Label text="Quiz actifs" styleClass="stat-label"/>
+                                <Label text="▲ +5.7%" styleClass="stat-progress-up"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </HBox>
+
+                <!-- ACTIVITÉ RÉCENTE -->
+                <VBox styleClass="section-box" spacing="15">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Activité récente" styleClass="section-title"
+                               HBox.hgrow="ALWAYS"/>
+                        <Hyperlink text="Voir tout" styleClass="view-all"/>
+                    </HBox>
+                    <VBox spacing="12">
+                        <HBox styleClass="activity-item" spacing="15" alignment="CENTER_LEFT">
+                            <Label text="👤" styleClass="activity-icon"/>
+                            <VBox spacing="3">
+                                <Label text="Nouvel utilisateur inscrit" styleClass="activity-title"/>
+                                <Label text="Ahmed Ben Ali a créé un compte." styleClass="activity-desc"/>
+                                <Label text="Il y a 2 heures" styleClass="activity-time"/>
+                            </VBox>
+                        </HBox>
+                        <HBox styleClass="activity-item" spacing="15" alignment="CENTER_LEFT">
+                            <Label text="📖" styleClass="activity-icon"/>
+                            <VBox spacing="3">
+                                <Label text="Nouveau cours publié" styleClass="activity-title"/>
+                                <Label text="Leila Mansour a publié « Bases de Symfony »." styleClass="activity-desc"/>
+                                <Label text="Il y a 3 heures" styleClass="activity-time"/>
+                            </VBox>
+                        </HBox>
+                        <HBox styleClass="activity-item" spacing="15" alignment="CENTER_LEFT">
+                            <Label text="✅" styleClass="activity-icon"/>
+                            <VBox spacing="3">
+                                <Label text="Quiz complété" styleClass="activity-title"/>
+                                <Label text="Mohamed Khelifi a terminé le quiz de proba." styleClass="activity-desc"/>
+                                <Label text="Il y a 5 heures" styleClass="activity-time"/>
+                            </VBox>
+                        </HBox>
+                        <HBox styleClass="activity-item" spacing="15" alignment="CENTER_LEFT">
+                            <Label text="📝" styleClass="activity-icon"/>
+                            <VBox spacing="3">
+                                <Label text="Examen soumis" styleClass="activity-title"/>
+                                <Label text="Nadia Mansouri a soumis l'examen de mathématiques." styleClass="activity-desc"/>
+                                <Label text="Il y a 6 heures" styleClass="activity-time"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- EVALUATIONS RECENTES -->
+                <VBox styleClass="section-box" spacing="15">
+                    <HBox alignment="CENTER_LEFT">
+                        <Label text="Evaluations recentes" styleClass="section-title"
+                               HBox.hgrow="ALWAYS"/>
+                        <Hyperlink text="Voir tout" styleClass="view-all"/>
+                    </HBox>
+                    <TableView styleClass="parcels-table" prefHeight="200"
+                               maxWidth="Infinity">
+                        <columns>
+                            <TableColumn text="ID"       prefWidth="60"/>
+                            <TableColumn text="Cours"    prefWidth="180"/>
+                            <TableColumn text="Etudiant" prefWidth="160"/>
+                            <TableColumn text="Type"     prefWidth="100"/>
+                            <TableColumn text="Date"     prefWidth="120"/>
+                            <TableColumn text="Statut"   prefWidth="100"/>
+                        </columns>
+                        <placeholder>
+                            <Label text="Aucune evaluation recente." styleClass="stat-label"/>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+            </VBox> <!-- End of dashboardView -->
+        </VBox> <!-- End of dashboard-content -->
+        </ScrollPane>
+    </VBox>
+</HBox>

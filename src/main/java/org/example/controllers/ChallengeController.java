@@ -1,0 +1,180 @@
+package org.example.controllers;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.example.Services.ServiceChallenge;
+import org.example.entities.Challenge;
+
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
+public class ChallengeController implements Initializable {
+
+    @FXML private TextField searchField;
+    @FXML private TableView<Challenge>            challengeTable;
+    @FXML private TableColumn<Challenge, Integer> colId;
+    @FXML private TableColumn<Challenge, String>  colTitre;
+    @FXML private TableColumn<Challenge, String>  colDescription;
+    @FXML private TableColumn<Challenge, String>  colNiveau;
+    @FXML private TableColumn<Challenge, String>  colEtat;
+    @FXML private TableColumn<Challenge, Double>  colObjectif;
+    @FXML private TableColumn<Challenge, Double>  colProgression;
+    @FXML private TableColumn<Challenge, Void>    colActions;
+
+    private ObservableList<Challenge> allChallenges = FXCollections.observableArrayList();
+    private final ServiceChallenge serviceChallenge = new ServiceChallenge();
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        setupColumns();
+        loadData();
+        setupActionsColumn();
+    }
+
+    private void loadData() {
+        try {
+            List<Challenge> list = serviceChallenge.recuperer();
+            allChallenges.setAll(list);
+            challengeTable.setItems(allChallenges);
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger les challenges : " + e.getMessage());
+        }
+    }
+
+    private void setupColumns() {
+        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colTitre.setCellValueFactory(new PropertyValueFactory<>("titrec"));
+        colDescription.setCellValueFactory(new PropertyValueFactory<>("descriptionc"));
+        colNiveau.setCellValueFactory(new PropertyValueFactory<>("niveaudifficulte"));
+        colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
+        colObjectif.setCellValueFactory(new PropertyValueFactory<>("objectifscore"));
+        colProgression.setCellValueFactory(new PropertyValueFactory<>("progressionactuelle"));
+
+        colEtat.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); setStyle(""); return; }
+                setText(item);
+                switch (item.toLowerCase()) {
+                    case "actif"      -> setStyle("-fx-text-fill:#185FA5; -fx-font-weight:bold;");
+                    case "termine"    -> setStyle("-fx-text-fill:#A32D2D; -fx-font-weight:bold;");
+                    case "en attente" -> setStyle("-fx-text-fill:#854F0B; -fx-font-weight:bold;");
+                    default           -> setStyle("");
+                }
+            }
+        });
+
+        colNiveau.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) { setText(null); setStyle(""); return; }
+                setText(item);
+                switch (item.toLowerCase()) {
+                    case "facile"    -> setStyle("-fx-text-fill:#3B6D11; -fx-font-weight:bold;");
+                    case "moyen"     -> setStyle("-fx-text-fill:#854F0B; -fx-font-weight:bold;");
+                    case "difficile" -> setStyle("-fx-text-fill:#A32D2D; -fx-font-weight:bold;");
+                    default          -> setStyle("");
+                }
+            }
+        });
+    }
+
+    private void setupActionsColumn() {
+        colActions.setCellFactory(col -> new TableCell<>() {
+            private final Button btnModifier  = new Button("Modifier");
+            private final Button btnSupprimer = new Button("Supprimer");
+            private final HBox   box          = new HBox(6, btnModifier, btnSupprimer);
+            {
+                btnModifier.setStyle("-fx-background-color:#007bff; -fx-text-fill:white; -fx-font-size:11px; -fx-font-weight:bold; -fx-padding:4 10; -fx-background-radius:5; -fx-cursor:hand;");
+                btnSupprimer.setStyle("-fx-background-color:#dc3545; -fx-text-fill:white; -fx-font-size:11px; -fx-font-weight:bold; -fx-padding:4 10; -fx-background-radius:5; -fx-cursor:hand;");
+                box.setStyle("-fx-alignment:CENTER_LEFT;");
+                btnModifier.setOnAction(e -> handleEdit(getTableView().getItems().get(getIndex())));
+                btnSupprimer.setOnAction(e -> handleDelete(getTableView().getItems().get(getIndex())));
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : box);
+            }
+        });
+    }
+
+    @FXML
+    private void handleSearch() {
+        String q = searchField.getText().toLowerCase().trim();
+        if (q.isEmpty()) { challengeTable.setItems(allChallenges); return; }
+        challengeTable.setItems(allChallenges.stream()
+                .filter(c -> c.getTitrec().toLowerCase().contains(q)
+                        || (c.getDescriptionc() != null && c.getDescriptionc().toLowerCase().contains(q)))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList)));
+    }
+
+    @FXML
+    private void showAddChallenge() {
+        ouvrirFormulaire(null, "Ajouter un Challenge");
+    }
+
+    private void handleEdit(Challenge c) {
+        ouvrirFormulaire(c, "Modifier : " + c.getTitrec());
+    }
+
+    private void handleDelete(Challenge c) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                "Voulez-vous vraiment supprimer " + c.getTitrec() + " ?",
+                ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Confirmer la suppression");
+        alert.setHeaderText(null);
+        alert.showAndWait().ifPresent(btn -> {
+            if (btn == ButtonType.YES) {
+                try {
+                    serviceChallenge.supprimer(c);
+                    loadData();
+                } catch (SQLException ex) {
+                    showAlert(Alert.AlertType.ERROR, "Erreur", ex.getMessage());
+                }
+            }
+        });
+    }
+
+    private void ouvrirFormulaire(Challenge challenge, String titre) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/fxml/AjouterChallenge.fxml"));
+            Parent root = loader.load();
+            AjouterChallengeController ctrl = loader.getController();
+            if (challenge != null) ctrl.setChallenge(challenge);
+            ctrl.setOnSuccessCallback(c -> loadData());
+            Stage stage = new Stage();
+            stage.setTitle(titre);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.showAndWait();
+        } catch (IOException ex) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", ex.getMessage());
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String msg) {
+        Alert alert = new Alert(type, msg, ButtonType.OK);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.showAndWait();
+    }
+}

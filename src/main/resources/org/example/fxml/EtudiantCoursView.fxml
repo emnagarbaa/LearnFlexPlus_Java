@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.EtudiantCoursController"
+      styleClass="front-root"
+      prefWidth="1200" prefHeight="900"
+      stylesheets="@../css/front.css">
+
+    <!-- ===== HEADER ===== -->
+    <HBox styleClass="header" alignment="CENTER_LEFT" spacing="15">
+        <padding><Insets top="15" right="40" bottom="15" left="40"/></padding>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <ImageView fx:id="logo" fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true"/>
+            <Label text="LearnFlex+" styleClass="logo-text"/>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox spacing="5" alignment="CENTER">
+            <Button text="Accueil"       styleClass="nav-btn" onAction="#goToAccueil"/>
+            <Button text="Cours"         styleClass="nav-btn"/>
+            <Button text="Évaluation"    styleClass="nav-btn"/>
+            <Button text="Questionnaire" styleClass="nav-btn"/>
+            <Button text="Orientation"   styleClass="nav-btn"/>
+            <Button text="Forum"         styleClass="nav-btn"/>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔐  Connexion" styleClass="btn-primary" onAction="#goToConnexion"/>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                styleClass="scroll-pane" hbarPolicy="NEVER">
+        <VBox fx:id="contentArea" spacing="20"
+              style="-fx-background-color: transparent;">
+            <padding><Insets top="10" right="10" bottom="20" left="10"/></padding>
+        </VBox>
+    </ScrollPane>
+</VBox>

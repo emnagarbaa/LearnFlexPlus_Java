@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.MatiereController"
+      spacing="20" style="-fx-background-color: transparent;"
+      minWidth="950">
+
+    <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label fx:id="headerTitle" text="Espace Enseignant — Matières"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;"/>
+            <Label fx:id="headerSubtitle" text="Sélectionnez une matière pour gérer ses cours"
+                   style="-fx-font-size: 13px; -fx-text-fill: #94a3b8;"/>
+        </VBox>
+        <Button text="＋  Nouvelle Matière" onAction="#toggleAddForm"
+                style="-fx-background-color: #97c3a2; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-background-radius: 12; -fx-padding: 12 24; -fx-cursor: hand; -fx-font-size: 13px;"/>
+    </HBox>
+
+    <!-- Search Bar -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 4);">
+        <HBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f1f5f9; -fx-padding: 8 15; -fx-background-radius: 8;">
+            <Label text="🔍" style="-fx-text-fill: #94a3b8;"/>
+            <TextField fx:id="searchField" promptText="Rechercher une matière par nom ou code..." HBox.hgrow="ALWAYS"
+                       onKeyReleased="#handleSearch"
+                       style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 13px;"/>
+        </HBox>
+        <Button text="Réinitialiser" onAction="#resetSearch"
+                style="-fx-background-color: #f1f5f9; -fx-text-fill: #64748b; -fx-background-radius: 8; -fx-padding: 8 15; -fx-cursor: hand; -fx-font-size: 13px;"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- Matiere Grid -->
+        <ScrollPane fitToWidth="true" HBox.hgrow="ALWAYS"
+                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+            <FlowPane fx:id="matiereGrid" hgap="25" vgap="25"
+                      style="-fx-padding: 5;"/>
+        </ScrollPane>
+
+    </HBox>
+</VBox>
