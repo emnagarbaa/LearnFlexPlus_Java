@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.EvenementDetailController"
+      prefWidth="1200" prefHeight="850"
+      style="-fx-background-color:#f8f9fa;">
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" hbarPolicy="NEVER"
+                style="-fx-background:transparent; -fx-background-color:transparent;">
+        <VBox spacing="0">
+
+            <!-- ══ HERO ══════════════════════════════════════════════════ -->
+            <VBox spacing="10"
+                  style="-fx-background-color:#1f4f65; -fx-padding:48 40 64 40;">
+                <Button fx:id="btnBack" text="← Retour aux événements" onAction="#goBack"
+                        style="-fx-background-color:transparent; -fx-text-fill:rgba(255,255,255,0.85);
+                               -fx-font-size:13px; -fx-cursor:hand; -fx-border-color:transparent;
+                               -fx-padding:0;"/>
+                <Label fx:id="heroTitre" text=""
+                       style="-fx-font-size:34px; -fx-font-weight:bold;
+                              -fx-text-fill:white; -fx-wrap-text:true;"/>
+                <Label text="Découvrez tous les détails de cet événement"
+                       style="-fx-font-size:16px; -fx-text-fill:rgba(255,255,255,0.85);"/>
+            </VBox>
+
+            <!-- ══ CONTENT ═══════════════════════════════════════════════ -->
+            <HBox spacing="24" style="-fx-padding:0 32 40 32; -fx-background-color:#f8f9fa;">
+                <HBox.margin><Insets top="-24"/></HBox.margin>
+
+                <!-- LEFT — Main card -->
+                <VBox spacing="0" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color:white; -fx-background-radius:16;
+                             -fx-border-color:rgba(151,195,162,0.25); -fx-border-radius:16;
+                             -fx-border-width:1;">
+
+                    <!-- À propos -->
+                    <VBox spacing="12" style="-fx-padding:26 30; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="ℹ" style="-fx-font-size:16px; -fx-background-color:#1f4f65;
+                                           -fx-text-fill:white; -fx-background-radius:10;
+                                           -fx-padding:8 10;"/>
+                            <Label text="À propos"
+                                   style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                        </HBox>
+                        <Label fx:id="lblDescription" text="" wrapText="true"
+                               style="-fx-font-size:14px; -fx-text-fill:#555; -fx-line-spacing:4;"/>
+                    </VBox>
+
+                    <!-- Dates -->
+                    <VBox spacing="12" style="-fx-padding:26 30; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="📅" style="-fx-font-size:16px; -fx-background-color:#1f4f65;
+                                           -fx-text-fill:white; -fx-background-radius:10;
+                                           -fx-padding:8 10;"/>
+                            <Label text="Dates &amp; Horaires"
+                                   style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                        </HBox>
+                        <HBox spacing="16">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color:#f8faf9; -fx-padding:16;
+                                         -fx-border-color:#97c3a2; -fx-border-width:0 0 0 3;">
+                                <Label text="DÉBUT"
+                                       style="-fx-font-size:11px; -fx-text-fill:#999; -fx-font-weight:bold;"/>
+                                <Label fx:id="lblDateDebut" text=""
+                                       style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#333;"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color:#f8faf9; -fx-padding:16;
+                                         -fx-border-color:#97c3a2; -fx-border-width:0 0 0 3;">
+                                <Label text="FIN"
+                                       style="-fx-font-size:11px; -fx-text-fill:#999; -fx-font-weight:bold;"/>
+                                <Label fx:id="lblDateFin" text=""
+                                       style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#333;"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Localisation -->
+                    <VBox spacing="12" style="-fx-padding:26 30; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="📍" style="-fx-font-size:16px; -fx-background-color:#1f4f65;
+                                           -fx-text-fill:white; -fx-background-radius:10;
+                                           -fx-padding:8 10;"/>
+                            <Label text="Localisation"
+                                   style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                        </HBox>
+                        <Label fx:id="lblLieu" text=""
+                               style="-fx-font-size:14px; -fx-text-fill:#555;"/>
+                    </VBox>
+
+                    <!-- Détails -->
+                    <VBox spacing="12" style="-fx-padding:26 30; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="🏷" style="-fx-font-size:16px; -fx-background-color:#1f4f65;
+                                          -fx-text-fill:white; -fx-background-radius:10;
+                                          -fx-padding:8 10;"/>
+                            <Label text="Détails"
+                                   style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                        </HBox>
+                        <HBox spacing="16">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color:#f8faf9; -fx-padding:16;
+                                         -fx-border-color:#97c3a2; -fx-border-width:0 0 0 3;">
+                                <Label text="MODE"
+                                       style="-fx-font-size:11px; -fx-text-fill:#999; -fx-font-weight:bold;"/>
+                                <Label fx:id="lblMode" text=""
+                                       style="-fx-font-size:13px; -fx-font-weight:bold;
+                                              -fx-text-fill:#1f4f65; -fx-background-color:rgba(151,195,162,0.25);
+                                              -fx-background-radius:6; -fx-padding:4 10;"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS"
+                                  style="-fx-background-color:#f8faf9; -fx-padding:16;
+                                         -fx-border-color:#97c3a2; -fx-border-width:0 0 0 3;">
+                                <Label text="CAPACITÉ"
+                                       style="-fx-font-size:11px; -fx-text-fill:#999; -fx-font-weight:bold;"/>
+                                <Label fx:id="lblCapacite" text=""
+                                       style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#333;"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Audience -->
+                    <VBox spacing="12" style="-fx-padding:26 30; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="👥" style="-fx-font-size:16px; -fx-background-color:#1f4f65;
+                                           -fx-text-fill:white; -fx-background-radius:10;
+                                           -fx-padding:8 10;"/>
+                            <Label text="Audience"
+                                   style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                        </HBox>
+                        <Label fx:id="lblPublicCible" text=""
+                               style="-fx-font-size:14px; -fx-text-fill:#555;"/>
+                    </VBox>
+
+                    <!-- Inscription -->
+                    <VBox spacing="12" style="-fx-padding:26 30; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="🔗" style="-fx-font-size:16px; -fx-background-color:#1f4f65;
+                                           -fx-text-fill:white; -fx-background-radius:10;
+                                           -fx-padding:8 10;"/>
+                            <Label text="Inscription"
+                                   style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                        </HBox>
+                        <Label fx:id="lblLienInscription" text=""
+                               style="-fx-font-size:14px; -fx-text-fill:#1f4f65;"/>
+                    </VBox>
+
+                    <!-- Contact -->
+                    <VBox spacing="12" style="-fx-padding:26 30; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="📇" style="-fx-font-size:16px; -fx-background-color:#1f4f65;
+                                           -fx-text-fill:white; -fx-background-radius:10;
+                                           -fx-padding:8 10;"/>
+                            <Label text="Contact"
+                                   style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                        </HBox>
+                        <Label fx:id="lblEmail" text=""
+                               style="-fx-font-size:14px; -fx-text-fill:#555;"/>
+                        <Label fx:id="lblTelephone" text=""
+                               style="-fx-font-size:14px; -fx-text-fill:#555;"/>
+                    </VBox>
+
+                    <!-- Organisme -->
+                    <VBox spacing="12" style="-fx-padding:26 30;">
+                        <HBox spacing="12" alignment="CENTER_LEFT">
+                            <Label text="🏢" style="-fx-font-size:16px; -fx-background-color:#1f4f65;
+                                           -fx-text-fill:white; -fx-background-radius:10;
+                                           -fx-padding:8 10;"/>
+                            <Label text="Organisme"
+                                   style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                        </HBox>
+                        <Label fx:id="lblOrganisme" text=""
+                               style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#333;"/>
+                    </VBox>
+                </VBox>
+
+                <!-- RIGHT — Sidebar -->
+                <VBox spacing="20" prefWidth="300">
+
+                    <!-- Card Inscription -->
+                    <VBox spacing="16"
+                          style="-fx-background-color:white; -fx-background-radius:16;
+                                 -fx-border-color:rgba(151,195,162,0.25); -fx-border-radius:16;
+                                 -fx-border-width:1; -fx-padding:26;">
+                        <Label text="Prêt à vous inscrire ?"
+                               style="-fx-font-size:17px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                        <Button fx:id="btnInscrire" text="✔  S'inscrire maintenant"
+                                onAction="#inscrire" maxWidth="Infinity"
+                                style="-fx-background-color:#1f4f65; -fx-text-fill:white;
+                                       -fx-font-size:14px; -fx-font-weight:bold;
+                                       -fx-background-radius:12; -fx-cursor:hand;
+                                       -fx-padding:14 20;"/>
+                    </VBox>
+
+                    <!-- Card Infos rapides -->
+                    <VBox spacing="0"
+                          style="-fx-background-color:white; -fx-background-radius:16;
+                                 -fx-border-color:rgba(151,195,162,0.25); -fx-border-radius:16;
+                                 -fx-border-width:1; -fx-padding:26;">
+                        <Label text="Informations rapides"
+                               style="-fx-font-size:17px; -fx-font-weight:bold;
+                                      -fx-text-fill:#1a1a2e; -fx-padding:0 0 14 0;"/>
+
+                        <HBox spacing="10" style="-fx-padding:12 0; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                            <Label text="•" style="-fx-text-fill:#97c3a2; -fx-font-size:18px;"/>
+                            <Label text="Date :" style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#1f4f65; -fx-min-width:70;"/>
+                            <Label fx:id="sideDate" text="" style="-fx-font-size:13px; -fx-text-fill:#555;"/>
+                        </HBox>
+                        <HBox spacing="10" style="-fx-padding:12 0; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                            <Label text="•" style="-fx-text-fill:#97c3a2; -fx-font-size:18px;"/>
+                            <Label text="Heure :" style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#1f4f65; -fx-min-width:70;"/>
+                            <Label fx:id="sideHeure" text="" style="-fx-font-size:13px; -fx-text-fill:#555;"/>
+                        </HBox>
+                        <HBox spacing="10" style="-fx-padding:12 0; -fx-border-color:#f0f0f0; -fx-border-width:0 0 1 0;">
+                            <Label text="•" style="-fx-text-fill:#97c3a2; -fx-font-size:18px;"/>
+                            <Label text="Lieu :" style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#1f4f65; -fx-min-width:70;"/>
+                            <Label fx:id="sideLieu" text="" style="-fx-font-size:13px; -fx-text-fill:#555;" wrapText="true"/>
+                        </HBox>
+                        <HBox spacing="10" style="-fx-padding:12 0;">
+                            <Label text="•" style="-fx-text-fill:#97c3a2; -fx-font-size:18px;"/>
+                            <Label text="Capacité :" style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#1f4f65; -fx-min-width:70;"/>
+                            <Label fx:id="sideCapacite" text="" style="-fx-font-size:13px; -fx-text-fill:#555;"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</VBox>

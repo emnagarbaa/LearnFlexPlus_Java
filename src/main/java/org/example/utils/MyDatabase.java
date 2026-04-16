@@ -12,12 +12,13 @@ public class MyDatabase {
     private Connection connection;
     private static MyDatabase instance;
 
-    public MyDatabase() {
+    // Fix 1: private constructor — enforces singleton
+    private MyDatabase() {
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             System.out.println("Connected to database successfully");
         } catch (SQLException e) {
-            System.out.println("Error: failed to connect to database" + e.getMessage());
+            System.out.println("Error: failed to connect to database: " + e.getMessage());
         }
     }
 
@@ -28,7 +29,16 @@ public class MyDatabase {
         return instance;
     }
 
+    // Fix 2: reconnect if connection is null or closed
     public Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+                System.out.println("Reconnected to database successfully");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error: failed to reconnect to database: " + e.getMessage());
+        }
         return connection;
     }
 }

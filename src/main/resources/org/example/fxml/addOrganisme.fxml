@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="org.example.controllers.AddOrganismeController"
+           style="-fx-background-color:#f0f4f8;">
+
+    <ScrollPane fitToWidth="true" style="-fx-background:transparent; -fx-background-color:transparent;">
+        <VBox spacing="0">
+
+            <!-- ══ HERO HEADER ══════════════════════════════════════════ -->
+            <VBox alignment="CENTER" spacing="6"
+                  style="-fx-background-color:linear-gradient(to right, #1f4f65, #2e7d9e);
+                         -fx-padding:36 40 36 40;">
+                <Label text="🏢" style="-fx-font-size:42px;"/>
+                <Label text="Ajouter un Organisme"
+                       style="-fx-font-size:26px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+                <Label text="Remplissez les informations pour enregistrer un nouvel organisme"
+                       style="-fx-font-size:13px; -fx-text-fill:rgba(255,255,255,0.8);"/>
+            </VBox>
+
+            <!-- ══ BACK BUTTON BAR ══════════════════════════════════════ -->
+            <HBox style="-fx-background-color:#ffffff; -fx-padding:12 32;
+                         -fx-border-color:#e8ecf0; -fx-border-width:0 0 1 0;">
+                <Button text="← Retour à la liste" onAction="#goBack"
+                        style="-fx-background-color:transparent; -fx-text-fill:#1f4f65;
+                               -fx-font-size:13px; -fx-font-weight:bold;
+                               -fx-cursor:hand; -fx-border-color:#1f4f65;
+                               -fx-border-radius:6; -fx-background-radius:6;
+                               -fx-padding:6 16;"/>
+            </HBox>
+
+            <!-- ══ FORM BODY ════════════════════════════════════════════ -->
+            <HBox spacing="24" style="-fx-padding:32 40;">
+
+                <!-- LEFT CARD — Infos principales -->
+                <VBox spacing="20" HBox.hgrow="ALWAYS"
+                      style="-fx-background-color:white; -fx-background-radius:12;
+                             -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.08),16,0,0,4);
+                             -fx-padding:28;">
+
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="📋" style="-fx-font-size:18px;"/>
+                        <Label text="Informations générales"
+                               style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+                    </HBox>
+                    <Separator/>
+
+                    <!-- Nom -->
+                    <VBox spacing="4">
+                        <Label text="Nom de l'organisme *"
+                               style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
+                        <TextField fx:id="fNom" promptText="Ex: Université de Tunis"
+                                   style="-fx-background-radius:8; -fx-border-radius:8;
+                                          -fx-border-color:#dce3ea; -fx-padding:10 14; -fx-font-size:13px;"/>
+                        <Label fx:id="errNom" text=""
+                               style="-fx-text-fill:#e74c3c; -fx-font-size:11px;"
+                               visible="false" managed="false"/>
+                    </VBox>
+
+                    <!-- Type -->
+                    <VBox spacing="4">
+                        <Label text="Type d'organisme *"
+                               style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
+                        <ComboBox fx:id="fType" maxWidth="Infinity" promptText="Sélectionner un type"
+                                  style="-fx-background-radius:8; -fx-border-radius:8;
+                                         -fx-border-color:#dce3ea; -fx-padding:4 8; -fx-font-size:13px;"/>
+                        <Label fx:id="errType" text=""
+                               style="-fx-text-fill:#e74c3c; -fx-font-size:11px;"
+                               visible="false" managed="false"/>
+                    </VBox>
+
+                    <!-- Ville + Langue -->
+                    <HBox spacing="16">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Ville"
+                                   style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
+                            <TextField fx:id="fVille" promptText="Ex: Tunis"
+                                       style="-fx-background-radius:8; -fx-border-radius:8;
+                                              -fx-border-color:#dce3ea; -fx-padding:10 14; -fx-font-size:13px;"/>
+                            <Label fx:id="errVille" text=""
+                                   style="-fx-text-fill:#e74c3c; -fx-font-size:11px;"
+                                   visible="false" managed="false"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Langue"
+                                   style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
+                            <ComboBox fx:id="fLangue" maxWidth="Infinity" promptText="Langue"
+                                      style="-fx-background-radius:8; -fx-border-radius:8;
+                                             -fx-border-color:#dce3ea; -fx-padding:4 8; -fx-font-size:13px;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Description -->
+                    <VBox spacing="4">
+                        <Label text="Description"
+                               style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
+                        <TextArea fx:id="fDescription" prefRowCount="4"
+                                  promptText="Décrivez l'organisme en quelques lignes…"
+                                  style="-fx-background-radius:8; -fx-border-radius:8;
+                                         -fx-border-color:#dce3ea; -fx-padding:10 14; -fx-font-size:13px;"/>
+                        <Label fx:id="errDescription" text=""
+                               style="-fx-text-fill:#e74c3c; -fx-font-size:11px;"
+                               visible="false" managed="false"/>
+                    </VBox>
+                </VBox>
+
+                <!-- RIGHT COLUMN -->
+                <VBox spacing="24" prefWidth="300">
+
+                    <!-- CARD — Photo -->
+                    <VBox spacing="16"
+                          style="-fx-background-color:white; -fx-background-radius:12;
+                                 -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.08),16,0,0,4);
+                                 -fx-padding:24;">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="🖼" style="-fx-font-size:16px;"/>
+                            <Label text="Photo de l'organisme"
+                                   style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+                        </HBox>
+                        <Separator/>
+
+                        <!-- Aperçu photo -->
+                        <VBox alignment="CENTER" spacing="0"
+                              style="-fx-background-color:#f0f7f2; -fx-background-radius:10;
+                                     -fx-border-color:#97c3a2; -fx-border-style:dashed;
+                                     -fx-border-width:2; -fx-border-radius:10;
+                                     -fx-min-height:160; -fx-pref-height:160;">
+                            <ImageView fx:id="photoPreview"
+                                       fitWidth="252" fitHeight="156"
+                                       preserveRatio="true" pickOnBounds="true"
+                                       style="-fx-background-radius:10;"/>
+                            <Label fx:id="photoPlaceholder" text="📷  Aucune photo sélectionnée"
+                                   style="-fx-font-size:12px; -fx-text-fill:#97c3a2;"/>
+                        </VBox>
+
+                        <!-- Boutons -->
+                        <HBox spacing="8">
+                            <Button text="📂  Choisir une photo" onAction="#choisirPhoto"
+                                    style="-fx-background-color:#1f4f65; -fx-text-fill:white;
+                                           -fx-background-radius:8; -fx-border-radius:8;
+                                           -fx-font-size:12px; -fx-font-weight:bold;
+                                           -fx-padding:9 16; -fx-cursor:hand;"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button fx:id="btnSupprimerPhoto" text="✖" onAction="#supprimerPhoto"
+                                    style="-fx-background-color:#fdecea; -fx-text-fill:#c0392b;
+                                           -fx-background-radius:8; -fx-border-radius:8;
+                                           -fx-font-size:12px; -fx-font-weight:bold;
+                                           -fx-padding:9 12; -fx-cursor:hand;"
+                                    visible="false" managed="false"/>
+                        </HBox>
+
+                        <!-- Chemin affiché -->
+                        <Label fx:id="photoPathLabel" text=""
+                               style="-fx-font-size:10px; -fx-text-fill:#888; -fx-wrap-text:true;"
+                               wrapText="true" visible="false" managed="false"/>
+                    </VBox>
+
+                    <!-- CARD — Contact -->
+                    <VBox spacing="16"
+                          style="-fx-background-color:white; -fx-background-radius:12;
+                                 -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.08),16,0,0,4);
+                                 -fx-padding:24;">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="📞" style="-fx-font-size:16px;"/>
+                            <Label text="Contact"
+                                   style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+                        </HBox>
+                        <Separator/>
+
+                        <VBox spacing="4">
+                            <Label text="Email"
+                                   style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
+                            <TextField fx:id="fEmail" promptText="email@exemple.com"
+                                       style="-fx-background-radius:8; -fx-border-radius:8;
+                                              -fx-border-color:#dce3ea; -fx-padding:9 12; -fx-font-size:13px;"/>
+                            <Label fx:id="errEmail" text=""
+                                   style="-fx-text-fill:#e74c3c; -fx-font-size:11px;"
+                                   visible="false" managed="false"/>
+                        </VBox>
+
+                        <VBox spacing="4">
+                            <Label text="Téléphone"
+                                   style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
+                            <TextField fx:id="fTelephone" promptText="+216 XX XXX XXX"
+                                       style="-fx-background-radius:8; -fx-border-radius:8;
+                                              -fx-border-color:#dce3ea; -fx-padding:9 12; -fx-font-size:13px;"/>
+                            <Label fx:id="errTelephone" text=""
+                                   style="-fx-text-fill:#e74c3c; -fx-font-size:11px;"
+                                   visible="false" managed="false"/>
+                        </VBox>
+
+                        <VBox spacing="4">
+                            <Label text="Site Web"
+                                   style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
+                            <TextField fx:id="fSiteWeb" promptText="https://..."
+                                       style="-fx-background-radius:8; -fx-border-radius:8;
+                                              -fx-border-color:#dce3ea; -fx-padding:9 12; -fx-font-size:13px;"/>
+                            <Label fx:id="errSiteWeb" text=""
+                                   style="-fx-text-fill:#e74c3c; -fx-font-size:11px;"
+                                   visible="false" managed="false"/>
+                        </VBox>
+
+                        <VBox spacing="4">
+                            <Label text="Frais Minimum (TND)"
+                                   style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
+                            <TextField fx:id="fFraisMin" promptText="0.0"
+                                       style="-fx-background-radius:8; -fx-border-radius:8;
+                                              -fx-border-color:#dce3ea; -fx-padding:9 12; -fx-font-size:13px;"/>
+                            <Label fx:id="errFraisMin" text=""
+                                   style="-fx-text-fill:#e74c3c; -fx-font-size:11px;"
+                                   visible="false" managed="false"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- CARD — Options -->
+                    <VBox spacing="16"
+                          style="-fx-background-color:white; -fx-background-radius:12;
+                                 -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.08),16,0,0,4);
+                                 -fx-padding:24;">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="⚙️" style="-fx-font-size:16px;"/>
+                            <Label text="Options"
+                                   style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+                        </HBox>
+                        <Separator/>
+                        <VBox spacing="12">
+                            <CheckBox fx:id="fActif" text="✅  Organisme actif"
+                                      style="-fx-font-size:13px;"/>
+                            <CheckBox fx:id="fOpportunitesStage" text="🎓  Offre des stages"
+                                      style="-fx-font-size:13px;"/>
+                            <CheckBox fx:id="fOpportunitesEmploi" text="💼  Offre des emplois"
+                                      style="-fx-font-size:13px;"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Message erreur global -->
+                    <Label fx:id="errorLabel" text="" wrapText="true"
+                           style="-fx-text-fill:#c0392b; -fx-font-size:12px;
+                                  -fx-background-color:#fdecea; -fx-background-radius:8;
+                                  -fx-padding:10 14; -fx-border-color:#f5c6cb;
+                                  -fx-border-radius:8;"
+                           visible="false" managed="false"/>
+                </VBox>
+            </HBox>
+
+            <!-- ══ ACTION BUTTONS ════════════════════════════════════════ -->
+            <HBox alignment="CENTER_RIGHT" spacing="16"
+                  style="-fx-background-color:white; -fx-padding:20 40;
+                         -fx-border-color:#e8ecf0; -fx-border-width:1 0 0 0;">
+                <Button text="✖  Annuler" onAction="#goBack"
+                        style="-fx-background-color:#f0f4f8; -fx-text-fill:#555;
+                               -fx-font-size:13px; -fx-font-weight:bold;
+                               -fx-background-radius:8; -fx-cursor:hand;
+                               -fx-padding:12 28; -fx-border-color:#dce3ea;
+                               -fx-border-radius:8;"/>
+                <Button text="💾  Enregistrer l'organisme" onAction="#saveOrganisme"
+                        style="-fx-background-color:linear-gradient(to right,#1f4f65,#2e7d9e);
+                               -fx-text-fill:white; -fx-font-size:13px;
+                               -fx-font-weight:bold; -fx-background-radius:8;
+                               -fx-cursor:hand; -fx-padding:12 32;
+                               -fx-effect:dropshadow(gaussian,rgba(31,79,101,0.4),10,0,0,3);"/>
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+</StackPane>
