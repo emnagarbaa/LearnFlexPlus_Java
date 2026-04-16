@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.OrientationFrontController"
+      prefWidth="1200" prefHeight="850"
+      style="-fx-background-color:#f8f9fa;"
+      stylesheets="@../css/front.css">
+
+    <!-- ===== HEADER ===== -->
+    <HBox styleClass="header" alignment="CENTER_LEFT" spacing="15">
+        <padding><Insets top="15" right="40" bottom="15" left="40"/></padding>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <ImageView fx:id="logo" fitHeight="45" fitWidth="45"
+                       pickOnBounds="true" preserveRatio="true"
+                       onMouseClicked="#switchToBack" style="-fx-cursor:hand;"/>
+            <Label text="LearnFlex+" styleClass="logo-text"/>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox spacing="5" alignment="CENTER">
+            <Button text="Accueil"       styleClass="nav-btn" onAction="#goToAccueil"/>
+            <Button text="Cours"         styleClass="nav-btn" onAction="#goToCours"/>
+            <Button text="Évaluation"    styleClass="nav-btn" onAction="#goToEvaluation"/>
+            <Button text="Questionnaire" styleClass="nav-btn" onAction="#goToQuestionnaire"/>
+            <Button text="Orientation"   styleClass="nav-btn" onAction="#goToOrientation"/>
+            <Button text="Forum"         styleClass="nav-btn" onAction="#goToForum"/>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔐  Connexion" styleClass="btn-primary" onAction="#goToConnexion"/>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" hbarPolicy="NEVER"
+                style="-fx-background:transparent; -fx-background-color:transparent;">
+        <VBox spacing="0">
+
+            <!-- ══ HERO ══════════════════════════════════════════════════ -->
+            <VBox alignment="CENTER" spacing="12"
+                  style="-fx-background-color:linear-gradient(to bottom right,#97c3a2,#1f4f65);
+                         -fx-padding:56 40 72 40;">
+                <Button text="🏢  Voir les organismes" onAction="#goToOrganismes"
+                        style="-fx-background-color:rgba(255,255,255,0.18);
+                               -fx-text-fill:white; -fx-font-size:14px; -fx-font-weight:bold;
+                               -fx-border-color:rgba(255,255,255,0.55); -fx-border-radius:50;
+                               -fx-background-radius:50; -fx-padding:10 22; -fx-cursor:hand;"/>
+                <Label text="📅  Événements disponibles"
+                       style="-fx-font-size:34px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+                <Label text="Découvrez nos événements et formations"
+                       style="-fx-font-size:16px; -fx-text-fill:rgba(255,255,255,0.88);"/>
+            </VBox>
+
+            <!-- ══ CARDS GRID ═════════════════════════════════════════════ -->
+            <VBox style="-fx-padding:0 32 40 32; -fx-background-color:#f8f9fa;">
+                <VBox.margin><Insets top="-28"/></VBox.margin>
+
+                <!-- Ligne 1 -->
+                <HBox fx:id="cardsContainer" spacing="24" style="-fx-padding:0 0 24 0;"/>
+
+                <!-- Message si vide -->
+                <VBox fx:id="emptyBox" alignment="CENTER" spacing="16"
+                      style="-fx-background-color:white; -fx-background-radius:20;
+                             -fx-border-color:#97c3a2; -fx-border-style:dashed;
+                             -fx-border-width:2; -fx-border-radius:20;
+                             -fx-padding:80 40;" visible="false" managed="false">
+                    <Label text="📅" style="-fx-font-size:48px;"/>
+                    <Label text="Aucun événement disponible"
+                           style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#1a1a2e;"/>
+                    <Label text="Consultez-nous plus tard pour découvrir nos prochains événements"
+                           style="-fx-font-size:14px; -fx-text-fill:#666;"/>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+</VBox>

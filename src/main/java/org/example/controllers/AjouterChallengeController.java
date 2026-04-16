@@ -6,10 +6,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.Services.ServiceChallenge;
 import org.example.entities.Challenge;
-import org.example.utils.MyDatabase;
 
 import java.net.URL;
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -23,7 +22,7 @@ public class AjouterChallengeController implements Initializable {
     @FXML private TextField        fieldProgression;
     @FXML private TextField        fieldTypeRecompense;
     @FXML private TextField        fieldContenuRecompense;
-    @FXML private ComboBox<String> cbExamenId;   // ← remplacé
+    @FXML private TextField        fieldExamenId;
     @FXML private Label            lblErreur;
 
     private Challenge challengeAModifier = null;
@@ -43,31 +42,6 @@ public class AjouterChallengeController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         cbNiveau.getItems().addAll("Facile", "Moyen", "Difficile");
         cbEtat.getItems().addAll("Actif", "En attente", "Termine");
-        chargerExamens();
-    }
-
-    private void chargerExamens() {
-        cbExamenId.getItems().clear();
-        String sql = "SELECT id, titre FROM examen ORDER BY id";
-        try (Connection conn = MyDatabase.getInstance().getConnection();
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String titre = rs.getString("titre");
-                // Affiche "1 - Mathématiques" dans la ComboBox
-                cbExamenId.getItems().add(id + " - " + titre);
-            }
-
-            if (cbExamenId.getItems().isEmpty()) {
-                cbExamenId.getItems().add("Aucun examen disponible");
-                cbExamenId.setDisable(true);
-            }
-
-        } catch (SQLException e) {
-            lblErreur.setText("Erreur chargement examens : " + e.getMessage());
-        }
     }
 
     private void prefillFields() {
@@ -82,13 +56,7 @@ public class AjouterChallengeController implements Initializable {
         fieldProgression.setText(String.valueOf(challengeAModifier.getProgressionactuelle()));
         fieldTypeRecompense.setText(nvl(challengeAModifier.getTyperecomponse()));
         fieldContenuRecompense.setText(nvl(challengeAModifier.getContenurecompense()));
-
-        // Sélectionne automatiquement l'examen existant dans la ComboBox
-        int examenId = challengeAModifier.getExamen_id();
-        cbExamenId.getItems().stream()
-                .filter(item -> item.startsWith(examenId + " -"))
-                .findFirst()
-                .ifPresent(cbExamenId::setValue);
+        fieldExamenId.setText(String.valueOf(challengeAModifier.getExamen_id()));
     }
 
     private String nvl(String s) { return s != null ? s : ""; }
@@ -106,11 +74,9 @@ public class AjouterChallengeController implements Initializable {
         if (cbEtat.getValue() == null) {
             lblErreur.setText("Veuillez choisir un état."); return;
         }
-        if (cbExamenId.getValue() == null || cbExamenId.isDisable()) {
-            lblErreur.setText("Veuillez choisir un examen."); return;
-        }
 
         double objectif, progression;
+        int examenId;
 
         try { objectif = Double.parseDouble(fieldObjectif.getText().trim()); }
         catch (NumberFormatException e) { lblErreur.setText("L'objectif doit être un nombre."); return; }
@@ -118,8 +84,8 @@ public class AjouterChallengeController implements Initializable {
         try { progression = Double.parseDouble(fieldProgression.getText().trim()); }
         catch (NumberFormatException e) { lblErreur.setText("La progression doit être un nombre."); return; }
 
-        // Extrait juste le numéro avant le " - "
-        int examenId = Integer.parseInt(cbExamenId.getValue().split(" - ")[0].trim());
+        try { examenId = Integer.parseInt(fieldExamenId.getText().trim()); }
+        catch (NumberFormatException e) { lblErreur.setText("L'ID examen doit être un entier."); return; }
 
         Challenge c = (challengeAModifier != null) ? challengeAModifier : new Challenge();
         c.setTitrec(fieldTitre.getText().trim());
@@ -138,14 +104,13 @@ public class AjouterChallengeController implements Initializable {
         c.setReponses(challengeAModifier != null ? challengeAModifier.getReponses() : "[]");
 
         try {
-            if (challengeAModifier != null) serviceChallenge.modifier(c);
-            else                            serviceChallenge.ajouter(c);
-
+            if (challengeAModifier != null) {
+                serviceChallenge.modifier(c);
+            } else {
+                serviceChallenge.ajouter(c);
+            }
             if (onSuccessCallback != null) onSuccessCallback.accept(c);
             ((Stage) fieldTitre.getScene().getWindow()).close();
-
-        } catch (IllegalArgumentException ex) {
-            lblErreur.setText(ex.getMessage());        // erreur métier venant du service
         } catch (SQLException ex) {
             lblErreur.setText("Erreur BDD : " + ex.getMessage());
         }

@@ -61,14 +61,15 @@ public class AjouterCommentaireController implements Initializable {
         c.setExamen_id(examenId);
 
         try {
-            if (commentaireAModifier != null) serviceCommentaire.modifier(c);
-            else                              serviceCommentaire.ajouter(c);
+            if (commentaireAModifier != null) {
+                serviceCommentaire.modifier(c);
+            } else {
+                serviceCommentaire.ajouter(c);
+            }
 
             if (onSuccessCallback != null) onSuccessCallback.accept(c);
             ((Stage) fieldContenu.getScene().getWindow()).close();
 
-        } catch (IllegalArgumentException ex) {
-            lblErreur.setText(ex.getMessage());        // erreur métier venant du service
         } catch (SQLException ex) {
             lblErreur.setText("Erreur BDD : " + ex.getMessage());
         }

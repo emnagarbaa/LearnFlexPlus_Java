@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 
@@ -14,11 +13,7 @@
     <VBox styleClass="sidebar" prefWidth="260" minWidth="260" maxWidth="260">
 
         <!-- Logo -->
-        <HBox styleClass="sidebar-header" alignment="CENTER_LEFT" spacing="10">
-            <ImageView fx:id="logoImage" fitHeight="60" fitWidth="60"
-                       pickOnBounds="true" preserveRatio="true"
-            onMouseClicked="#goToFront"
-            style="-fx-cursor:hand;"/>
+        <HBox styleClass="sidebar-header" alignment="CENTER_LEFT">
             <HBox alignment="CENTER_LEFT" spacing="4">
                 <Label text="LearnFlex" styleClass="logo-main"/>
                 <Label text="+" styleClass="logo-highlight"/>
@@ -49,10 +44,31 @@
 
             <Button text="  Questionnaire"
                     styleClass="nav-btn" onAction="#showQuestionnaire"/>
-            <Button text="  Orientation"
-                    styleClass="nav-btn" onAction="#showOrientation"/>
+
+            <!-- Orientation avec sous-menu -->
+            <VBox>
+                <Button fx:id="btnOrientation" text="   Orientation  ▾"
+                        styleClass="nav-btn" onAction="#toggleOrientation"/>
+                <VBox fx:id="orientationSubmenu" styleClass="submenu"
+                      managed="false" visible="false">
+                    <Button fx:id="btnOrganisme" text="      🏢 Organisme"
+                            styleClass="nav-btn-sub" onAction="#showOrganisme"/>
+                    <Button fx:id="btnEvenement" text="      📅 Événement"
+                            styleClass="nav-btn-sub" onAction="#showEvenement"/>
+                </VBox>
+            </VBox>
+
             <Button text="  Forum"
                     styleClass="nav-btn" onAction="#showForum"/>
+
+            <!-- ══ Séparateur + bouton Vue Publique ══ -->
+            <Separator style="-fx-background-color:rgba(255,255,255,0.15); -fx-padding:4 0;"/>
+            <Button text="👁  Vue Publique" onAction="#switchToFront"
+                    style="-fx-background-color:rgba(151,195,162,0.25);
+                           -fx-text-fill:white; -fx-font-weight:bold;
+                           -fx-font-size:13px; -fx-cursor:hand;
+                           -fx-padding:10 16; -fx-alignment:CENTER_LEFT;"
+                    maxWidth="Infinity"/>
         </VBox>
 
         <!-- Footer -->

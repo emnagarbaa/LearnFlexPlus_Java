@@ -17,7 +17,7 @@
         <HBox alignment="CENTER_LEFT" spacing="10">
             <ImageView fx:id="logo" fitHeight="45" fitWidth="45"
                        pickOnBounds="true" preserveRatio="true"
-                       onMouseClicked="#goToAccueil" style="-fx-cursor:hand;"/>
+                       onMouseClicked="#switchToBack" style="-fx-cursor:hand;"/>
             <Label text="LearnFlex+" styleClass="logo-text"/>
         </HBox>
         <Region HBox.hgrow="ALWAYS"/>
@@ -39,13 +39,9 @@
 
             <!-- ===== HERO SECTION ===== -->
             <StackPane prefHeight="520">
-
-                <!-- Image hero -->
-                <ImageView fx:id="heroImage"
-                           fitWidth="1200" fitHeight="520"
+                <ImageView fx:id="heroImage" fitWidth="1200" fitHeight="520"
                            preserveRatio="false" pickOnBounds="true"/>
 
-                <!-- Texte aligné à GAUCHE -->
                 <HBox alignment="CENTER_LEFT" prefHeight="520" prefWidth="1200">
                     <padding><Insets top="0" right="0" bottom="0" left="80"/></padding>
 

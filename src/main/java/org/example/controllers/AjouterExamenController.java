@@ -3,12 +3,10 @@ package org.example.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.example.Services.ServiceExamen;
 import org.example.entities.Examen;
 
-import java.io.File;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -31,9 +29,10 @@ public class AjouterExamenController implements Initializable {
     @FXML private ComboBox<String> cbEtat;
     @FXML private TextField        fieldPdf;
     @FXML private Label            lblErreur;
-    @FXML private Label            lblPdfNom;
 
+    // null  = mode AJOUTER  |  non-null = mode MODIFIER
     private Examen examenAModifier = null;
+
     private Consumer<Examen> onSuccessCallback;
     private final ServiceExamen serviceExamen = new ServiceExamen();
 
@@ -41,6 +40,7 @@ public class AjouterExamenController implements Initializable {
         this.onSuccessCallback = callback;
     }
 
+    // ── Appelé depuis ExamenController pour le mode MODIFIER ─
     public void setExamen(Examen examen) {
         this.examenAModifier = examen;
         prefillFields();
@@ -53,110 +53,42 @@ public class AjouterExamenController implements Initializable {
         cbEtat.getItems().addAll("Actif", "En attente", "Termine");
     }
 
+    // ── Pré-remplissage des champs (mode MODIFIER) ────────────
     private void prefillFields() {
         if (examenAModifier == null) return;
+
         fieldTitre.setText(nvl(examenAModifier.getTitre()));
         fieldDescription.setText(nvl(examenAModifier.getDescription()));
         fieldMatiere.setText(nvl(examenAModifier.getMatiere()));
+
         if (examenAModifier.getNiveauexamen() != null)
             cbNiveau.setValue(examenAModifier.getNiveauexamen());
         if (examenAModifier.getDatedebut() != null)
             dpDebut.setValue(examenAModifier.getDatedebut().toLocalDate());
         if (examenAModifier.getDatefin() != null)
             dpFin.setValue(examenAModifier.getDatefin().toLocalDate());
+
         fieldDuree.setText(String.valueOf(examenAModifier.getDuree()));
         fieldNbQuestions.setText(String.valueOf(examenAModifier.getNbquestion()));
         fieldScoreTotal.setText(String.valueOf(examenAModifier.getScoretotal()));
         fieldCoefficient.setText(String.valueOf(examenAModifier.getCoefficient()));
+
         if (examenAModifier.getTypeexamen() != null)
             cbType.setValue(examenAModifier.getTypeexamen());
         if (examenAModifier.getEtat() != null)
             cbEtat.setValue(examenAModifier.getEtat());
-        if (examenAModifier.getPdf() != null && !examenAModifier.getPdf().isBlank()) {
-            fieldPdf.setText(examenAModifier.getPdf());
-            File f = new File(examenAModifier.getPdf());
-            lblPdfNom.setText("📄 " + f.getName());
-        }
+
+        fieldPdf.setText(nvl(examenAModifier.getPdf()));
     }
 
     private String nvl(String s) { return s != null ? s : ""; }
 
-    // ── Parcourir PDF (version améliorée) ───────────────────────
-    @FXML
-    private void handleParcourirPdf() {
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Choisir un fichier PDF");
-
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf")
-        );
-
-        Stage stage = (Stage) fieldTitre.getScene().getWindow();
-        File fichier = fileChooser.showOpenDialog(stage);
-
-        if (fichier == null) {
-            lblPdfNom.setText("❌ Aucun fichier sélectionné");
-            lblPdfNom.setStyle("-fx-text-fill:#dc2626; -fx-font-size:11px;");
-            return;
-        }
-
-        try {
-
-            // 📁 Dialogue ENREGISTREMENT (IMPORTANT)
-            FileChooser saveChooser = new FileChooser();
-            saveChooser.setTitle("Enregistrer le PDF");
-            saveChooser.setInitialFileName(fichier.getName());
-
-            File dest = saveChooser.showSaveDialog(stage);
-
-            if (dest == null) {
-                lblPdfNom.setText("❌ Enregistrement annulé");
-                lblPdfNom.setStyle("-fx-text-fill:#dc2626; -fx-font-size:11px;");
-                return;
-            }
-
-            // 📦 copie du fichier
-            java.nio.file.Files.copy(
-                    fichier.toPath(),
-                    dest.toPath(),
-                    java.nio.file.StandardCopyOption.REPLACE_EXISTING
-            );
-
-            // 🧠 infos fichier
-            long tailleKo = dest.length() / 1024;
-
-            // UI update
-            fieldPdf.setText(dest.getAbsolutePath());
-
-            lblPdfNom.setText(
-                    "✅ PDF enregistré\n" +
-                            "Nom : " + dest.getName() + "\n" +
-                            "Taille : " + tailleKo + " KB\n" +
-                            "Chemin : " + dest.getAbsolutePath()
-            );
-
-            lblPdfNom.setStyle(
-                    "-fx-text-fill:#16a34a;" +
-                            "-fx-font-size:11px;" +
-                            "-fx-wrap-text:true;"
-            );
-
-            // debug console
-            System.out.println("PDF enregistré ici : " + dest.getAbsolutePath());
-
-        } catch (Exception e) {
-            lblPdfNom.setText("❌ Erreur : " + e.getMessage());
-            lblPdfNom.setStyle("-fx-text-fill:#dc2626; -fx-font-size:11px;");
-            e.printStackTrace();
-        }
-    }
-
-    // ── Enregistrer ───────────────────────────────────────────
+    // ── Enregistrer : INSERT ou UPDATE selon le mode ──────────
     @FXML
     private void handleEnregistrer() {
         lblErreur.setText("");
 
+        // ── Validation ────────────────────────────────────────
         if (fieldTitre.getText().trim().isEmpty()) {
             lblErreur.setText("Le titre est obligatoire."); return;
         }
@@ -196,7 +128,11 @@ public class AjouterExamenController implements Initializable {
             coefficient = c.isEmpty() ? 1.0 : Double.parseDouble(c);
         } catch (NumberFormatException e) { lblErreur.setText("Le coefficient doit etre un nombre."); return; }
 
+        // ── Construction de l'objet ───────────────────────────
+        // Mode MODIFIER : on réutilise l'objet existant (conserve l'id)
+        // Mode AJOUTER  : on crée un nouvel objet
         Examen examen = (examenAModifier != null) ? examenAModifier : new Examen();
+
         examen.setTitre(fieldTitre.getText().trim());
         examen.setDescription(fieldDescription.getText().trim());
         examen.setMatiere(fieldMatiere.getText().trim());
@@ -211,13 +147,19 @@ public class AjouterExamenController implements Initializable {
         examen.setEtat(cbEtat.getValue());
         examen.setPdf(fieldPdf.getText().trim());
 
+        // ── Appel service ─────────────────────────────────────
         try {
-            if (examenAModifier != null) serviceExamen.modifier(examen);
-            else                         serviceExamen.ajouter(examen);
-            if (onSuccessCallback != null) onSuccessCallback.accept(examen);
+            if (examenAModifier != null) {
+                serviceExamen.modifier(examen);   // UPDATE
+            } else {
+                serviceExamen.ajouter(examen);    // INSERT
+            }
+
+            if (onSuccessCallback != null)
+                onSuccessCallback.accept(examen);
+
             ((Stage) fieldTitre.getScene().getWindow()).close();
-        } catch (IllegalArgumentException ex) {
-            lblErreur.setText(ex.getMessage());
+
         } catch (SQLException ex) {
             lblErreur.setText("Erreur BDD : " + ex.getMessage());
         }

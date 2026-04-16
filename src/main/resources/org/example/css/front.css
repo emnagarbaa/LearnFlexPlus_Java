@@ -235,24 +235,3 @@
 .btn-outline-dark:hover {
     -fx-background-color: rgba(26,61,79,0.1);
 }
-/* Force la couleur du texte dans la zone question */
-#questionContainer .label {
-    -fx-text-fill: #1a1a1a;
-}
-
-#questionContainer .radio-button {
-    -fx-text-fill: #1a1a1a;
-}
-
-#questionContainer .radio-button .radio {
-    -fx-border-color: #0f3d4f;
-}
-
-#questionContainer .check-box {
-    -fx-text-fill: #1a1a1a;
-}
-
-/* Fix ScrollPane viewport grisé */
-.scroll-pane > .viewport {
-    -fx-background-color: #f4f8f7;
-}

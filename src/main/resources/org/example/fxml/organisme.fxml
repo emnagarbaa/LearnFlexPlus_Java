@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<!-- Root is now StackPane so the overlay can cover the table -->
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="org.example.controllers.OrganismeController"
+           style="-fx-background-color:#f4f6f9;">
+
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════════ -->
+    <VBox spacing="0">
+
+        <!-- ══ TOOLBAR ══════════════════════════════════════════════ -->
+        <HBox alignment="CENTER_LEFT" spacing="12"
+              style="-fx-background-color:#ffffff; -fx-border-color:#e0e0e0;
+                     -fx-border-width:0 0 1 0; -fx-padding:14 20 14 20;">
+
+            <Label text="🏢  Organismes"
+                   style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <TextField fx:id="searchField" promptText="🔍  Rechercher par nom…"
+                       prefWidth="220" onKeyReleased="#onSearch"
+                       style="-fx-background-radius:20; -fx-border-radius:20;
+                              -fx-border-color:#ccc; -fx-padding:6 12;"/>
+
+            <Button text="▲ Frais" onAction="#sortAsc"
+                    style="-fx-background-color:#e8f4fd; -fx-border-color:#b8d9f0;
+                           -fx-background-radius:6; -fx-cursor:hand; -fx-padding:6 12;"/>
+            <Button text="▼ Frais" onAction="#sortDesc"
+                    style="-fx-background-color:#fef9e7; -fx-border-color:#f0d9a0;
+                           -fx-background-radius:6; -fx-cursor:hand; -fx-padding:6 12;"/>
+
+            <Button text="＋  Ajouter" onAction="#openAddDialog"
+                    style="-fx-background-color:#1f4f65; -fx-text-fill:white;
+                           -fx-font-weight:bold; -fx-background-radius:6;
+                           -fx-cursor:hand; -fx-padding:8 16;"/>
+        </HBox>
+
+        <!-- ══ TABLE ════════════════════════════════════════════════ -->
+        <TableView fx:id="table" VBox.vgrow="ALWAYS"
+                   style="-fx-background-color:transparent;">
+            <columns>
+                <TableColumn fx:id="colId"      text="ID"        prefWidth="45"/>
+                <TableColumn fx:id="colNom"     text="Nom"       prefWidth="130"/>
+                <TableColumn fx:id="colType"    text="Type"      prefWidth="110"/>
+                <TableColumn fx:id="colVille"   text="Ville"     prefWidth="90"/>
+                <TableColumn fx:id="colEmail"   text="Email"     prefWidth="150"/>
+                <TableColumn fx:id="colTel"     text="Tél."      prefWidth="110"/>
+                <TableColumn fx:id="colFrais"   text="Frais Min" prefWidth="85"/>
+                <TableColumn fx:id="colLangue"  text="Langue"    prefWidth="80"/>
+                <TableColumn fx:id="colActif"   text="Actif"     prefWidth="55"/>
+                <TableColumn fx:id="colStage"   text="Stage"     prefWidth="55"/>
+                <TableColumn fx:id="colEmploi"  text="Emploi"    prefWidth="60"/>
+                <TableColumn fx:id="colActions" text="Actions" minWidth="200" />
+            </columns>
+            <placeholder>
+                <Label text="Aucun organisme trouvé."
+                       style="-fx-text-fill:#888; -fx-font-size:14px;"/>
+            </placeholder>
+        </TableView>
+
+    </VBox>
+
+    <!-- ══ EDIT DIALOG OVERLAY — now a direct child of StackPane ════ -->
+    <StackPane fx:id="dialogOverlay" visible="false" managed="false"
+               style="-fx-background-color:rgba(0,0,0,0.45);">
+
+        <VBox maxWidth="560" spacing="16"
+              style="-fx-background-color:white; -fx-background-radius:10;
+                     -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.25),20,0,0,4);
+                     -fx-padding:28;">
+
+            <Label fx:id="dialogTitle" text="Modifier l'organisme"
+                   style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+
+            <GridPane hgap="14" vgap="11">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="130" prefWidth="140"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="Nom *"      GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight:bold;"/>
+                <TextField fx:id="fNom" promptText="Nom de l'organisme"
+                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Type *"     GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight:bold;"/>
+                <ComboBox fx:id="fType" maxWidth="Infinity"
+                          GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Ville"      GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="fVille" promptText="Ville"
+                           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Email"      GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="fEmail" promptText="email@exemple.com"
+                           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Téléphone"  GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextField fx:id="fTelephone" promptText="+216 XX XXX XXX"
+                           GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                <Label text="Site Web"   GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                <TextField fx:id="fSiteWeb" promptText="https://..."
+                           GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                <Label text="Frais Min (TND)" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                <TextField fx:id="fFraisMin" promptText="0.0"
+                           GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                <Label text="Langue"     GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+                <ComboBox fx:id="fLangue" maxWidth="Infinity"
+                          GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+                <Label text="Description" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
+                <TextArea fx:id="fDescription" prefRowCount="3"
+                          GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+
+                <Label text="Options"    GridPane.rowIndex="9" GridPane.columnIndex="0"/>
+                <HBox spacing="18" alignment="CENTER_LEFT"
+                      GridPane.rowIndex="9" GridPane.columnIndex="1">
+                    <CheckBox fx:id="fActif"              text="Actif"/>
+                    <CheckBox fx:id="fOpportunitesStage"  text="Stage"/>
+                    <CheckBox fx:id="fOpportunitesEmploi" text="Emploi"/>
+                </HBox>
+            </GridPane>
+
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <Button text="Annuler" onAction="#closeDialog"
+                        style="-fx-background-color:#e0e0e0; -fx-background-radius:6;
+                               -fx-padding:8 20; -fx-cursor:hand;"/>
+                <Button text="💾  Enregistrer" onAction="#saveOrganisme"
+                        style="-fx-background-color:#1f4f65; -fx-text-fill:white;
+                               -fx-font-weight:bold; -fx-background-radius:6;
+                               -fx-padding:8 20; -fx-cursor:hand;"/>
+            </HBox>
+        </VBox>
+    </StackPane>
+
+</StackPane>

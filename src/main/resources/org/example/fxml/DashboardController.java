@@ -1,15 +1,9 @@
-package org.example.controllers;
-import org.example.entities.Evenement;
-import org.example.entities.Organisme;
+package org.example.fxml;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class DashboardController {
@@ -117,57 +111,6 @@ public class DashboardController {
             ctrl.setDashboardController(this);
         } catch (IOException e) {
             System.err.println("❌ Erreur chargement addEvenement.fxml : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void showEditEvenement(Evenement evenement) {
-        try {
-            String path = "/org/example/fxml/EditEvenement.fxml";
-            var url = getClass().getResource(path);
-            if (url == null) { System.err.println("❌ FXML introuvable : " + path); return; }
-            FXMLLoader loader = new FXMLLoader(url);
-            mainContent.getChildren().clear();
-            mainContent.getChildren().add(loader.load());
-            EditEvenementController ctrl = loader.getController();
-            ctrl.setDashboardController(this);
-            ctrl.setEvenement(evenement);
-        } catch (IOException e) {
-            System.err.println("❌ Erreur chargement EditEvenement.fxml : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    // ── Switch vers la vue publique (front.fxml) ─────────────────────
-    @FXML
-    public void switchToFront() {
-        try {
-            var url = getClass().getResource("/org/example/fxml/front.fxml");
-            if (url == null) { System.err.println("❌ FXML introuvable : front.fxml"); return; }
-            FXMLLoader loader = new FXMLLoader(url);
-            Parent root = loader.load();
-            Stage stage = (Stage) mainContent.getScene().getWindow();
-            stage.setScene(new Scene(root, stage.getWidth(), stage.getHeight()));
-            stage.setTitle("LearnFlex+ — Vue Publique");
-            stage.show();
-        } catch (Exception e) {
-            System.err.println("❌ Erreur switch to front : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-    public void showEditOrganisme(Organisme organisme) {
-        try {
-            String path = "/org/example/fxml/editOrganisme.fxml";
-            var url = getClass().getResource(path);
-            if (url == null) { System.err.println("❌ FXML introuvable : " + path); return; }
-            FXMLLoader loader = new FXMLLoader(url);
-            mainContent.getChildren().clear();
-            mainContent.getChildren().add(loader.load());
-            EditOrganismeController ctrl = loader.getController();
-            ctrl.setDashboardController(this);
-            ctrl.setOrganisme(organisme);
-        } catch (IOException e) {
-            System.err.println("❌ Erreur chargement editOrganisme.fxml : " + e.getMessage());
             e.printStackTrace();
         }
     }
