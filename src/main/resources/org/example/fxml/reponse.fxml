@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controllers.ReponseController"
+            prefHeight="700" prefWidth="1200"
+            style="-fx-background-color: #f0f2f5;">
+
+    <!-- ═══════════════ SIDEBAR ═══════════════ -->
+    <left>
+        <VBox prefWidth="215"
+              style="-fx-background-color: #142341;">
+
+            <HBox alignment="CENTER_LEFT" spacing="4"
+                  style="-fx-padding: 20 16 16 16;
+                         -fx-border-color: rgba(255,255,255,0.08);
+                         -fx-border-width: 0 0 1 0;">
+                <Label text="LearnFlex"
+                       style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label text="+"
+                       style="-fx-text-fill: #77af84; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <VBox VBox.vgrow="ALWAYS" style="-fx-padding: 8 0;">
+                <Button text="  Dashboard" maxWidth="Infinity" alignment="CENTER_LEFT"
+                        style="-fx-background-color: transparent; -fx-text-fill: #b0bec5;
+                               -fx-font-size: 13px; -fx-padding: 11 18; -fx-border-width: 0;"/>
+                <Button text="  Utilisateurs" maxWidth="Infinity" alignment="CENTER_LEFT"
+                        style="-fx-background-color: transparent; -fx-text-fill: #b0bec5;
+                               -fx-font-size: 13px; -fx-padding: 11 18; -fx-border-width: 0;"/>
+                <Button text="  Contenu pédagogique" maxWidth="Infinity" alignment="CENTER_LEFT"
+                        style="-fx-background-color: transparent; -fx-text-fill: #b0bec5;
+                               -fx-font-size: 13px; -fx-padding: 11 18; -fx-border-width: 0;"/>
+                <Button text="  Cours" maxWidth="Infinity" alignment="CENTER_LEFT"
+                        style="-fx-background-color: transparent; -fx-text-fill: #b0bec5;
+                               -fx-font-size: 13px; -fx-padding: 11 18; -fx-border-width: 0;"/>
+                <Button text="  Matières" maxWidth="Infinity" alignment="CENTER_LEFT"
+                        style="-fx-background-color: transparent; -fx-text-fill: #b0bec5;
+                               -fx-font-size: 13px; -fx-padding: 11 18; -fx-border-width: 0;"/>
+                <Button text="  Évaluation" maxWidth="Infinity" alignment="CENTER_LEFT"
+                        style="-fx-background-color: transparent; -fx-text-fill: #b0bec5;
+                               -fx-font-size: 13px; -fx-padding: 11 18; -fx-border-width: 0;"/>
+
+                <!-- Actif -->
+                <Button text="  Questionnaire" maxWidth="Infinity" alignment="CENTER_LEFT"
+                        style="-fx-background-color: rgba(255,255,255,0.13);
+                               -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 11 18;
+                               -fx-border-color: #77af84; -fx-border-width: 0 0 0 3;"/>
+
+                <Button text="  Orientation" maxWidth="Infinity" alignment="CENTER_LEFT"
+                        style="-fx-background-color: transparent; -fx-text-fill: #b0bec5;
+                               -fx-font-size: 13px; -fx-padding: 11 18; -fx-border-width: 0;"/>
+                <Button text="  Forum" maxWidth="Infinity" alignment="CENTER_LEFT"
+                        style="-fx-background-color: transparent; -fx-text-fill: #b0bec5;
+                               -fx-font-size: 13px; -fx-padding: 11 18; -fx-border-width: 0;"/>
+            </VBox>
+
+            <VBox style="-fx-padding: 14 16;
+                         -fx-border-color: rgba(255,255,255,0.08);
+                         -fx-border-width: 1 0 0 0;">
+                <Label text="Admin User"
+                       style="-fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                <Label text="Administrateur"
+                       style="-fx-text-fill: #b0bec5; -fx-font-size: 11px;"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ═══════════════ ZONE PRINCIPALE ═══════════════ -->
+    <center>
+        <VBox spacing="0">
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="12"
+                  style="-fx-background-color: white; -fx-padding: 14 22;
+                         -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;">
+                <VBox spacing="3" HBox.hgrow="ALWAYS">
+                    <Label text="Dashboard"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #142341;"/>
+                    <Label text="Bienvenue sur la plateforme d'apprentissage LearnFlex+"
+                           style="-fx-font-size: 12px; -fx-text-fill: #607d8b;"/>
+                </VBox>
+                <TextField fx:id="searchField"
+                           promptText="Rechercher une réponse..."
+                           prefWidth="210"
+                           style="-fx-background-radius: 6; -fx-border-color: #ddd;
+                                  -fx-border-radius: 6; -fx-font-size: 13px; -fx-padding: 7 11;"/>
+                <Button text="Rechercher" onAction="#handleSearch"
+                        style="-fx-background-color: #142341; -fx-text-fill: white;
+                               -fx-background-radius: 6; -fx-font-size: 13px;
+                               -fx-padding: 7 13; -fx-border-width: 0;"/>
+                <StackPane>
+                    <Button text="🔔"
+                            style="-fx-background-color: #f5f5f5; -fx-border-color: #ddd;
+                                   -fx-border-radius: 6; -fx-background-radius: 6;
+                                   -fx-font-size: 14px; -fx-padding: 6 10;"/>
+                    <Label text="3"
+                           style="-fx-background-color: #e24b4a; -fx-text-fill: white;
+                                  -fx-font-size: 9px; -fx-padding: 1 4; -fx-background-radius: 8;"
+                           StackPane.alignment="TOP_RIGHT"
+                           translateX="5" translateY="-5"/>
+                </StackPane>
+            </HBox>
+
+            <!-- Contenu -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <content>
+                    <VBox spacing="16" style="-fx-padding: 20 22;">
+
+                        <!-- Toolbar -->
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <VBox HBox.hgrow="ALWAYS" spacing="3">
+                                <Label text="Gestion des Réponses"
+                                       style="-fx-font-size: 16px; -fx-font-weight: bold;
+                                              -fx-text-fill: #142341;"/>
+                                <Label fx:id="quizTitreLabel"
+                                       style="-fx-font-size: 12px; -fx-text-fill: #607d8b;"/>
+                            </VBox>
+
+                            <!-- Retour aux Quiz -->
+                            <Button text="← Retour aux Quiz"
+                                    onAction="#retourQuiz"
+                                    style="-fx-background-color: #6c757d; -fx-text-fill: white;
+                                           -fx-background-radius: 6; -fx-font-size: 13px;
+                                           -fx-font-weight: bold; -fx-padding: 9 16;
+                                           -fx-border-width: 0; -fx-cursor: hand;"/>
+
+                            <!-- Nouvelle Réponse -->
+                            <Button text="+ Nouvelle Réponse"
+                                    onAction="#ajouterReponse"
+                                    style="-fx-background-color: #77af84; -fx-text-fill: white;
+                                           -fx-background-radius: 6; -fx-font-size: 13px;
+                                           -fx-font-weight: bold; -fx-padding: 9 16;
+                                           -fx-border-width: 0; -fx-cursor: hand;"/>
+                        </HBox>
+
+                        <!-- Message feedback -->
+                        <Label fx:id="messageLabel"
+                               style="-fx-font-size: 13px;"
+                               visible="false"/>
+
+                        <!-- TableView -->
+                        <TableView fx:id="tableReponse" prefHeight="450"
+                                   style="-fx-background-color: white; -fx-background-radius: 8;">
+                            <columns>
+                                <TableColumn fx:id="colId"          text="ID"       prefWidth="60"/>
+                                <TableColumn fx:id="colTexte"       text="Texte"    prefWidth="350"/>
+                                <TableColumn fx:id="colEstCorrecte" text="Correcte" prefWidth="100"/>
+                                <TableColumn fx:id="colActions"     text="Actions"  prefWidth="200"/>
+                            </columns>
+                            <placeholder>
+                                <Label text="Aucune réponse trouvée pour ce quiz"
+                                       style="-fx-text-fill: #888; -fx-font-size: 14px;"/>
+                            </placeholder>
+                        </TableView>
+
+                    </VBox>
+                </content>
+            </ScrollPane>
+
+        </VBox>
+    </center>
+
+</BorderPane>

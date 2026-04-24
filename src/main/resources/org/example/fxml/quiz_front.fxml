@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.QuizFrontController"
+      stylesheets="@../css/front.css">
+
+    <!-- ================= HEADER ================= -->
+    <HBox styleClass="header" alignment="CENTER_LEFT" spacing="15">
+        <padding><Insets top="15" right="40" bottom="15" left="40"/></padding>
+
+        <Label text="LearnFlex+"
+               style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:white; -fx-cursor:hand;"
+               onMouseClicked="#goToAccueil"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <HBox spacing="5" alignment="CENTER">
+            <Button text="Accueil"       styleClass="nav-btn" onAction="#goToAccueil"/>
+            <Button text="Cours"         styleClass="nav-btn" onAction="#goToCours"/>
+            <Button text="Évaluation"    styleClass="nav-btn" onAction="#goToEvaluation"/>
+            <Button text="Questionnaire"
+                    style="-fx-background-color:rgba(255,255,255,0.25);
+                           -fx-text-fill:white;
+                           -fx-background-radius:20;
+                           -fx-border-radius:20;
+                           -fx-border-color:white;
+                           -fx-border-width:1;
+                           -fx-padding:6 14;"/>
+            <Button text="Orientation"   styleClass="nav-btn" onAction="#goToOrientation"/>
+            <Button text="Forum"         styleClass="nav-btn" onAction="#goToForum"/>
+        </HBox>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="🔐 Connexion" styleClass="btn-primary" onAction="#goToConnexion"/>
+    </HBox>
+
+    <!-- ================= CONTENU PRINCIPAL ================= -->
+    <HBox VBox.vgrow="ALWAYS">
+
+        <!-- ===== MAIN QUIZ (colonne gauche) ===== -->
+        <ScrollPane fx:id="scrollPrincipal" fitToWidth="true" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS"
+                    style="-fx-background:transparent; -fx-background-color:transparent;">
+
+            <VBox spacing="20" style="-fx-padding:30; -fx-background-color:#f0f4fa;">
+
+                <!-- FILTRE -->
+                <HBox fx:id="blocFiltres" spacing="12" alignment="CENTER_LEFT"
+                      style="-fx-background-color:white; -fx-padding:12 18;
+                     -fx-background-radius:12;
+                     -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.08), 8,0,0,2);">
+                    <Label text="🔎 Filtrer les quiz :"
+                           style="-fx-font-weight:bold; -fx-text-fill:#142341; -fx-font-size:13px;"/>
+                    <Button text="Tous"  onAction="#filtrerTous" fx:id="btnTous"
+                            style="-fx-background-color:#f0f4fa; -fx-text-fill:#142341;
+                           -fx-background-radius:20; -fx-padding:6 14; -fx-font-size:12px; -fx-cursor:hand;"/>
+                    <Button text="Java"  onAction="#filtrerJava" fx:id="btnJava"
+                            style="-fx-background-color:#e6f4ff; -fx-text-fill:#1890ff; -fx-border-color:#1890ff;
+                           -fx-border-radius:20; -fx-background-radius:20; -fx-padding:6 14;
+                           -fx-font-size:12px; -fx-cursor:hand;"/>
+                    <Button text="SQL"   onAction="#filtrerSQL"  fx:id="btnSQL"
+                            style="-fx-background-color:#fff7e6; -fx-text-fill:#d46b08; -fx-border-color:#d46b08;
+                           -fx-border-radius:20; -fx-background-radius:20; -fx-padding:6 14;
+                           -fx-font-size:12px; -fx-cursor:hand;"/>
+                </HBox>
+
+                <!-- HERO -->
+                <VBox fx:id="blocHero" alignment="CENTER" spacing="12"
+                      style="-fx-background-color:linear-gradient(to right, #081624, #0f3d4f);
+                     -fx-padding:25; -fx-background-radius:15;">
+                    <Label fx:id="lblTitre" text="Quiz"
+                           style="-fx-font-size:24px; -fx-text-fill:white; -fx-font-weight:bold;"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10" maxWidth="500">
+                        <ProgressBar fx:id="progressBar" progress="0" prefWidth="400"
+                                     style="-fx-accent:#52c41a; -fx-background-radius:10; -fx-pref-height:8;"/>
+                        <Label fx:id="lblProgression" text="1 / 1"
+                               style="-fx-text-fill:rgba(255,255,255,0.8); -fx-font-size:13px;"/>
+                    </HBox>
+                    <HBox alignment="CENTER" spacing="8">
+                        <Label text="⏱" style="-fx-font-size:16px;"/>
+                        <Label fx:id="lblTimer" text="05:00"
+                               style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#ff4d4f;
+                              -fx-background-color:white; -fx-padding:5 14; -fx-background-radius:20;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- CARTE QUESTION -->
+                <VBox fx:id="blocQuestion" spacing="15"
+                      style="-fx-background-color:white; -fx-padding:25; -fx-background-radius:15;
+                     -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,3);">
+                    <Label text="QUESTION"
+                           style="-fx-text-fill:#888; -fx-font-size:11px; -fx-font-weight:bold;"/>
+                    <Label fx:id="lblQuestion" wrapText="true"
+                           style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#142341;"/>
+                    <VBox fx:id="reponseContainer" spacing="10"/>
+                    <Button fx:id="btnValider" text="✅  Valider ma réponse" onAction="#validerReponse"
+                            style="-fx-background-color:#52c41a; -fx-text-fill:white; -fx-font-weight:bold;
+                           -fx-font-size:14px; -fx-padding:12 20; -fx-background-radius:10; -fx-cursor:hand;"
+                            maxWidth="Infinity"/>
+                </VBox>
+
+                <!-- ALERTE TEMPS -->
+                <Label fx:id="lblAlerteTemps" text="⏰ Le temps est écoulé ! Quiz terminé."
+                       visible="false" managed="false"
+                       style="-fx-background-color:rgba(220,53,69,0.9); -fx-text-fill:white;
+                      -fx-padding:10 20; -fx-background-radius:8;
+                      -fx-font-size:15px; -fx-font-weight:bold;"/>
+
+                <!-- ✅ ÉCRAN CORRECTION (caché au départ) -->
+                <VBox fx:id="ecranCorrectionContainer" spacing="16"
+                      visible="false" managed="false"/>
+
+            </VBox>
+        </ScrollPane>
+
+        <!-- ===== COLONNE HISTORIQUE DES RÉPONSES (droite) ===== -->
+        <VBox fx:id="colonneHistorique"
+              prefWidth="320" minWidth="280"
+              visible="false" managed="false"
+              style="-fx-background-color:#f8fafc;
+             -fx-border-color:#e0e7ef;
+             -fx-border-width:0 0 0 1;
+             -fx-padding:20;">
+
+            <Label text="📋  Vos réponses"
+                   style="-fx-font-size:14px;
+                  -fx-font-weight:bold;
+                  -fx-text-fill:#555;
+                  -fx-padding:0 0 12 0;"/>
+
+            <Separator style="-fx-padding:0 0 12 0;"/>
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background:transparent;
+                       -fx-background-color:transparent;">
+                <VBox fx:id="historiqueContainer" spacing="10" style="-fx-padding:4 0;"/>
+            </ScrollPane>
+
+            <Separator style="-fx-padding:10 0 8 0;"/>
+            <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding:8 0 0 0;">
+                <Label text="Score :"
+                       style="-fx-font-size:13px; -fx-text-fill:#888;"/>
+                <Label fx:id="lblScore"
+                       text="0 / 0"
+                       style="-fx-font-size:16px;
+                      -fx-font-weight:bold;
+                      -fx-text-fill:#142341;"/>
+            </HBox>
+        </VBox>
+
+    </HBox>
+
+    <!-- ================= FOOTER ================= -->
+    <HBox alignment="CENTER"
+          style="-fx-background-color:#0f3d4f; -fx-padding:15;">
+        <Label text="© 2026 LearnFlex+ — Quiz Module"
+               style="-fx-text-fill:white; -fx-font-size:13px;"/>
+    </HBox>
+
+</VBox>

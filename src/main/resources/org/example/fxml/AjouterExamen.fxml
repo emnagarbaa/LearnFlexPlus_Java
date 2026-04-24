@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.AjouterExamenController"
+      spacing="0"
+      prefWidth="620"
+      style="-fx-background-color: #f4f6fb;">
+
+    <!-- ── En-tête ── -->
+    <HBox style="-fx-background-color: #1a2540; -fx-padding: 18 24;">
+        <Label text="Ajouter un Examen"
+               style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <!-- ── Formulaire scrollable ── -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+        <VBox spacing="14" style="-fx-padding: 24; -fx-background-color: #f4f6fb;">
+
+            <!-- Titre -->
+            <VBox spacing="4">
+                <Label text="Titre *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                <TextField fx:id="fieldTitre" promptText="Ex: Examen Mathématiques S1"
+                           style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+            </VBox>
+
+            <!-- Description -->
+            <VBox spacing="4">
+                <Label text="Description" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                <TextArea fx:id="fieldDescription" promptText="Description de l'examen..."
+                          prefRowCount="3" wrapText="true"
+                          style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+            </VBox>
+
+            <!-- Matière + Niveau -->
+            <HBox spacing="14">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Matiere *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <TextField fx:id="fieldMatiere" promptText="Ex: Mathematiques"
+                               style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Niveau *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <ComboBox fx:id="cbNiveau" maxWidth="Infinity"
+                              style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Date début + Date fin -->
+            <HBox spacing="14">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Date Debut *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <DatePicker fx:id="dpDebut" maxWidth="Infinity"
+                                style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Date Fin *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <DatePicker fx:id="dpFin" maxWidth="Infinity"
+                                style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Duree + Nb Questions + Score Total + Coefficient -->
+            <HBox spacing="14">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Duree (min) *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <TextField fx:id="fieldDuree" promptText="Ex: 90"
+                               style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Nb Questions *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <TextField fx:id="fieldNbQuestions" promptText="Ex: 20"
+                               style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="14">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Score Total *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <TextField fx:id="fieldScoreTotal" promptText="Ex: 100"
+                               style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Coefficient" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <TextField fx:id="fieldCoefficient" promptText="Ex: 1.5"
+                               style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Type + Etat -->
+            <HBox spacing="14">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Type Examen *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <ComboBox fx:id="cbType" maxWidth="Infinity"
+                              style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Etat *" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                    <ComboBox fx:id="cbEtat" maxWidth="Infinity"
+                              style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6;"/>
+                </VBox>
+            </HBox>
+
+            <!-- PDF -->
+            <VBox spacing="4">
+                <Label text="PDF (chemin ou URL)" style="-fx-font-weight: bold; -fx-text-fill: #333;"/>
+                <TextField fx:id="fieldPdf" promptText="Ex: /documents/examen.pdf"
+                           style="-fx-background-color: white; -fx-border-color: #ccd; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;"/>
+            </VBox>
+
+            <!-- Message d'erreur -->
+            <Label fx:id="lblErreur" text=""
+                   style="-fx-text-fill: #dc3545; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+
+            <!-- Boutons -->
+            <HBox spacing="12" alignment="CENTER_RIGHT" style="-fx-padding: 8 0 0 0;">
+                <Button text="Annuler"
+                        onAction="#handleAnnuler"
+                        style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-padding: 9 24; -fx-background-radius: 6; -fx-cursor: hand;"/>
+                <Button text="Enregistrer"
+                        onAction="#handleEnregistrer"
+                        style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-padding: 9 24; -fx-background-radius: 6; -fx-cursor: hand;"/>
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+</VBox>

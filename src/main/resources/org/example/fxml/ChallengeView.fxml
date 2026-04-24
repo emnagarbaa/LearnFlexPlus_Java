@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.ChallengeController"
+      spacing="25" prefWidth="1000" prefHeight="700"
+      styleClass="dashboard-content"
+      stylesheets="@../css/dashboard.css">
+
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <TextField fx:id="searchField" promptText="Rechercher un challenge..."
+                   HBox.hgrow="ALWAYS" styleClass="search-input"
+                   onKeyReleased="#handleSearch"/>
+        <Button text="🔍" styleClass="search-btn" onAction="#handleSearch"/>
+        <Button text="+ Ajouter un Challenge" styleClass="btn-primary"
+                onAction="#showAddChallenge"/>
+    </HBox>
+
+    <VBox styleClass="section-box" spacing="0" VBox.vgrow="ALWAYS">
+        <TableView fx:id="challengeTable" styleClass="parcels-table"
+                   VBox.vgrow="ALWAYS" maxWidth="Infinity" prefHeight="500">
+            <columns>
+                <TableColumn fx:id="colId"          text="ID"          prefWidth="50"/>
+                <TableColumn fx:id="colTitre"       text="Titre"       prefWidth="180"/>
+                <TableColumn fx:id="colDescription" text="Description" prefWidth="200"/>
+                <TableColumn fx:id="colNiveau"      text="Niveau"      prefWidth="100"/>
+                <TableColumn fx:id="colEtat"        text="État"        prefWidth="100"/>
+                <TableColumn fx:id="colObjectif"    text="Objectif"    prefWidth="90"/>
+                <TableColumn fx:id="colProgression" text="Progression" prefWidth="100"/>
+                <TableColumn fx:id="colActions"     text="Actions"     prefWidth="180"/>
+            </columns>
+            <placeholder>
+                <Label text="Aucun challenge trouvé." styleClass="stat-label"/>
+            </placeholder>
+        </TableView>
+    </VBox>
+
+</VBox>

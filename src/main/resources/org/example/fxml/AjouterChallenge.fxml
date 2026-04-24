@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.AjouterChallengeController"
+      spacing="15" style="-fx-padding:20; -fx-min-width:450;">
+
+    <Label text="Challenge" style="-fx-font-size:16px; -fx-font-weight:bold;"/>
+
+    <Label text="Titre :"/>
+    <TextField fx:id="fieldTitre"/>
+
+    <Label text="Description :"/>
+    <TextArea fx:id="fieldDescription" prefRowCount="3" wrapText="true"/>
+
+    <Label text="Niveau de difficulté :"/>
+    <ComboBox fx:id="cbNiveau" maxWidth="Infinity"/>
+
+    <Label text="État :"/>
+    <ComboBox fx:id="cbEtat" maxWidth="Infinity"/>
+
+    <Label text="Objectif score :"/>
+    <TextField fx:id="fieldObjectif"/>
+
+    <Label text="Progression actuelle :"/>
+    <TextField fx:id="fieldProgression"/>
+
+    <Label text="Type de récompense :"/>
+    <TextField fx:id="fieldTypeRecompense"/>
+
+    <Label text="Contenu récompense :"/>
+    <TextField fx:id="fieldContenuRecompense"/>
+
+    <Label text="ID Examen lié :"/>
+    <ComboBox fx:id="cbExamenId" promptText="Choisir un examen" prefWidth="200"/>
+
+    <Label fx:id="lblErreur" style="-fx-text-fill:red;"/>
+
+    <HBox spacing="10">
+        <Button text="Enregistrer" onAction="#handleEnregistrer"
+                style="-fx-background-color:#007bff; -fx-text-fill:white;
+                       -fx-font-weight:bold; -fx-padding:8 20; -fx-background-radius:5;"/>
+        <Button text="Annuler" onAction="#handleAnnuler"
+                style="-fx-padding:8 20; -fx-background-radius:5;"/>
+    </HBox>
+
+</VBox>
