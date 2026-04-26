@@ -15,7 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import org.mindrot.jbcrypt.BCrypt;
 import javafx.stage.Stage;
+import javafx.scene.image.ImageView;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -29,7 +31,7 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private TextField visiblePasswordField;
     @FXML private Label togglePassword;
-
+    @FXML private ImageView logoImage;
     private boolean passwordVisible = false;
 
     // ---------------- INIT ----------------
@@ -38,11 +40,27 @@ public class LoginController {
         if (togglePassword != null) {
             togglePassword.setText("👁");
             togglePassword.setOnMouseClicked(e -> togglePasswordVisibility());
+            loadImage(logoImage, "/images/logo1.png");
         }
 
         if (visiblePasswordField != null && passwordField != null) {
             visiblePasswordField.textProperty()
                     .bindBidirectional(passwordField.textProperty());
+        }
+    }
+
+    private void loadImage(ImageView imageView, String path) {
+        try (var stream = getClass().getResourceAsStream(path)) {
+
+            if (stream == null) {
+                System.err.println("Image introuvable: " + path);
+                return;
+            }
+
+            imageView.setImage(new javafx.scene.image.Image(stream));
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -93,7 +111,30 @@ public class LoginController {
 
                 if (BCrypt.checkpw(password, hash)) {
 
-                    // session (ok to keep if you already use it)
+                    int userId = rs.getInt("id");
+
+                    // ── BAN CHECK ──────────────────────────────────────────
+                    Services.ServiceBan serviceBan = new Services.ServiceBan();
+                    entities.Ban activeBan = serviceBan.getActiveBan(userId);
+
+                    if (activeBan != null) {
+                        showNotification("Compte suspendu : " + activeBan.getReason(), false);
+
+                        // Show detailed ban dialog
+                        javafx.scene.control.Alert banAlert =
+                                new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                        banAlert.setTitle("Compte suspendu");
+                        banAlert.setHeaderText("Vous ne pouvez pas vous connecter.");
+                        banAlert.setContentText(
+                                "Raison  : " + activeBan.getReason() + "\n" +
+                                        "Type    : " + activeBan.getBanType()  + "\n" +
+                                        "Jusqu'à : " + activeBan.getFormattedExpiry()
+                        );
+                        banAlert.showAndWait();
+                        return; // ← stop here, do NOT navigate
+                    }
+                    // ── END BAN CHECK ──────────────────────────────────────
+
                     User user = new User(
                             rs.getInt("id"),
                             rs.getString("nom") + " " + rs.getString("prenom"),
@@ -105,7 +146,6 @@ public class LoginController {
 
                     SessionManager.login(user);
 
-                    // ✅ OLD STYLE NAVIGATION (NO SceneManager)
                     Parent root = FXMLLoader.load(
                             getClass().getResource("/fxml/Dashboard.fxml")
                     );

@@ -3,53 +3,249 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="Controllers.UserController"
-      spacing="10" style="-fx-padding: 15;">
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controllers.UserController"
+            style="-fx-background-color: #f5f7fb;">
 
-    <Label text="Gestion des utilisateurs"
-           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <!-- CENTER CARD -->
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="20"
+                  alignment="TOP_CENTER"
+                  style="-fx-padding: 25;">
 
-    <TextField fx:id="txtNom" promptText="Nom"/>
-    <Label fx:id="errNom" style="-fx-text-fill: red;"/>
+                <!-- TITLE -->
+                <Label text="Gestion des utilisateurs"
+                       style="-fx-font-size: 24px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: #1f4f65;"/>
 
-    <TextField fx:id="txtPrenom" promptText="Prénom"/>
-    <Label fx:id="errPrenom" style="-fx-text-fill: red;"/>
+                <!-- FORM CARD -->
+                <VBox spacing="12"
+                      maxWidth="600"
+                      style="-fx-background-color: white;
+                             -fx-padding: 20;
+                             -fx-background-radius: 15;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0.2, 0, 4);">
 
-    <TextField fx:id="txtEmail" promptText="Email"/>
-    <Label fx:id="errEmail" style="-fx-text-fill: red;"/>
+                    <!-- ROW 1 -->
+                    <HBox spacing="10">
+                        <TextField fx:id="txtNom" promptText="Nom" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="txtPrenom" promptText="Prénom" HBox.hgrow="ALWAYS"/>
+                    </HBox>
 
-    <ComboBox fx:id="cmbRole" promptText="Select role"/>
-    <Label fx:id="errRole" style="-fx-text-fill: red;"/>
+                    <HBox spacing="10">
+                        <Label fx:id="errNom" style="-fx-text-fill: red;"/>
+                        <Label fx:id="errPrenom" style="-fx-text-fill: red;"/>
+                    </HBox>
 
-    <PasswordField fx:id="txtPassword" promptText="Mot de passe"/>
-    <Label fx:id="errPassword" style="-fx-text-fill: red;"/>
+                    <!-- EMAIL -->
+                    <TextField fx:id="txtEmail" promptText="Email"/>
+                    <Label fx:id="errEmail" style="-fx-text-fill: red;"/>
 
-    <HBox spacing="10">
-        <Button text="Ajouter" onAction="#addUser"/>
-        <Button text="Modifier" onAction="#editUser"/>
-        <Button text="Supprimer" onAction="#deleteUser"/>
-        <Button text="Actualiser" onAction="#loadUsers"/>
-    </HBox>
-    <!-- TABLE -->
-    <TableView fx:id="usersTable" prefHeight="400">
+                    <!-- ROLE -->
+                    <ComboBox fx:id="cmbRole" promptText="Select role"/>
+                    <Label fx:id="errRole" style="-fx-text-fill: red;"/>
 
-        <columns>
-            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-            <TableColumn fx:id="colNom" text="Nom"/>
-            <TableColumn fx:id="colPrenom" text="Prénom"/>
-            <TableColumn fx:id="colEmail" text="Email"/>
-            <TableColumn fx:id="colRole" text="Rôle"/>
-        </columns>
+                    <!-- PASSWORD -->
+                    <PasswordField fx:id="txtPassword" promptText="Mot de passe"/>
+                    <Label fx:id="errPassword" style="-fx-text-fill: red;"/>
 
-    </TableView>
+                    <!-- ACTION BUTTONS -->
+                    <HBox spacing="10" alignment="CENTER">
 
-    <!-- CRUD BUTTONS -->
-    <HBox spacing="10">
+                        <Button text="Ajouter"
+                                onAction="#addUser"
+                                style="-fx-background-color: #1f4f65;
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 8;"/>
 
-        <Button text="Supprimer" onAction="#deleteUser"/>
+                        <Button text="Modifier"
+                                onAction="#editUser"
+                                style="-fx-background-color: #2e7d9f;
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 8;"/>
 
-    </HBox>
+                        <Button text="Supprimer"
+                                onAction="#deleteUser"
+                                style="-fx-background-color: #c62828;
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 8;"/>
 
-</VBox>
+                        <Button text="Actualiser"
+                                onAction="#loadUsers"
+                                style="-fx-background-color: #555;
+                                       -fx-text-fill: white;
+                                       -fx-background-radius: 8;"/>
+                    </HBox>
+
+                </VBox>
+
+                <!-- STATS CARDS -->
+                <HBox spacing="20" fillHeight="true">
+
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="👥" styleClass="stat-icon-users"/>
+                            <VBox spacing="4">
+                                <Label fx:id="lblTotalUsers" text="0" styleClass="stat-number"/>
+                                <Label text="Utilisateurs" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="🟢" styleClass="stat-icon-courses"/>
+                            <VBox spacing="4">
+                                <Label fx:id="lblAdmins" text="0" styleClass="stat-number"/>
+                                <Label text="Admins" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="🎓" styleClass="stat-icon-eval"/>
+                            <VBox spacing="4">
+                                <Label fx:id="lblStudents" text="0" styleClass="stat-number"/>
+                                <Label text="Étudiants" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="👨‍🏫" styleClass="stat-icon-quiz"/>
+                            <VBox spacing="4">
+                                <Label fx:id="lblTeachers" text="0" styleClass="stat-number"/>
+                                <Label text="Enseignants" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- BANNED STAT CARD -->
+                    <VBox styleClass="stat-card" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: #fff5f5;
+                                 -fx-border-color: #ffcdd2;
+                                 -fx-border-width: 1;
+                                 -fx-border-radius: 10;
+                                 -fx-background-radius: 10;
+                                 -fx-padding: 12;">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="🚫"/>
+                            <VBox spacing="4">
+                                <Label fx:id="lblBanned" text="0" styleClass="stat-number"
+                                       style="-fx-text-fill: #c62828;"/>
+                                <Label text="Bannis" styleClass="stat-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                </HBox>
+
+                <!-- SEARCH -->
+                <TextField fx:id="searchField"
+                           promptText="🔍 Rechercher utilisateur..."
+                           maxWidth="400"
+                           style="-fx-background-radius: 10;
+                                  -fx-padding: 8;"/>
+
+                <!-- USERS TABLE CARD -->
+                <VBox maxWidth="950"
+                      style="-fx-background-color: white;
+                             -fx-padding: 15;
+                             -fx-background-radius: 15;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.2, 0, 3);">
+
+                    <TableView fx:id="usersTable" prefHeight="340">
+                        <columns>
+                            <TableColumn fx:id="colId"     text="ID"     prefWidth="50"/>
+                            <TableColumn fx:id="colNom"    text="Nom"    prefWidth="110"/>
+                            <TableColumn fx:id="colPrenom" text="Prénom" prefWidth="110"/>
+                            <TableColumn fx:id="colEmail"  text="Email"  prefWidth="200"/>
+                            <TableColumn fx:id="colRole"   text="Rôle"   prefWidth="100"/>
+                            <!-- Status column — cell factory set in controller -->
+                            <TableColumn fx:id="colStatus" text="Statut" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+
+                </VBox>
+
+                <!-- ═══════════════════════════════════════════════════════
+                     BAN HISTORY PANEL
+                     Appears below the users table once a row is selected.
+                     ═══════════════════════════════════════════════════════ -->
+                <VBox fx:id="banHistoryPanel"
+                      maxWidth="950"
+                      spacing="10"
+                      style="-fx-background-color: white;
+                             -fx-padding: 18;
+                             -fx-background-radius: 15;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0.2, 0, 3);">
+
+                    <!-- Panel header: title + unban button -->
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+
+                        <VBox spacing="2" HBox.hgrow="ALWAYS">
+                            <Label fx:id="lblBanHistoryTitle"
+                                   text="Sélectionnez un utilisateur pour voir ses sanctions"
+                                   style="-fx-font-size: 15px;
+                                          -fx-font-weight: bold;
+                                          -fx-text-fill: #1f4f65;"/>
+                            <Label fx:id="lblBanHistorySub"
+                                   text=""
+                                   style="-fx-font-size: 12px;
+                                          -fx-text-fill: #888;"/>
+                        </VBox>
+
+                        <!-- Unban button — hidden until a banned user is selected -->
+                        <Button fx:id="btnUnban"
+                                text="✔  Lever le ban"
+                                onAction="#unbanUser"
+                                visible="false"
+                                managed="false"
+                                style="-fx-background-color: #2e7d32;
+                                       -fx-text-fill: white;
+                                       -fx-font-weight: bold;
+                                       -fx-background-radius: 8;
+                                       -fx-padding: 8 16;"/>
+
+                    </HBox>
+
+                    <!-- Divider -->
+                    <Separator/>
+
+                    <!-- Ban history table -->
+                    <TableView fx:id="banHistoryTable" prefHeight="200">
+                        <placeholder>
+                            <Label text="Aucune sanction enregistrée pour cet utilisateur."
+                                   style="-fx-text-fill: #aaa;"/>
+                        </placeholder>
+                        <columns>
+                            <TableColumn fx:id="colBanDate"
+                                         text="Date"
+                                         prefWidth="130"/>
+                            <TableColumn fx:id="colBanType"
+                                         text="Type"
+                                         prefWidth="100"/>
+                            <TableColumn fx:id="colBanReason"
+                                         text="Raison"
+                                         prefWidth="300"/>
+                            <TableColumn fx:id="colBanExpiry"
+                                         text="Expire le"
+                                         prefWidth="140"/>
+                            <TableColumn fx:id="colBanActive"
+                                         text="Actif"
+                                         prefWidth="60"/>
+                        </columns>
+                    </TableView>
+
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

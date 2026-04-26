@@ -8,9 +8,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 
 public class    SignupController {
@@ -24,12 +24,30 @@ public class    SignupController {
     @FXML private TextField ageField;
     @FXML private TextField addressField;
     @FXML private Label imageLabel;
+    @FXML private ImageView logoImage;
+
 
     private File selectedImage;
 
     @FXML
     public void initialize() {
         roleCombo.getItems().addAll("STUDENT", "TEACHER", "ADMIN");
+        loadImage(logoImage, "/images/logo1.png");
+    }
+
+    private void loadImage(ImageView imageView, String path) {
+        try (var stream = getClass().getResourceAsStream(path)) {
+
+            if (stream == null) {
+                System.err.println("Image introuvable: " + path);
+                return;
+            }
+
+            imageView.setImage(new javafx.scene.image.Image(stream));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // IMAGE PICKER

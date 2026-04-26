@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
+import javafx.scene.image.ImageView;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -20,6 +20,27 @@ public class ForgotPasswordController {
     @FXML private PasswordField newPasswordField;
     @FXML private PasswordField confirmPasswordField;
     @FXML private Label messageLabel;
+    @FXML private ImageView logoImage;
+
+    @FXML
+    public void initialize() {
+        loadImage(logoImage, "/images/logo1.png");
+    }
+
+    private void loadImage(ImageView imageView, String path) {
+        try (var stream = getClass().getResourceAsStream(path)) {
+
+            if (stream == null) {
+                System.err.println("Image introuvable: " + path);
+                return;
+            }
+
+            imageView.setImage(new javafx.scene.image.Image(stream));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void resetPassword(ActionEvent event) {
@@ -64,7 +85,8 @@ public class ForgotPasswordController {
         }
     }
 
-    private void goToLogin(ActionEvent event) {
+    @FXML
+    public void goToLogin(javafx.event.ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(
                     getClass().getResource("/fxml/login.fxml")
