@@ -1,34 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.example.controllers.ChallengeController"
-      spacing="25" prefWidth="1000" prefHeight="700"
+      spacing="25"
+      prefWidth="1100"
+      prefHeight="700"
       styleClass="dashboard-content"
       stylesheets="@../css/dashboard.css">
 
+    <!-- ===== STAT CARDS ===== -->
+    <HBox spacing="20" fillHeight="true">
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="◈" styleClass="stat-icon-green"/>
+                <VBox spacing="4">
+                    <Label fx:id="lblFacileCount" text="0" styleClass="stat-number"/>
+                    <Label text="Challenges Faciles" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="◎" styleClass="stat-icon-amber"/>
+                <VBox spacing="4">
+                    <Label fx:id="lblMoyenCount" text="0" styleClass="stat-number"/>
+                    <Label text="Challenges Moyens" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="▲" styleClass="stat-icon-red"/>
+                <VBox spacing="4">
+                    <Label fx:id="lblDifficileCount" text="0" styleClass="stat-number"/>
+                    <Label text="Challenges Difficiles" styleClass="stat-label"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <!-- ===== BARRE ACTIONS ===== -->
     <HBox alignment="CENTER_LEFT" spacing="15">
-        <TextField fx:id="searchField" promptText="Rechercher un challenge..."
-                   HBox.hgrow="ALWAYS" styleClass="search-input"
+        <TextField fx:id="searchField"
+                   promptText="Rechercher un challenge..."
+                   HBox.hgrow="ALWAYS"
+                   styleClass="search-input"
                    onKeyReleased="#handleSearch"/>
         <Button text="🔍" styleClass="search-btn" onAction="#handleSearch"/>
         <Button text="+ Ajouter un Challenge" styleClass="btn-primary"
                 onAction="#showAddChallenge"/>
     </HBox>
 
+    <!-- ===== FILTRES ===== -->
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <ToggleButton fx:id="tabTous"      text="Tous"      styleClass="tab-btn,active" onAction="#filterTous"/>
+        <ToggleButton fx:id="tabFacile"    text="Facile"    styleClass="tab-btn"        onAction="#filterFacile"/>
+        <ToggleButton fx:id="tabMoyen"     text="Moyen"     styleClass="tab-btn"        onAction="#filterMoyen"/>
+        <ToggleButton fx:id="tabDifficile" text="Difficile" styleClass="tab-btn"        onAction="#filterDifficile"/>
+    </HBox>
+
+    <!-- ===== TABLE ===== -->
     <VBox styleClass="section-box" spacing="0" VBox.vgrow="ALWAYS">
-        <TableView fx:id="challengeTable" styleClass="parcels-table"
-                   VBox.vgrow="ALWAYS" maxWidth="Infinity" prefHeight="500">
+        <TableView fx:id="challengeTable"
+                   styleClass="parcels-table"
+                   VBox.vgrow="ALWAYS"
+                   maxWidth="Infinity"
+                   prefHeight="420">
             <columns>
                 <TableColumn fx:id="colId"          text="ID"          prefWidth="50"/>
-                <TableColumn fx:id="colTitre"       text="Titre"       prefWidth="180"/>
-                <TableColumn fx:id="colDescription" text="Description" prefWidth="200"/>
-                <TableColumn fx:id="colNiveau"      text="Niveau"      prefWidth="100"/>
-                <TableColumn fx:id="colEtat"        text="État"        prefWidth="100"/>
-                <TableColumn fx:id="colObjectif"    text="Objectif"    prefWidth="90"/>
-                <TableColumn fx:id="colProgression" text="Progression" prefWidth="100"/>
-                <TableColumn fx:id="colActions"     text="Actions"     prefWidth="180"/>
+                <TableColumn fx:id="colTitre"       text="Titre"       prefWidth="150"/>
+                <TableColumn fx:id="colDescription" text="Description" prefWidth="170"/>
+                <TableColumn fx:id="colNiveau"      text="Niveau"      prefWidth="90"/>
+                <TableColumn fx:id="colEtat"        text="État"        prefWidth="90"/>
+                <TableColumn fx:id="colObjectif"    text="Objectif"    prefWidth="80"/>
+                <TableColumn fx:id="colProgression" text="Progression" prefWidth="90"/>
+                <TableColumn fx:id="colActions"     text="Actions"     prefWidth="260"/>
             </columns>
             <placeholder>
                 <Label text="Aucun challenge trouvé." styleClass="stat-label"/>

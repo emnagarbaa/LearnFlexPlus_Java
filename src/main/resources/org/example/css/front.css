@@ -234,6 +234,7 @@
 }
 .btn-outline-dark:hover {
     -fx-background-color: rgba(26,61,79,0.1);
+<<<<<<< HEAD
 }
 /* Force la couleur du texte dans la zone question */
 #questionContainer .label {
@@ -255,4 +256,6 @@
 /* Fix ScrollPane viewport grisé */
 .scroll-pane > .viewport {
     -fx-background-color: #f4f8f7;
+=======
+>>>>>>> origin/gestionContenu
 }

@@ -1,260 +1,319 @@
 package org.example.controllers;
 
-import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.geometry.Pos;
-import javafx.geometry.Insets;
 import javafx.stage.Stage;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.example.Services.ServiceCommentaire;
-import org.example.entities.Commentaire;
+import org.example.Services.ServiceReponseExamen;
 import org.example.entities.Examen;
+import org.example.entities.ReponseExamen;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class ExamenFrontController implements Initializable {
 
-    @FXML private Label  lblTitre;
-    @FXML private Label  lblMatiere;
-    @FXML private Label  lblNiveau;
-    @FXML private Label  lblDuree;
-    @FXML private Label  lblNbQuestions;
-    @FXML private Label  lblDescription;
-    @FXML private VBox   questionContainer;
-    @FXML private Button btnCommencer;
-    @FXML private VBox   heroSection;
-    @FXML private VBox   startSection;
+    @FXML
+    private Label lblTitre, lblMatiere, lblNiveau, lblDuree, lblNbQuestions, lblDescription;
+
+    @FXML
+    private VBox questionContainer, heroSection, startSection;
+
+    @FXML
+    private Button btnCommencer;
+
+    @FXML
+    private ScrollPane mainScrollPane, questionsScrollPane;
 
     private Examen examen;
+    private List<TextArea> reponsesFields = new ArrayList<>();
+    private boolean examenSoumis = false;
 
     public void setExamen(Examen examen) {
         this.examen = examen;
         lblTitre.setText(examen.getTitre());
-        lblMatiere.setText(examen.getMatiere() != null ? examen.getMatiere() : "—");
-        lblNiveau.setText(examen.getNiveauexamen() != null ? examen.getNiveauexamen() : "—");
+        lblMatiere.setText(examen.getMatiere());
+        lblNiveau.setText(examen.getNiveauexamen());
         lblDuree.setText(examen.getDuree() + " min");
         lblNbQuestions.setText(String.valueOf(examen.getNbquestion()));
-        lblDescription.setText(examen.getDescription() != null ? examen.getDescription() : "");
+        lblDescription.setText(examen.getDescription());
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Supprimer les logs PDFBox
-        java.util.logging.Logger.getLogger("org.apache.pdfbox").setLevel(java.util.logging.Level.OFF);
-        java.util.logging.Logger.getLogger("org.apache.fontbox").setLevel(java.util.logging.Level.OFF);
+        // Configuration des ScrollPanes
+        if (mainScrollPane != null) {
+            mainScrollPane.setFitToWidth(true);
+            mainScrollPane.setFitToHeight(true);
+        }
+        if (questionsScrollPane != null) {
+            questionsScrollPane.setFitToWidth(true);
+        }
     }
 
     @FXML
     private void handleCommencer() {
-        startSection.setVisible(false);
-        startSection.setManaged(false);
-        questionContainer.setVisible(true);
-        questionContainer.setManaged(true);
-
-        // ── Afficher le PDF via PDFBox 3.x ───────────────────
-        if (examen.getPdf() != null && !examen.getPdf().isBlank()) {
-            File pdfFile = new File(examen.getPdf());
-
-            Label pdfTitre = new Label("📄  Support de l'examen");
-            pdfTitre.setStyle("-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;");
-
-            VBox pdfBox = new VBox(12);
-            pdfBox.setStyle(
-                    "-fx-background-color:white; -fx-background-radius:16; " +
-                            "-fx-padding:25; -fx-border-color:#e0e0e0; " +
-                            "-fx-border-radius:16; -fx-border-width:1;");
-            pdfBox.getChildren().add(pdfTitre);
-
-            if (pdfFile.exists()) {
-                try (PDDocument document = Loader.loadPDF(pdfFile)) {
-                    PDFRenderer renderer = new PDFRenderer(document);
-                    int nbPages = document.getNumberOfPages();
-
-                    for (int page = 0; page < nbPages; page++) {
-                        BufferedImage buffImage = renderer.renderImageWithDPI(page, 150);
-                        Image fxImage = SwingFXUtils.toFXImage(buffImage, null);
-
-                        ImageView iv = new ImageView(fxImage);
-                        iv.setPreserveRatio(true);
-                        iv.setFitWidth(820);
-                        iv.setSmooth(true);
-
-                        if (nbPages > 1) {
-                            Label pageLabel = new Label("Page " + (page + 1) + " / " + nbPages);
-                            pageLabel.setStyle("-fx-font-size:11px; -fx-text-fill:#999; -fx-alignment:center;");
-                            pdfBox.getChildren().addAll(iv, pageLabel);
-                        } else {
-                            pdfBox.getChildren().add(iv);
-                        }
-                    }
-
-                } catch (Exception ex) {
-                    Label errPdf = new Label("⚠️  Erreur lors du chargement du PDF : " + ex.getMessage());
-                    errPdf.setStyle("-fx-text-fill:#dc2626; -fx-font-size:12px;");
-                    pdfBox.getChildren().add(errPdf);
-                    ex.printStackTrace();
-                }
-
-            } else {
-                Label errPdf = new Label("⚠️  PDF introuvable : " + examen.getPdf());
-                errPdf.setStyle("-fx-text-fill:#dc2626; -fx-font-size:12px;");
-                pdfBox.setStyle(
-                        "-fx-background-color:white; -fx-background-radius:16; " +
-                                "-fx-padding:25; -fx-border-color:#fca5a5; " +
-                                "-fx-border-radius:16; -fx-border-width:1;");
-                pdfBox.getChildren().add(errPdf);
-            }
-
-            questionContainer.getChildren().add(pdfBox);
+        // Cacher la section de démarrage
+        if (startSection != null) {
+            startSection.setVisible(false);
+            startSection.setManaged(false);
         }
 
-        buildQuestions();
-    }
-
-    private void buildQuestions() {
-        int nb = examen != null ? examen.getNbquestion() : 5;
-        for (int i = 1; i <= nb; i++) {
-            VBox card = new VBox(12);
-            card.setStyle(
-                    "-fx-background-color:white; -fx-background-radius:16; " +
-                            "-fx-padding:25; -fx-border-color:#e0e0e0; -fx-border-radius:16; " +
-                            "-fx-border-width:1;");
-
-            Label qLabel = new Label("Question " + i);
-            qLabel.setStyle(
-                    "-fx-font-size:13px; -fx-font-weight:bold; " +
-                            "-fx-text-fill:#97c3a2; -fx-background-color:#f0f7f4; " +
-                            "-fx-background-radius:20; -fx-padding:4 12;");
-
-            Label qText = new Label("Répondez à la question " + i + " de l'examen.");
-            qText.setStyle("-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;");
-            qText.setWrapText(true);
-
-            TextArea ta = new TextArea();
-            ta.setPromptText("Écrivez votre réponse ici...");
-            ta.setPrefRowCount(3);
-            ta.setStyle(
-                    "-fx-font-size:13px; -fx-background-radius:10; " +
-                            "-fx-border-color:#d1d5db; -fx-border-radius:10; -fx-border-width:1;");
-
-            card.getChildren().addAll(qLabel, qText, ta);
-            questionContainer.getChildren().add(card);
+        // Afficher le conteneur des questions
+        if (questionsScrollPane != null) {
+            questionsScrollPane.setVisible(true);
+            questionsScrollPane.setManaged(true);
         }
 
-        Button btnSubmit = new Button("📨  Soumettre l'examen");
-        btnSubmit.setStyle(
-                "-fx-background-color:#1f4f65; -fx-text-fill:white; " +
-                        "-fx-font-size:15px; -fx-font-weight:bold; -fx-background-radius:12; " +
-                        "-fx-padding:13 35; -fx-cursor:hand;");
-        btnSubmit.setOnAction(e -> handleSubmit());
-        VBox.setMargin(btnSubmit, new Insets(10, 0, 0, 0));
-        questionContainer.getChildren().add(btnSubmit);
-    }
+        // Nettoyer et construire les questions
+        if (questionContainer != null) {
+            questionContainer.getChildren().clear();
+            afficherPDF();
+            buildQuestions();
+        }
 
-    private void handleSubmit() {
-        questionContainer.getChildren().clear();
-
-        // ── Message de succès ─────────────────────────────────
-        VBox result = new VBox(20);
-        result.setAlignment(Pos.CENTER);
-        result.setPadding(new Insets(40));
-        result.setStyle("-fx-background-color:white; -fx-background-radius:16; -fx-padding:40;");
-
-        Label ico = new Label("✅");
-        ico.setStyle("-fx-font-size:60px;");
-
-        Label titre = new Label("Examen soumis avec succès !");
-        titre.setStyle("-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;");
-
-        Label msg = new Label("Vos réponses ont été enregistrées. Bonne chance !");
-        msg.setStyle("-fx-font-size:14px; -fx-text-fill:#666;");
-
-        Button btnFermer = new Button("✖  Fermer");
-        btnFermer.setStyle(
-                "-fx-background-color:#e5e7eb; -fx-text-fill:#374151; " +
-                        "-fx-font-size:14px; -fx-background-radius:10; -fx-padding:10 30; -fx-cursor:hand;");
-        btnFermer.setOnAction(e ->
-                ((Stage) questionContainer.getScene().getWindow()).close()
-        );
-
-        result.getChildren().addAll(ico, titre, msg, btnFermer);
-        questionContainer.getChildren().add(result);
-
-        // ── Commentaires du prof ──────────────────────────────
-        try {
-            ServiceCommentaire serviceCommentaire = new ServiceCommentaire();
-            List<Commentaire> commentaires = serviceCommentaire.recupererParExamenId(examen.getId());
-
-            if (!commentaires.isEmpty()) {
-
-                Label comTitre = new Label("💬  Commentaires du professeur");
-                comTitre.setStyle(
-                        "-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;");
-
-                VBox comContainer = new VBox(12);
-                comContainer.setStyle(
-                        "-fx-background-color:white; -fx-background-radius:16; " +
-                                "-fx-padding:25; -fx-border-color:#e0e0e0; " +
-                                "-fx-border-radius:16; -fx-border-width:1;");
-                comContainer.getChildren().add(comTitre);
-
-                for (Commentaire c : commentaires) {
-                    VBox comCard = new VBox(6);
-                    comCard.setStyle(
-                            "-fx-background-color:#f0f7f4; -fx-background-radius:12; " +
-                                    "-fx-padding:15; -fx-border-color:#97c3a2; " +
-                                    "-fx-border-radius:12; -fx-border-width:1;");
-
-                    // En-tête : auteur + date
-                    HBox header = new HBox(10);
-                    header.setAlignment(Pos.CENTER_LEFT);
-
-                    Label auteur = new Label("👤  " + c.getAuteur());
-                    auteur.setStyle(
-                            "-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;");
-
-                    Label date = new Label(c.getDatecre() != null ? c.getDatecre().toString() : "");
-                    date.setStyle("-fx-font-size:11px; -fx-text-fill:#999;");
-
-                    Region spacer = new Region();
-                    HBox.setHgrow(spacer, Priority.ALWAYS);
-                    header.getChildren().addAll(auteur, spacer, date);
-
-                    // Contenu du commentaire
-                    Label contenu = new Label(c.getContenu());
-                    contenu.setStyle("-fx-font-size:13px; -fx-text-fill:#374151;");
-                    contenu.setWrapText(true);
-
-                    // Likes
-                    Label likes = new Label("👍  " + c.getLikes());
-                    likes.setStyle("-fx-font-size:11px; -fx-text-fill:#97c3a2;");
-
-                    comCard.getChildren().addAll(header, contenu, likes);
-                    comContainer.getChildren().add(comCard);
-                }
-
-                questionContainer.getChildren().add(comContainer);
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        // Remonter en haut du scroll principal
+        if (mainScrollPane != null) {
+            mainScrollPane.setVvalue(0);
         }
     }
 
     @FXML
-    private void handleFermer() {
-        ((Stage) lblTitre.getScene().getWindow()).close();
+    private void handleFermer(ActionEvent event) {
+        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        if (stage != null) {
+            stage.close();
+        }
+    }
+
+    private void afficherPDF() {
+        if (examen == null || examen.getPdf() == null || examen.getPdf().trim().isEmpty()) {
+            return;
+        }
+
+        File pdfFile = new File(examen.getPdf());
+
+        if (!pdfFile.exists()) {
+            Label erreurLabel = new Label("❌ Fichier PDF introuvable : " + examen.getPdf());
+            erreurLabel.setStyle("-fx-text-fill: red; -fx-padding: 10;");
+            questionContainer.getChildren().add(erreurLabel);
+            return;
+        }
+
+        // TitledPane pour le PDF
+        TitledPane pdfTitledPane = new TitledPane();
+        pdfTitledPane.setText("📄 Document PDF");
+        pdfTitledPane.setExpanded(true);
+        pdfTitledPane.setStyle("-fx-font-weight: bold;");
+
+        VBox pdfBox = new VBox(10);
+        pdfBox.setPadding(new Insets(10));
+
+        try (PDDocument document = Loader.loadPDF(pdfFile)) {
+            PDFRenderer renderer = new PDFRenderer(document);
+            int maxPages = Math.min(document.getNumberOfPages(), 15);
+
+            for (int i = 0; i < maxPages; i++) {
+                BufferedImage img = renderer.renderImageWithDPI(i, 100);
+                javafx.scene.image.Image fxImage = javafx.embed.swing.SwingFXUtils.toFXImage(img, null);
+                ImageView iv = new ImageView(fxImage);
+                iv.setFitWidth(750);
+                iv.setPreserveRatio(true);
+                iv.setSmooth(true);
+                pdfBox.getChildren().add(iv);
+            }
+
+            pdfTitledPane.setContent(pdfBox);
+            questionContainer.getChildren().add(pdfTitledPane);
+
+            // Séparateur
+            Separator separator = new Separator();
+            separator.setPadding(new Insets(20, 0, 20, 0));
+            questionContainer.getChildren().add(separator);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Label erreurLabel = new Label("❌ Erreur PDF : " + e.getMessage());
+            erreurLabel.setStyle("-fx-text-fill: red;");
+            pdfBox.getChildren().add(erreurLabel);
+            pdfTitledPane.setContent(pdfBox);
+            questionContainer.getChildren().add(pdfTitledPane);
+        }
+    }
+
+    private void buildQuestions() {
+        reponsesFields.clear();
+
+        int nb = examen.getNbquestion();
+
+        if (nb <= 0) {
+            Label noQuestions = new Label("⚠️ Aucune question pour cet examen");
+            noQuestions.setStyle("-fx-text-fill: orange; -fx-padding: 20; -fx-font-size: 14px;");
+            questionContainer.getChildren().add(noQuestions);
+            return;
+        }
+
+        // Titre de section
+        Label sectionTitle = new Label("📝 QUESTIONS DE L'EXAMEN");
+        sectionTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;");
+        sectionTitle.setPadding(new Insets(10, 0, 10, 0));
+        questionContainer.getChildren().add(sectionTitle);
+
+        for (int i = 1; i <= nb; i++) {
+            VBox questionBox = new VBox(10);
+            questionBox.setStyle(
+                    "-fx-background-color: white;" +
+                            "-fx-background-radius: 12px;" +
+                            "-fx-padding: 20px;" +
+                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);"
+            );
+
+            Label qNumber = new Label("Question " + i + " / " + nb);
+            qNumber.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1f4f65;");
+
+            TextArea ta = new TextArea();
+            ta.setPromptText("Écrivez votre réponse ici...");
+            ta.setPrefRowCount(4);
+            ta.setWrapText(true);
+            ta.setStyle("-fx-font-size: 13px; -fx-font-family: 'Segoe UI';");
+
+            reponsesFields.add(ta);
+            questionBox.getChildren().addAll(qNumber, ta);
+            questionContainer.getChildren().add(questionBox);
+        }
+
+        // Bouton de soumission
+        Button btnSubmit = new Button("📤 SOUMETTRE L'EXAMEN");
+        btnSubmit.setStyle(
+                "-fx-background-color: linear-gradient(#1f4f65, #163d4f);" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 15px;" +
+                        "-fx-padding: 15px 30px;" +
+                        "-fx-background-radius: 12px;" +
+                        "-fx-cursor: hand;"
+        );
+        btnSubmit.setOnAction(e -> handleSubmit());
+        btnSubmit.setMaxWidth(Double.MAX_VALUE);
+
+        VBox.setMargin(btnSubmit, new Insets(20, 0, 10, 0));
+        questionContainer.getChildren().add(btnSubmit);
+    }
+
+    private void handleSubmit() {
+        if (examenSoumis) {
+            showAlert(Alert.AlertType.WARNING, "Examen déjà soumis", "Cet examen a déjà été soumis !");
+            return;
+        }
+
+        // Vérifier qu'au moins une réponse existe
+        boolean hasAnswer = reponsesFields.stream().anyMatch(ta -> !ta.getText().trim().isEmpty());
+
+        if (!hasAnswer) {
+            showAlert(Alert.AlertType.WARNING, "Attention", "Veuillez répondre à au moins une question.");
+            return;
+        }
+
+        // Confirmation
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirmation");
+        confirmAlert.setHeaderText("Soumettre l'examen ?");
+        confirmAlert.setContentText("Êtes-vous sûr de vouloir soumettre vos réponses ?");
+
+        if (confirmAlert.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
+            return;
+        }
+
+        // Construire les réponses
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== RÉPONSES EXAMEN ===\n");
+        sb.append("Titre: ").append(examen.getTitre()).append("\n");
+        sb.append("Date: ").append(new Timestamp(System.currentTimeMillis())).append("\n\n");
+
+        for (int i = 0; i < reponsesFields.size(); i++) {
+            String reponse = reponsesFields.get(i).getText().trim();
+            if (!reponse.isEmpty()) {
+                sb.append("Q").append(i + 1).append(":\n");
+                sb.append(reponse).append("\n");
+                sb.append("─".repeat(50)).append("\n\n");
+            }
+        }
+
+        try {
+            // ✅ UTILISATION CORRECTE DE ServiceReponseExamen ET ReponseExamen
+            ServiceReponseExamen service = new ServiceReponseExamen();
+            ReponseExamen r = new ReponseExamen(examen.getId(), 1, sb.toString());
+            r.setDateSoumission(new Timestamp(System.currentTimeMillis()));
+            service.soumettre(r);
+
+            examenSoumis = true;
+            afficherResultat();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de sauvegarder : " + e.getMessage());
+        }
+    }
+
+    private void afficherResultat() {
+        if (questionContainer != null) {
+            questionContainer.getChildren().clear();
+        }
+
+        VBox resultBox = new VBox(20);
+        resultBox.setAlignment(Pos.CENTER);
+        resultBox.setPadding(new Insets(60));
+        resultBox.setStyle("-fx-background-color: white; -fx-background-radius: 16px;");
+
+        Label icon = new Label("✅");
+        icon.setStyle("-fx-font-size: 64px;");
+
+        Label title = new Label("Examen soumis avec succès !");
+        title.setStyle("-fx-font-weight: bold; -fx-font-size: 20px; -fx-text-fill: #2e7d32;");
+
+        Label message = new Label("Vos réponses ont bien été enregistrées.");
+        message.setStyle("-fx-font-size: 14px; -fx-text-fill: #666;");
+
+        Button closeBtn = new Button("Fermer");
+        closeBtn.setStyle(
+                "-fx-background-color: #1f4f65;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 10px 25px;" +
+                        "-fx-background-radius: 8px;" +
+                        "-fx-cursor: hand;"
+        );
+        closeBtn.setOnAction(e -> {
+            Stage stage = (Stage) closeBtn.getScene().getWindow();
+            if (stage != null) stage.close();
+        });
+
+        resultBox.getChildren().addAll(icon, title, message, closeBtn);
+
+        if (questionContainer != null) {
+            questionContainer.getChildren().add(resultBox);
+        }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

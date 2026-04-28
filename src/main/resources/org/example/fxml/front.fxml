@@ -21,14 +21,57 @@
             <Label text="LearnFlex+" styleClass="logo-text"/>
         </HBox>
         <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- NAV BUTTONS -->
         <HBox spacing="5" alignment="CENTER">
             <Button text="Accueil"       styleClass="nav-btn" onAction="#goToAccueil"/>
             <Button text="Cours"         styleClass="nav-btn" onAction="#goToCours"/>
             <Button text="Évaluation"    styleClass="nav-btn" onAction="#goToEvaluation"/>
             <Button text="Questionnaire" styleClass="nav-btn" onAction="#goToQuestionnaire"/>
             <Button text="Orientation"   styleClass="nav-btn" onAction="#goToOrientation"/>
-            <Button text="Forum"         styleClass="nav-btn" onAction="#goToForum"/>
+
+            <!-- Forum avec dropdown hover -->
+            <StackPane onMouseEntered="#showForumDropdown"
+                       onMouseExited="#hideForumDropdown">
+                <Button text="Forum ▾" styleClass="nav-btn"/>
+
+                <!-- Dropdown menu -->
+                <VBox fx:id="forumDropdown"
+                      visible="false" managed="false"
+                      styleClass="forum-dropdown"
+                      style="-fx-background-color:white;
+                             -fx-border-color:#e0e0e0;
+                             -fx-border-width:1;
+                             -fx-border-radius:8;
+                             -fx-background-radius:8;
+                             -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.15),10,0,0,4);
+                             -fx-padding:6 0 6 0;"
+                      StackPane.alignment="BOTTOM_LEFT"
+                      translateY="36">
+                    <Button text="💬  Publications"
+                            onAction="#goToPublication"
+                            style="-fx-background-color:transparent;
+                                   -fx-text-fill:#1f4f65;
+                                   -fx-font-size:13px;
+                                   -fx-cursor:hand;
+                                   -fx-padding:10 20 10 20;
+                                   -fx-alignment:CENTER_LEFT;
+                                   -fx-min-width:180;"
+                            maxWidth="Infinity"/>
+                    <Button text="📢  Communication"
+                            onAction="#goToCommunication"
+                            style="-fx-background-color:transparent;
+                                   -fx-text-fill:#1f4f65;
+                                   -fx-font-size:13px;
+                                   -fx-cursor:hand;
+                                   -fx-padding:10 20 10 20;
+                                   -fx-alignment:CENTER_LEFT;
+                                   -fx-min-width:180;"
+                            maxWidth="Infinity"/>
+                </VBox>
+            </StackPane>
         </HBox>
+
         <Region HBox.hgrow="ALWAYS"/>
         <Button text="🔐  Connexion" styleClass="btn-primary" onAction="#goToConnexion"/>
     </HBox>
@@ -237,10 +280,11 @@
                     <VBox spacing="8" alignment="TOP_LEFT">
                         <Label text="Navigation"
                                style="-fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:14px;"/>
-                        <Hyperlink text="Accueil"    styleClass="footer-link" onAction="#goToAccueil"/>
-                        <Hyperlink text="Cours"      styleClass="footer-link" onAction="#goToCours"/>
-                        <Hyperlink text="Évaluation" styleClass="footer-link" onAction="#goToEvaluation"/>
-                        <Hyperlink text="Forum"      styleClass="footer-link" onAction="#goToForum"/>
+                        <Hyperlink text="Accueil"        styleClass="footer-link" onAction="#goToAccueil"/>
+                        <Hyperlink text="Cours"          styleClass="footer-link" onAction="#goToCours"/>
+                        <Hyperlink text="Évaluation"     styleClass="footer-link" onAction="#goToEvaluation"/>
+                        <Hyperlink text="Publications"   styleClass="footer-link" onAction="#goToPublication"/>
+                        <Hyperlink text="Communication"  styleClass="footer-link" onAction="#goToCommunication"/>
                     </VBox>
                     <VBox spacing="8" alignment="TOP_LEFT">
                         <Label text="Contact"

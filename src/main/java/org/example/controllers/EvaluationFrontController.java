@@ -20,6 +20,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
+import org.example.Services.ServiceReponseChallenge;
+import org.example.entities.ReponseChallenge;
 
 public class EvaluationFrontController implements Initializable {
     @FXML private Label lblTotalChallenges;

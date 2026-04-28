@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.CoursController"
+      spacing="20" style="-fx-background-color: transparent;"
+      minWidth="950">
+
+    <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
+
+    <!-- Header -->
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Button fx:id="btnBack" text="← Retour aux matières" onAction="#goBack"
+                    style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-cursor: hand;
+                           -fx-font-size: 12px; -fx-padding: 0;"/>
+            <Label fx:id="headerTitle" text="Gestion des Cours"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;"/>
+            <Label fx:id="headerSubtitle" text="Gérez les cours de cette matière"
+                   style="-fx-font-size: 13px; -fx-text-fill: #94a3b8;"/>
+        </VBox>
+        <Button fx:id="btnAdd" text="＋  Nouveau Cours" onAction="#toggleAddForm"
+                style="-fx-background-color: #97c3a2; -fx-text-fill: white; -fx-font-weight: bold;
+                       -fx-background-radius: 12; -fx-padding: 12 24; -fx-cursor: hand; -fx-font-size: 13px;"/>
+    </HBox>
+
+    <!-- Search and Filter Bar -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 4);">
+        <HBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: #f1f5f9; -fx-padding: 8 15; -fx-background-radius: 8;">
+            <Label text="🔍" style="-fx-text-fill: #94a3b8;"/>
+            <TextField fx:id="searchField" promptText="Rechercher un cours par titre..." HBox.hgrow="ALWAYS"
+                       onKeyReleased="#handleSearch"
+                       style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 13px;"/>
+        </HBox>
+        <ComboBox fx:id="filterLanguage" promptText="Filtrer par langue" onAction="#handleSearch"
+                  style="-fx-background-color: #f1f5f9; -fx-background-radius: 8; -fx-padding: 4; -fx-font-size: 13px; -fx-pref-width: 180;"/>
+        <Button text="Réinitialiser" onAction="#resetFilters"
+                style="-fx-background-color: #f1f5f9; -fx-text-fill: #64748b; -fx-background-radius: 8; -fx-padding: 8 15; -fx-cursor: hand; -fx-font-size: 13px;"/>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- Cours Grid -->
+        <ScrollPane fitToWidth="true" HBox.hgrow="ALWAYS"
+                    style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+            <FlowPane fx:id="coursGrid" hgap="25" vgap="25"
+                      style="-fx-padding: 5;"/>
+        </ScrollPane>
+
+    </HBox>
+</VBox>

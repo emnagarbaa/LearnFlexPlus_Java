@@ -65,8 +65,8 @@
         </HBox>
     </VBox>
 
-    <!-- CONTENU -->
-    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+    <!-- SCROLLPANE PRINCIPAL -->
+    <ScrollPane fx:id="mainScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS"
                 style="-fx-background:transparent; -fx-background-color:#f4f8f7;
                        -fx-border-color:transparent;">
         <VBox style="-fx-padding:30 80 30 80; -fx-background-color:#f4f8f7;" spacing="20">
@@ -74,13 +74,13 @@
             <!-- SECTION START -->
             <VBox fx:id="startSection" alignment="CENTER" spacing="20"
                   style="-fx-background-color:white; -fx-background-radius:16;
-                         -fx-padding:50; -fx-border-color:#e0e0e0;
-                         -fx-border-radius:16; -fx-border-width:1;">
+                         -fx-padding:50; -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);
+                         -fx-border-color:#e0e0e0; -fx-border-radius:16; -fx-border-width:1;">
                 <Label text="Prêt à commencer ?"
                        style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
                 <Label text="Lisez bien les questions et répondez avec soin. Une fois soumis, vous ne pourrez plus modifier vos réponses."
                        wrapText="true" alignment="CENTER" maxWidth="500"
-                       style="-fx-font-size:13px; -fx-text-fill:#666; -fx-text-alignment:CENTER;"/>
+                       style="-fx-font-size:13px; -fx-text-fill:#666;"/>
                 <HBox spacing="15" alignment="CENTER">
                     <Button fx:id="btnCommencer" text="▶  Commencer l'examen"
                             onAction="#handleCommencer"
@@ -94,9 +94,15 @@
                 </HBox>
             </VBox>
 
-            <!-- QUESTIONS (cachées au départ) -->
-            <VBox fx:id="questionContainer" spacing="20"
-                  visible="false" managed="false"/>
+            <!-- CONTENEUR DES QUESTIONS (scrollable) -->
+            <ScrollPane fx:id="questionsScrollPane" fitToWidth="true"
+                        visible="false" managed="false"
+                        style="-fx-background:transparent; -fx-background-color:transparent;
+                               -fx-border-color:transparent;">
+                <VBox fx:id="questionContainer" spacing="20"
+                      style="-fx-background-color:#f4f8f7;">
+                </VBox>
+            </ScrollPane>
 
         </VBox>
     </ScrollPane>

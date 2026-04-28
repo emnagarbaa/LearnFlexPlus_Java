@@ -2,62 +2,121 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.example.controllers.ChallengeUIController"
       prefWidth="1000" prefHeight="700"
-      stylesheets="@../css/front.css">
+      stylesheets="@../css/front.css"
+      style="-fx-background-color:#f0f4f5;">
 
-    <!-- HERO -->
-    <VBox fx:id="heroSection" alignment="CENTER" spacing="10"
-          style="-fx-background-color:#0f3d4f; -fx-padding:30 60 25 60;">
+    <!-- ══════════════════ HERO SECTION ══════════════════ -->
+    <VBox fx:id="heroSection" spacing="0"
+          style="-fx-background-color: linear-gradient(to bottom right, #0f3d4f, #1a6b7a);
+                 -fx-padding: 28 40 22 40;">
+
+        <!-- Titre + Description -->
         <Label fx:id="lblTitre"
-               style="-fx-font-size:26px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+               style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:white;
+                      -fx-font-family:'Segoe UI';"/>
         <Label fx:id="lblDescription"
-               style="-fx-font-size:13px; -fx-text-fill:rgba(255,255,255,0.75);"
-               wrapText="true" maxWidth="700"/>
-        <HBox spacing="30" alignment="CENTER" style="-fx-padding:15 0 0 0;">
+               style="-fx-font-size:13px; -fx-text-fill:rgba(255,255,255,0.72);
+                      -fx-font-family:'Segoe UI'; -fx-padding:6 0 0 0;"
+               wrapText="true" maxWidth="680"/>
+
+        <!-- Stats cards -->
+        <HBox spacing="14" alignment="CENTER_LEFT"
+              style="-fx-padding:18 0 0 0;">
+
+            <!-- Objectif -->
             <VBox alignment="CENTER" spacing="3"
-                  style="-fx-background-color:rgba(255,255,255,0.15); -fx-background-radius:10; -fx-padding:10 20 10 20;">
+                  style="-fx-background-color:rgba(255,255,255,0.13);
+                         -fx-background-radius:10; -fx-border-color:rgba(255,255,255,0.2);
+                         -fx-border-radius:10; -fx-border-width:0.5;
+                         -fx-padding:10 22 10 22; -fx-min-width:90;">
                 <Label fx:id="lblObjectif"
-                       style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+                       style="-fx-font-size:20px; -fx-font-weight:bold;
+                              -fx-text-fill:white; -fx-font-family:'Segoe UI';"/>
                 <Label text="Objectif"
-                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.7);"/>
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.6);
+                              -fx-font-family:'Segoe UI';"/>
             </VBox>
+
+            <!-- Score -->
             <VBox alignment="CENTER" spacing="3"
-                  style="-fx-background-color:rgba(255,255,255,0.15); -fx-background-radius:10; -fx-padding:10 20 10 20;">
-                <Label fx:id="lblScore"  text="0"
-                       style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#4ade80;"/>
+                  style="-fx-background-color:rgba(255,255,255,0.13);
+                         -fx-background-radius:10; -fx-border-color:rgba(255,255,255,0.2);
+                         -fx-border-radius:10; -fx-border-width:0.5;
+                         -fx-padding:10 22 10 22; -fx-min-width:90;">
+                <Label fx:id="lblScore" text="0"
+                       style="-fx-font-size:20px; -fx-font-weight:bold;
+                              -fx-text-fill:#4ade80; -fx-font-family:'Segoe UI';"/>
                 <Label text="Score"
-                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.7);"/>
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.6);
+                              -fx-font-family:'Segoe UI';"/>
             </VBox>
+
+            <!-- Timer -->
             <VBox alignment="CENTER" spacing="3"
-                  style="-fx-background-color:rgba(255,255,255,0.15); -fx-background-radius:10; -fx-padding:10 20 10 20;">
+                  style="-fx-background-color:rgba(255,255,255,0.13);
+                         -fx-background-radius:10; -fx-border-color:rgba(255,255,255,0.2);
+                         -fx-border-radius:10; -fx-border-width:0.5;
+                         -fx-padding:10 22 10 22; -fx-min-width:90;">
                 <Label fx:id="lblTimer" text="60s"
-                       style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#facc15;"/>
+                       style="-fx-font-size:20px; -fx-font-weight:bold;
+                              -fx-text-fill:#facc15; -fx-font-family:'Segoe UI';"/>
                 <Label text="Temps"
-                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.7);"/>
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.6);
+                              -fx-font-family:'Segoe UI';"/>
             </VBox>
+
+            <!-- Numéro question -->
             <VBox alignment="CENTER" spacing="3"
-                  style="-fx-background-color:rgba(255,255,255,0.15); -fx-background-radius:10; -fx-padding:10 20 10 20;">
+                  style="-fx-background-color:rgba(255,255,255,0.13);
+                         -fx-background-radius:10; -fx-border-color:rgba(255,255,255,0.2);
+                         -fx-border-radius:10; -fx-border-width:0.5;
+                         -fx-padding:10 22 10 22; -fx-min-width:90;">
                 <Label fx:id="lblQuestion" text="1/?"
-                       style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+                       style="-fx-font-size:20px; -fx-font-weight:bold;
+                              -fx-text-fill:white; -fx-font-family:'Segoe UI';"/>
                 <Label text="Question"
-                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.7);"/>
+                       style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.6);
+                              -fx-font-family:'Segoe UI';"/>
             </VBox>
         </HBox>
+
+        <!-- Barre de progression -->
+        <VBox style="-fx-padding:14 0 0 0;" spacing="4">
+            <ProgressBar fx:id="progressBar" progress="0.0"
+                         prefWidth="500" prefHeight="5"
+                         style="-fx-accent:#4ade80;
+                                -fx-background-color:rgba(255,255,255,0.18);
+                                -fx-background-radius:999; -fx-control-inner-background:rgba(255,255,255,0.18);"/>
+            <Label fx:id="lblProgress" text="0% complété"
+                   style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.5);
+                          -fx-font-family:'Segoe UI';"/>
+        </VBox>
     </VBox>
 
-    <!-- ZONE QUESTION -->
+    <!-- ══════════════════ ZONE QUESTION ══════════════════ -->
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
-                style="-fx-background:white; -fx-background-color:#f4f8f7;
-                   -fx-border-color:transparent;">
-        <VBox style="-fx-padding:30 100 30 100; -fx-background-color:#f4f8f7;">
-            <VBox fx:id="questionContainer" spacing="15"
-                  style="-fx-background-color:white; -fx-background-radius:16;
-                     -fx-padding:30; -fx-border-color:#e0e0e0;
-                     -fx-border-radius:16; -fx-border-width:1;
-                     -fx-text-fill:#1a1a1a;"/>
+                style="-fx-background:transparent; -fx-background-color:transparent;
+                       -fx-border-color:transparent; -fx-padding:0;">
+        <VBox style="-fx-padding:28 60 28 60; -fx-background-color:#f0f4f5;"
+              spacing="0">
+
+            <!-- Carte question -->
+            <VBox fx:id="questionContainer" spacing="18"
+                  style="-fx-background-color:white;
+                         -fx-background-radius:14;
+                         -fx-border-color:#e2e8ec;
+                         -fx-border-radius:14;
+                         -fx-border-width:0.5;
+                         -fx-padding:28 28 22 28;
+                         -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.07), 12, 0, 0, 3);">
+            </VBox>
+
         </VBox>
     </ScrollPane>
+
 </VBox>

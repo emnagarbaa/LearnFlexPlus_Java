@@ -39,14 +39,13 @@ public class EvenementService {
             ps.executeUpdate();
         }
     }
-
-    // ── READ ALL ──────────────────────────────────────────────────────
+//récupérer tous les événements de la base de données.
     public List<Evenement> findAll() throws SQLException {
         return runQuery(
                 "SELECT e.*, o.nom as orgNom FROM evenement e " +
                         "LEFT JOIN organisme o ON e.organisme_id = o.id ORDER BY e.id");
     }
-
+//rs.next() avance ligne par ligne. map(rs) convertit chaque ligne SQL en objet Evenement Java et l'ajoute à la liste.
     // ── SEARCH by titre ───────────────────────────────────────────────
     public List<Evenement> search(String keyword) throws SQLException {
         List<Evenement> list = new ArrayList<>();

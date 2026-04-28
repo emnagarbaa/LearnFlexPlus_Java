@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.LeaderboardController"
+      spacing="0" prefWidth="660" prefHeight="620"
+      style="-fx-background-color:#ffffff; -fx-padding:28 24 24 24;">
+
+    <Label fx:id="lblTitre"
+           text="Leaderboard"
+           style="-fx-font-size:20px; -fx-font-weight:bold;
+                  -fx-text-fill:#BA7517; -fx-alignment:CENTER;"
+           maxWidth="Infinity"/>
+
+    <Label fx:id="lblSousTitre"
+           text="Challenge : —"
+           style="-fx-font-size:13px; -fx-text-fill:#888888;
+                  -fx-padding:4 0 20 0; -fx-alignment:CENTER;"
+           maxWidth="Infinity"/>
+
+    <!-- Podium top 3 -->
+    <VBox fx:id="podiumContainer" alignment="CENTER" spacing="0">
+        <VBox.margin><Insets bottom="20"/></VBox.margin>
+    </VBox>
+
+    <!-- Liste rang 4+ -->
+    <VBox fx:id="listContainer" spacing="0" VBox.vgrow="ALWAYS"/>
+
+    <HBox alignment="CENTER_RIGHT">
+        <VBox.margin><Insets top="16"/></VBox.margin>
+        <Button text="Fermer" onAction="#handleFermer"
+                style="-fx-background-color:#ffffff; -fx-text-fill:#6b7280;
+                       -fx-font-size:13px; -fx-border-color:#d1d5db;
+                       -fx-border-width:1; -fx-border-radius:6;
+                       -fx-background-radius:6; -fx-padding:7 20; -fx-cursor:hand;"/>
+    </HBox>
+
+</VBox>

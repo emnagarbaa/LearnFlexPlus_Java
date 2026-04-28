@@ -1,4 +1,5 @@
 package org.example.controllers;
+
 import org.example.entities.Evenement;
 import org.example.entities.Organisme;
 
@@ -17,6 +18,8 @@ public class DashboardController {
     @FXML private StackPane mainContent;
     @FXML private VBox evaluationSubmenu;
     @FXML private VBox orientationSubmenu;
+    @FXML private VBox contenuSubmenu;   // ← ajouté
+    @FXML private VBox forumSubmenu;     // ← ajouté
 
     private void loadPage(String fxmlFile) {
         try {
@@ -41,6 +44,18 @@ public class DashboardController {
     @FXML public void showForum()         { loadPage("forum.fxml"); }
     @FXML public void logout()            { System.exit(0); }
 
+    // ── Sous-menu Contenu pédagogique ─────────────────────
+    @FXML
+    public void toggleContenu() {
+        boolean v = contenuSubmenu.isVisible();
+        contenuSubmenu.setVisible(!v);
+        contenuSubmenu.setManaged(!v);
+    }
+
+    @FXML public void showMatiere() { loadPage("matiere.fxml"); }
+    @FXML public void showCours()   { loadPage("cours.fxml"); }
+
+    // ── Sous-menu Évaluation ──────────────────────────────
     @FXML
     public void toggleEvaluation() {
         boolean v = evaluationSubmenu.isVisible();
@@ -48,6 +63,7 @@ public class DashboardController {
         evaluationSubmenu.setManaged(!v);
     }
 
+    // ── Sous-menu Orientation ─────────────────────────────
     @FXML
     public void toggleOrientation() {
         boolean v = orientationSubmenu.isVisible();
@@ -55,6 +71,18 @@ public class DashboardController {
         orientationSubmenu.setManaged(!v);
     }
 
+    // ── Sous-menu Forum ───────────────────────────────────
+    @FXML
+    public void toggleForum() {
+        boolean v = forumSubmenu.isVisible();
+        forumSubmenu.setVisible(!v);
+        forumSubmenu.setManaged(!v);
+    }
+
+    @FXML public void showPublication()   { loadPage("publication.fxml"); }
+    @FXML public void showCommunication() { loadPage("communication.fxml"); }
+
+    // ── Organisme ─────────────────────────────────────────
     @FXML
     public void showOrganisme() {
         try {
@@ -88,6 +116,24 @@ public class DashboardController {
         }
     }
 
+    public void showEditOrganisme(Organisme organisme) {
+        try {
+            String path = "/org/example/fxml/editOrganisme.fxml";
+            var url = getClass().getResource(path);
+            if (url == null) { System.err.println("❌ FXML introuvable : " + path); return; }
+            FXMLLoader loader = new FXMLLoader(url);
+            mainContent.getChildren().clear();
+            mainContent.getChildren().add(loader.load());
+            EditOrganismeController ctrl = loader.getController();
+            ctrl.setDashboardController(this);
+            ctrl.setOrganisme(organisme);
+        } catch (IOException e) {
+            System.err.println("❌ Erreur chargement editOrganisme.fxml : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // ── Événement ─────────────────────────────────────────
     @FXML
     public void showEvenement() {
         try {
@@ -138,7 +184,7 @@ public class DashboardController {
         }
     }
 
-    // ── Switch vers la vue publique (front.fxml) ─────────────────────
+    // ── Vue Publique ──────────────────────────────────────
     @FXML
     public void switchToFront() {
         try {
@@ -155,27 +201,14 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
-    public void showEditOrganisme(Organisme organisme) {
-        try {
-            String path = "/org/example/fxml/editOrganisme.fxml";
-            var url = getClass().getResource(path);
-            if (url == null) { System.err.println("❌ FXML introuvable : " + path); return; }
-            FXMLLoader loader = new FXMLLoader(url);
-            mainContent.getChildren().clear();
-            mainContent.getChildren().add(loader.load());
-            EditOrganismeController ctrl = loader.getController();
-            ctrl.setDashboardController(this);
-            ctrl.setOrganisme(organisme);
-        } catch (IOException e) {
-            System.err.println("❌ Erreur chargement editOrganisme.fxml : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
+    // ── Initialisation ────────────────────────────────────
     @FXML
     public void initialize() {
         mainContent.getChildren().clear();
         if (evaluationSubmenu  != null) { evaluationSubmenu.setVisible(false);  evaluationSubmenu.setManaged(false); }
         if (orientationSubmenu != null) { orientationSubmenu.setVisible(false); orientationSubmenu.setManaged(false); }
+        if (contenuSubmenu     != null) { contenuSubmenu.setVisible(false);     contenuSubmenu.setManaged(false); }
+        if (forumSubmenu       != null) { forumSubmenu.setVisible(false);       forumSubmenu.setManaged(false); }
     }
 }

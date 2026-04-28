@@ -36,6 +36,7 @@ public class AjouterChallengeController implements Initializable {
 
     public void setChallenge(Challenge c) {
         this.challengeAModifier = c;
+        //remplir le formulaire
         prefillFields();
     }
 
@@ -47,12 +48,14 @@ public class AjouterChallengeController implements Initializable {
     }
 
     private void chargerExamens() {
+        //vider la comboBox
         cbExamenId.getItems().clear();
         String sql = "SELECT id, titre FROM examen ORDER BY id";
         try (Connection conn = MyDatabase.getInstance().getConnection();
              Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
+            //Parcourir les résultats et remplir la ComboBox
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String titre = rs.getString("titre");
@@ -69,8 +72,9 @@ public class AjouterChallengeController implements Initializable {
             lblErreur.setText("Erreur chargement examens : " + e.getMessage());
         }
     }
-
+    //remplit automatiquement tous les champs
     private void prefillFields() {
+        //Remplir les champs texte simples
         if (challengeAModifier == null) return;
         fieldTitre.setText(nvl(challengeAModifier.getTitrec()));
         fieldDescription.setText(nvl(challengeAModifier.getDescriptionc()));
@@ -90,7 +94,7 @@ public class AjouterChallengeController implements Initializable {
                 .findFirst()
                 .ifPresent(cbExamenId::setValue);
     }
-
+    //retourne :la chaîne telle quelle si elle n'est pas null une chaîne vide "" si elle est null
     private String nvl(String s) { return s != null ? s : ""; }
 
     @FXML

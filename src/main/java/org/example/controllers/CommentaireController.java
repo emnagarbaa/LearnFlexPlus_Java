@@ -23,8 +23,10 @@ import java.util.ResourceBundle;
 
 public class CommentaireController implements Initializable {
 
-    @FXML private Label                          lblTitreExamen;
-    @FXML private TableView<Commentaire>         commentaireTable;
+    private static final String ETUDIANT_EMAIL = "emnagarbaa200@gmail.com";
+
+    @FXML private Label                             lblTitreExamen;
+    @FXML private TableView<Commentaire>            commentaireTable;
     @FXML private TableColumn<Commentaire, String>  colContenu;
     @FXML private TableColumn<Commentaire, String>  colAuteur;
     @FXML private TableColumn<Commentaire, String>  colDate;
@@ -52,9 +54,13 @@ public class CommentaireController implements Initializable {
             private final Button btnSupprimer = new Button("Supprimer");
             private final HBox   box          = new HBox(6, btnModifier, btnSupprimer);
             {
-                btnModifier.setStyle("-fx-background-color:#007bff; -fx-text-fill:white; -fx-font-size:11px; -fx-font-weight:bold; -fx-padding:4 10; -fx-background-radius:5;");
-                btnSupprimer.setStyle("-fx-background-color:#dc3545; -fx-text-fill:white; -fx-font-size:11px; -fx-font-weight:bold; -fx-padding:4 10; -fx-background-radius:5;");
-                btnModifier.setOnAction(e -> ouvrirFormulaire(getTableView().getItems().get(getIndex())));
+                btnModifier.setStyle(
+                        "-fx-background-color:#007bff; -fx-text-fill:white; -fx-font-size:11px;" +
+                                "-fx-font-weight:bold; -fx-padding:4 10; -fx-background-radius:5;");
+                btnSupprimer.setStyle(
+                        "-fx-background-color:#dc3545; -fx-text-fill:white; -fx-font-size:11px;" +
+                                "-fx-font-weight:bold; -fx-padding:4 10; -fx-background-radius:5;");
+                btnModifier .setOnAction(e -> ouvrirFormulaire(getTableView().getItems().get(getIndex())));
                 btnSupprimer.setOnAction(e -> supprimer(getTableView().getItems().get(getIndex())));
             }
             @Override
@@ -86,6 +92,7 @@ public class CommentaireController implements Initializable {
             Parent root = loader.load();
             AjouterCommentaireController ctrl = loader.getController();
             ctrl.setExamenId(examen.getId());
+            ctrl.setTitreExamen(examen.getTitre());  // passe le titre pour l'email
             if (commentaire != null) ctrl.setCommentaire(commentaire);
             ctrl.setOnSuccessCallback(c -> loadCommentaires());
             Stage stage = new Stage();

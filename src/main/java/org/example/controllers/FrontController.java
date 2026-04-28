@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class FrontController {
@@ -16,6 +17,7 @@ public class FrontController {
     @FXML private ImageView serviceImage1;
     @FXML private ImageView serviceImage2;
     @FXML private ImageView serviceImage3;
+    @FXML private VBox forumDropdown;
 
     @FXML
     public void initialize() {
@@ -35,20 +37,49 @@ public class FrontController {
         imageView.setImage(new Image(stream));
     }
 
-    @FXML private void goToCours()         { navigateTo("/org/example/fxml/cours.fxml",           "Cours"); }
-    @FXML private void explorerCours()     { navigateTo("/org/example/fxml/cours.fxml",           "Cours"); }
-    @FXML private void voirCours()         { navigateTo("/org/example/fxml/cours.fxml",           "Cours"); }
-    @FXML private void passerQuiz()        { navigateTo("/org/example/fxml/ExamenView.fxml",      "Examens"); }
-    @FXML private void accederForum()      { navigateTo("/org/example/fxml/forum.fxml",           "Forum"); }
-    @FXML private void goToConnexion()     { navigateTo("/org/example/fxml/login.fxml",           "Connexion"); }
+    // ── Navigation principale ─────────────────────────────────────────
+    @FXML private void goToCours()         { navigateTo("/org/example/fxml/EtudiantCoursView.fxml", "Catalogue des Cours"); }
+    @FXML private void explorerCours()     { navigateTo("/org/example/fxml/EtudiantCoursView.fxml", "Catalogue des Cours"); }
+    @FXML private void voirCours()         { navigateTo("/org/example/fxml/EtudiantCoursView.fxml", "Catalogue des Cours"); }
+    @FXML private void passerQuiz()        { navigateTo("/org/example/fxml/ExamenView.fxml",               "Examens"); }
+    @FXML private void goToConnexion()     { navigateTo("/org/example/fxml/login.fxml",                    "Connexion"); }
     @FXML private void goToAccueil()       {}
-    @FXML private void goToEvaluation()    { navigateTo("/org/example/fxml/EvaluationFront.fxml", "Évaluation"); }
-    @FXML private void goToQuestionnaire() { navigateTo("/org/example/fxml/questionnaire.fxml",   "Questionnaire"); }
-    @FXML private void goToForum()         { navigateTo("/org/example/fxml/forum.fxml",           "Forum"); }
+    @FXML private void goToEvaluation()    { navigateTo("/org/example/fxml/EvaluationFront.fxml",          "Évaluation"); }
+    @FXML private void goToQuestionnaire() { navigateTo("/org/example/fxml/quiz_front.fxml",            "Questionnaire"); }
+    @FXML private void goToOrientation()   { navigateTo("/org/example/fxml/OrientationFront.fxml",         "Orientation"); }
+
+    // ── Sous-menu Forum ───────────────────────────────────────────────
+    @FXML
+    private void showForumDropdown() {
+        if (forumDropdown != null) {
+            forumDropdown.setVisible(true);
+            forumDropdown.setManaged(true);
+        }
+    }
 
     @FXML
-    private void goToOrientation() {
-        navigateTo("/org/example/fxml/OrientationFront.fxml", "Orientation");
+    private void hideForumDropdown() {
+        if (forumDropdown != null) {
+            forumDropdown.setVisible(false);
+            forumDropdown.setManaged(false);
+        }
+    }
+
+    @FXML
+    private void goToPublication() {
+        hideForumDropdown();
+        navigateTo("/org/example/fxml/PublicationsFrontPage.fxml", "Publications");
+    }
+
+    @FXML
+    private void goToCommunication() {
+        hideForumDropdown();
+        navigateTo("/org/example/fxml/CommunicationsFrontPage.fxml", "Communication");
+    }
+
+    // gardé pour compatibilité avec accederForum dans les services
+    @FXML private void accederForum() {
+        navigateTo("/org/example/fxml/PublicationsFrontPage.fxml", "Publications");
     }
 
     // ── Switch vers le back-office au clic sur le logo ───────────────

@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.example.Services.EmailService;
 import org.example.Services.ServiceCommentaire;
 import org.example.entities.Commentaire;
 
@@ -19,13 +20,18 @@ public class AjouterCommentaireController implements Initializable {
     @FXML private TextField fieldAuteur;
     @FXML private Label     lblErreur;
 
-    private Commentaire commentaireAModifier = null;
-    private int examenId;
-    private Consumer<Commentaire> onSuccessCallback;
-    private final ServiceCommentaire serviceCommentaire = new ServiceCommentaire();
+    private Commentaire              commentaireAModifier = null;
+    private int                      examenId;
+    private String                   titreExamen          = "";
+    private Consumer<Commentaire>    onSuccessCallback;
+    private final ServiceCommentaire serviceCommentaire   = new ServiceCommentaire();
 
     public void setExamenId(int examenId) {
         this.examenId = examenId;
+    }
+
+    public void setTitreExamen(String titreExamen) {
+        this.titreExamen = (titreExamen != null) ? titreExamen : "";
     }
 
     public void setOnSuccessCallback(Consumer<Commentaire> callback) {
@@ -52,23 +58,36 @@ public class AjouterCommentaireController implements Initializable {
             lblErreur.setText("L'auteur est obligatoire."); return;
         }
 
-        Commentaire c = (commentaireAModifier != null) ? commentaireAModifier : new Commentaire();
+        boolean isNew = (commentaireAModifier == null);
+
+        Commentaire c = isNew ? new Commentaire() : commentaireAModifier;
         c.setContenu(fieldContenu.getText().trim());
         c.setAuteur(fieldAuteur.getText().trim());
         c.setDatecre(new Date(System.currentTimeMillis()));
         c.setNbvue(0);
-        c.setLikes(commentaireAModifier != null ? commentaireAModifier.getLikes() : 0);
+        c.setLikes(isNew ? 0 : commentaireAModifier.getLikes());
         c.setExamen_id(examenId);
 
         try {
-            if (commentaireAModifier != null) serviceCommentaire.modifier(c);
-            else                              serviceCommentaire.ajouter(c);
+            if (!isNew) {
+                serviceCommentaire.modifier(c);
+            } else {
+                serviceCommentaire.ajouter(c);
+
+                // ── Email envoyé uniquement lors d'un AJOUT ──────
+                new Thread(() ->
+                        EmailService.envoyerFeedback(
+                                "emnagarbaa200@gmail.com",
+                                titreExamen
+                        )
+                ).start();
+            }
 
             if (onSuccessCallback != null) onSuccessCallback.accept(c);
             ((Stage) fieldContenu.getScene().getWindow()).close();
 
         } catch (IllegalArgumentException ex) {
-            lblErreur.setText(ex.getMessage());        // erreur métier venant du service
+            lblErreur.setText(ex.getMessage());
         } catch (SQLException ex) {
             lblErreur.setText("Erreur BDD : " + ex.getMessage());
         }

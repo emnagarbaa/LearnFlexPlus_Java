@@ -58,4 +58,5 @@ public class Organisme {
     public void setOpportunitesEmploi(boolean b){ this.opportunitesEmploi = b; }
     public String getPhoto()                   { return photo; }
     public void setPhoto(String p)             { this.photo = p; }
+
 }

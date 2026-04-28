@@ -26,8 +26,19 @@
                     styleClass="nav-btn,active" onAction="#showDashboard"/>
             <Button fx:id="btnUsers" text="  Utilisateurs"
                     styleClass="nav-btn" onAction="#showUtilisateurs"/>
-            <Button fx:id="btnContenu" text="  Contenu pédagogique"
-                    styleClass="nav-btn" onAction="#showContenu"/>
+
+            <!-- Contenu pédagogique avec sous-menu -->
+            <VBox>
+                <Button text="  Contenu pédagogique  ▾"
+                        styleClass="nav-btn" onAction="#toggleContenu"/>
+                <VBox fx:id="contenuSubmenu" styleClass="submenu"
+                      managed="false" visible="false">
+                    <Button text="      📘 Matières"
+                            styleClass="nav-btn-sub" onAction="#showMatiere"/>
+                    <Button text="      🎓 Cours"
+                            styleClass="nav-btn-sub" onAction="#showCours"/>
+                </VBox>
+            </VBox>
 
             <!-- Evaluation avec sous-menu -->
             <VBox>
@@ -58,8 +69,18 @@
                 </VBox>
             </VBox>
 
-            <Button text="  Forum"
-                    styleClass="nav-btn" onAction="#showForum"/>
+            <!-- Forum avec sous-menu -->
+            <VBox>
+                <Button text="  Forum  ▾"
+                        styleClass="nav-btn" onAction="#toggleForum"/>
+                <VBox fx:id="forumSubmenu" styleClass="submenu"
+                      managed="false" visible="false">
+                    <Button text="      💬 Publications"
+                            styleClass="nav-btn-sub" onAction="#showPublication"/>
+                    <Button text="      📢 Communication"
+                            styleClass="nav-btn-sub" onAction="#showCommunication"/>
+                </VBox>
+            </VBox>
 
             <!-- ══ Séparateur + bouton Vue Publique ══ -->
             <Separator style="-fx-background-color:rgba(255,255,255,0.15); -fx-padding:4 0;"/>

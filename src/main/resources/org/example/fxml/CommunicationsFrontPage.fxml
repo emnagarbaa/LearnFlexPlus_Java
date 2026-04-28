@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.controllers.FrontCommunicationController"
+      spacing="0" style="-fx-background-color: #f8fafc;">
+
+    <!-- ===== NAVBAR ===== -->
+    <HBox alignment="CENTER_LEFT" spacing="15"
+          style="-fx-background-color: #1f4f65; -fx-padding: 12 30 12 30;">
+
+        <HBox alignment="CENTER_LEFT" spacing="10"
+              onMouseClicked="#goToAccueil" style="-fx-cursor: hand;">
+            <ImageView fx:id="logo" fitHeight="45" fitWidth="45"
+                       pickOnBounds="true" preserveRatio="true"/>
+            <Label text="LearnFlex+"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+        </HBox>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="🏠 Accueil"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 8 16;"
+                    onAction="#goToAccueil"/>
+            <Button text="📝 Publications"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 8 16;"
+                    onAction="#goToPublications"/>
+            <Button text="💬 Communications"
+                    style="-fx-background-color: rgba(255,255,255,0.15); -fx-text-fill: white;
+                           -fx-cursor: hand; -fx-padding: 8 16; -fx-background-radius: 8;"
+                    onAction="#goToCommunications"/>
+            <Button text="📚 Cours"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 8 16;"
+                    onAction="#goToCours"/>
+            <Button text="❓ Quiz"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 8 16;"
+                    onAction="#goToQuiz"/>
+        </HBox>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="🔐 Connexion"
+                style="-fx-background-color: #97c3a2; -fx-text-fill: #1f4f65;
+                       -fx-background-radius: 25; -fx-padding: 8 20; -fx-cursor: hand;"
+                onAction="#goToConnexion"/>
+    </HBox>
+
+    <!-- ===== CONTENU PRINCIPAL ===== -->
+    <VBox VBox.vgrow="ALWAYS"
+          style="-fx-background-color: linear-gradient(to bottom, #fef9e7, #fdebd0);">
+
+        <!-- En-tête + stats + bouton créer -->
+        <HBox alignment="CENTER_LEFT" spacing="15"
+              style="-fx-padding: 25 25 10 25;">
+            <Label text="💬" style="-fx-font-size: 32px;"/>
+            <VBox>
+                <Label text="Communications"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"/>
+                <Label text="Accédez aux sessions live et enregistrées"
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 13px;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="statsLabel"
+                   style="-fx-background-color: #e74c3c; -fx-background-radius: 20;
+                          -fx-padding: 8 15; -fx-text-fill: white;
+                          -fx-font-weight: bold; -fx-font-size: 12px;"/>
+            <!-- Bouton Créer -->
+            <Button text="➕ Nouvelle communication"
+                    onAction="#openCreateDialog"
+                    style="-fx-background-color: #1f4f65; -fx-text-fill: white;
+                           -fx-background-radius: 20; -fx-padding: 9 18;
+                           -fx-cursor: hand; -fx-font-weight: bold; -fx-font-size: 12px;"/>
+        </HBox>
+
+        <!-- Filtres et recherche -->
+        <HBox spacing="15" style="-fx-padding: 0 25 15 25;">
+            <ComboBox fx:id="typeFilter" promptText="Filtrer par type"
+                      HBox.hgrow="ALWAYS"
+                      style="-fx-background-color: white; -fx-background-radius: 25;
+                             -fx-border-color: #f0c0a0; -fx-border-radius: 25; -fx-padding: 8 15;"/>
+            <TextField fx:id="searchField" promptText="Rechercher..."
+                       HBox.hgrow="ALWAYS"
+                       style="-fx-background-color: white; -fx-background-radius: 25;
+                              -fx-padding: 8 15; -fx-border-color: #f0c0a0; -fx-border-radius: 25;"/>
+            <Button text="🔍" onAction="#searchCommunications"
+                    style="-fx-background-color: #f39c12; -fx-text-fill: white;
+                           -fx-background-radius: 25; -fx-padding: 8 20; -fx-cursor: hand;"/>
+        </HBox>
+
+        <!-- Liste des communications -->
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                    style="-fx-background: transparent; -fx-background-color: transparent;
+                           -fx-padding: 0 25 25 25;">
+            <VBox spacing="10" style="-fx-background: transparent; -fx-padding: 5;">
+                <FlowPane fx:id="cardsContainer" hgap="20" vgap="20"
+                          alignment="TOP_LEFT"/>
+                <Label fx:id="noDataLabel"
+                       text="Aucune communication disponible"
+                       style="-fx-text-fill: #95a5a6; -fx-font-size: 14px;"
+                       visible="false"
+                       alignment="CENTER"/>
+            </VBox>
+        </ScrollPane>
+
+    </VBox>
+
+</VBox>

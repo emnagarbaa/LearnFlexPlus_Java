@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.GenererQuestionsController"
+      spacing="16" prefWidth="620" prefHeight="580"
+      style="-fx-padding:24; -fx-background-color:#ffffff;">
+
+    <!-- Titre -->
+    <Label fx:id="lblTitreChallenge"
+           text="Challenge"
+           style="-fx-font-size:14px; -fx-font-weight:bold; -fx-text-fill:#6f42c1;"/>
+
+    <Separator/>
+
+    <!-- Contrôles -->
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Nombre de questions :"
+               style="-fx-font-size:13px; -fx-font-weight:bold;"/>
+        <Spinner fx:id="spinnerNbQuestions" prefWidth="80" editable="true"/>
+        <Button fx:id="btnGenerer"
+                text="✨ Générer avec IA"
+                onAction="#handleGenerer"
+                style="-fx-background-color:#fd7e14; -fx-text-fill:white;
+                       -fx-font-weight:bold; -fx-padding:6 16;
+                       -fx-background-radius:6; -fx-cursor:hand;"/>
+        <Button fx:id="btnSauvegarder"
+                text="💾 Sauvegarder"
+                onAction="#handleSauvegarder"
+                style="-fx-background-color:#1D9E75; -fx-text-fill:white;
+                       -fx-font-weight:bold; -fx-padding:6 16;
+                       -fx-background-radius:6; -fx-cursor:hand;"/>
+        <ProgressIndicator fx:id="progressIndicator" prefWidth="28" prefHeight="28"/>
+    </HBox>
+
+    <!-- Statut -->
+    <Label fx:id="lblStatut" text=""
+           wrapText="true"
+           style="-fx-font-size:12px; -fx-text-fill:#555;"/>
+
+    <!-- Liste questions -->
+    <ScrollPane fx:id="scrollPane" VBox.vgrow="ALWAYS"
+                fitToWidth="true" hbarPolicy="NEVER">
+        <VBox fx:id="vboxQuestions" spacing="10"
+              style="-fx-padding:4 0;"/>
+    </ScrollPane>
+
+    <!-- Fermer -->
+    <HBox alignment="CENTER_RIGHT">
+        <Button text="Fermer"
+                onAction="#handleFermer"
+                style="-fx-background-color:#6c757d; -fx-text-fill:white;
+                       -fx-font-weight:bold; -fx-padding:6 16;
+                       -fx-background-radius:6; -fx-cursor:hand;"/>
+    </HBox>
+
+</VBox>

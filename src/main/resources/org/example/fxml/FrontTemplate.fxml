@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.controllers.FrontTemplateController"
+            stylesheets="@../css/front-template.css">
+
+    <!-- ===== HEADER (NAVBAR) ===== -->
+    <top>
+        <VBox>
+            <HBox styleClass="header" alignment="CENTER_LEFT" spacing="15">
+                <padding><Insets top="15" right="40" bottom="15" left="40"/></padding>
+
+                <!-- Logo -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <ImageView fx:id="logo" fitHeight="45" fitWidth="45"
+                               pickOnBounds="true" preserveRatio="true"
+                               onMouseClicked="#goToAccueil" style="-fx-cursor:hand;"/>
+                    <Label text="LearnFlex+" styleClass="logo-text"/>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Boutons de navigation -->
+                <HBox spacing="15" alignment="CENTER">
+                    <Button text="🏠 Accueil" styleClass="nav-btn" onAction="#goToAccueil"/>
+                    <Button text="📝 Publications" styleClass="nav-btn" onAction="#goToPublications"/>
+                    <Button text="💬 Communications" styleClass="nav-btn" onAction="#goToCommunications"/>
+                    <Button text="📚 Cours" styleClass="nav-btn" onAction="#goToCours"/>
+                    <Button text="❓ Quiz" styleClass="nav-btn" onAction="#goToQuiz"/>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="🔐 Connexion" styleClass="btn-primary" onAction="#goToConnexion"/>
+            </HBox>
+
+            <!-- Indicateur de page active -->
+            <HBox styleClass="page-indicator" alignment="CENTER">
+                <Label fx:id="pageTitleLabel" text="Accueil" styleClass="page-title-indicator"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ===== CONTENU CENTRAL (change selon la page) ===== -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area">
+            <Label text="Chargement..." style="-fx-text-fill: #95a5a6; -fx-font-size: 14px;"/>
+        </StackPane>
+    </center>
+
+    <!-- ===== FOOTER ===== -->
+    <bottom>
+        <VBox styleClass="footer" spacing="15" alignment="CENTER">
+            <padding><Insets top="30" right="60" bottom="30" left="60"/></padding>
+            <HBox spacing="60" alignment="CENTER">
+                <VBox spacing="10" alignment="TOP_LEFT">
+                    <Label text="LearnFlex+" styleClass="footer-logo"/>
+                    <Label text="Apprends malin, ton bac en main."
+                           style="-fx-text-fill:rgba(255,255,255,0.6); -fx-font-size:13px;"/>
+                </VBox>
+                <VBox spacing="8" alignment="TOP_LEFT">
+                    <Label text="Navigation" style="-fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:14px;"/>
+                    <Hyperlink text="Accueil" styleClass="footer-link" onAction="#goToAccueil"/>
+                    <Hyperlink text="Publications" styleClass="footer-link" onAction="#goToPublications"/>
+                    <Hyperlink text="Communications" styleClass="footer-link" onAction="#goToCommunications"/>
+                </VBox>
+                <VBox spacing="8" alignment="TOP_LEFT">
+                    <Label text="Contact" style="-fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:14px;"/>
+                    <Label text="📧 contact@learnflex.tn" style="-fx-text-fill:rgba(255,255,255,0.6); -fx-font-size:13px;"/>
+                    <Label text="📞 +216 XX XXX XXX" style="-fx-text-fill:rgba(255,255,255,0.6); -fx-font-size:13px;"/>
+                </VBox>
+            </HBox>
+            <Separator style="-fx-background-color:rgba(255,255,255,0.2);"/>
+            <Label text="© 2026 LearnFlex+. Tous droits réservés."
+                   style="-fx-text-fill:rgba(255,255,255,0.4); -fx-font-size:12px;"/>
+        </VBox>
+    </bottom>
+
+</BorderPane>

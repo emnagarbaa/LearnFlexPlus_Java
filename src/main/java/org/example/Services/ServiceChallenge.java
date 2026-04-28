@@ -223,4 +223,12 @@ public class ServiceChallenge implements Iservice<Challenge> {
         int rows = ps.executeUpdate();
         System.out.println("✅ " + rows + " challenge(s) supprimé(s) !");
     }
+    public void mettreAJourQuestions(int challengeId, String questionsJson) throws SQLException {
+        String sql = "UPDATE challenge SET question = ? WHERE id = ?";
+        try (PreparedStatement ps = MyDatabase.getInstance().getConnection().prepareStatement(sql)) {
+            ps.setString(1, questionsJson);
+            ps.setInt(2, challengeId);
+            ps.executeUpdate();
+        }
+    }
 }
