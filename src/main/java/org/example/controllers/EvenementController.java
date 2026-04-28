@@ -10,8 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,10 +24,9 @@ import org.example.Services.EvenementService;
 import org.example.Services.OrganismeService;
 import org.example.Services.RecommendationService;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -78,6 +76,10 @@ public class EvenementController {
     private final ObservableList<Evenement> data = FXCollections.observableArrayList();
     private Evenement editingEvenement = null;
     private DashboardController dashboardController;
+
+    // ── Drag & Drop state ─────────────────────────────────────────────
+    private static final DataFormat EVENEMENT_FORMAT = new DataFormat("application/x-evenement-id");
+    private Evenement draggedEvenement = null;
 
     private static final DateTimeFormatter FMT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -146,6 +148,17 @@ public class EvenementController {
             }
         });
 
+        // ✅ Double-clic sur une ligne → ouvre le calendrier avec drag & drop
+        table.setRowFactory(tv -> {
+            TableRow<Evenement> tableRow = new TableRow<>();
+            tableRow.setOnMouseClicked(e -> {
+                if (e.getClickCount() == 2 && !tableRow.isEmpty()) {
+                    showCalendarForEvent(tableRow.getItem());
+                }
+            });
+            return tableRow;
+        });
+
         table.setItems(data);
     }
 
@@ -197,7 +210,7 @@ public class EvenementController {
     }
 
     // ══════════════════════════════════════════════════════════════════
-    //  📅 CALENDAR VIEW
+    //  📅 CALENDAR VIEW (bouton toolbar)
     // ══════════════════════════════════════════════════════════════════
     @FXML
     private void showCalendarView() {
@@ -211,11 +224,9 @@ public class EvenementController {
         root.setPadding(new Insets(20));
         root.setStyle("-fx-background-color:#f4f6f9;");
 
-        // ── Header avec titre et navigation ──
         HBox header = createCalendarHeader();
         root.getChildren().add(header);
 
-        // ── Calendar grid ──
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         GridPane calendarGrid = createCalendarGrid();
@@ -234,8 +245,8 @@ public class EvenementController {
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 20));
         titleLabel.setTextFill(Color.web("#1f4f65"));
 
-        Button prevBtn = new Button("← Précédent");
-        Button nextBtn = new Button("Suivant →");
+        Button prevBtn  = new Button("← Précédent");
+        Button nextBtn  = new Button("Suivant →");
         Button todayBtn = new Button("Aujourd'hui");
 
         prevBtn.setStyle("-fx-padding:8 16; -fx-background-color:#e8f4fd; -fx-cursor:hand;");
@@ -260,7 +271,6 @@ public class EvenementController {
         try {
             List<Evenement> allEvents = service.findAll();
 
-            // ── Days of week header ──
             String[] daysOfWeek = {"Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"};
             for (int i = 0; i < 7; i++) {
                 Label dayLabel = new Label(daysOfWeek[i]);
@@ -273,11 +283,10 @@ public class EvenementController {
                 grid.add(dayLabel, i, 0);
             }
 
-            // ── Calendar days ──
             LocalDate today = LocalDate.now();
             YearMonth currentMonth = YearMonth.now();
             LocalDate firstDay = currentMonth.atDay(1);
-            LocalDate lastDay = currentMonth.atEndOfMonth();
+            LocalDate lastDay  = currentMonth.atEndOfMonth();
             int dayOfWeekOffset = firstDay.getDayOfWeek().getValue() % 7;
 
             int row = 1;
@@ -286,15 +295,10 @@ public class EvenementController {
             for (LocalDate date = firstDay; !date.isAfter(lastDay); date = date.plusDays(1)) {
                 VBox dayCell = createDayCell(date, allEvents, today);
                 grid.add(dayCell, col, row);
-
                 col++;
-                if (col > 6) {
-                    col = 0;
-                    row++;
-                }
+                if (col > 6) { col = 0; row++; }
             }
 
-            // ── Column constraints ──
             for (int i = 0; i < 7; i++) {
                 ColumnConstraints cc = new ColumnConstraints(120);
                 cc.setHgrow(Priority.ALWAYS);
@@ -315,7 +319,6 @@ public class EvenementController {
         cellBox.setStyle("-fx-border-color:#e2e8f0; -fx-border-width:1;");
         cellBox.setAlignment(Pos.TOP_LEFT);
 
-        // ── Day number ──
         Label dayLabel = new Label(String.valueOf(date.getDayOfMonth()));
         dayLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
         if (date.equals(today)) {
@@ -323,30 +326,23 @@ public class EvenementController {
         } else {
             dayLabel.setStyle("-fx-text-fill:#4a5568;");
         }
-
         cellBox.getChildren().add(dayLabel);
 
-        // ── Filter events for this date ──
         List<Evenement> dayEvents = allEvents.stream()
                 .filter(e -> e.getDateDebut() != null && e.getDateDebut().toLocalDate().equals(date))
                 .collect(Collectors.toList());
 
-        // ── Display events ──
         for (Evenement event : dayEvents.stream().limit(3).collect(Collectors.toList())) {
             Label eventLabel = new Label(event.getTitre());
             eventLabel.setFont(Font.font("System", 11));
             eventLabel.setTextFill(Color.WHITE);
             eventLabel.setWrapText(true);
-            eventLabel.setStyle(
-                    "-fx-background-color:#1f4f65; -fx-padding:4 6; -fx-border-radius:3; " +
-                            "-fx-cursor:hand; -fx-background-insets:0;");
+            eventLabel.setStyle("-fx-background-color:#1f4f65; -fx-padding:4 6; -fx-border-radius:3; -fx-cursor:hand;");
             eventLabel.setMaxWidth(Double.MAX_VALUE);
             eventLabel.setOnMouseClicked(e -> showEventDetailsModal(event));
-
             cellBox.getChildren().add(eventLabel);
         }
 
-        // ── Show more indicator ──
         if (dayEvents.size() > 3) {
             Label moreLabel = new Label("+" + (dayEvents.size() - 3) + " plus");
             moreLabel.setFont(Font.font("System", 10));
@@ -357,6 +353,288 @@ public class EvenementController {
         return cellBox;
     }
 
+    // ══════════════════════════════════════════════════════════════════
+    //  📅 CALENDAR FOR SPECIFIC EVENT — avec DRAG & DROP
+    // ══════════════════════════════════════════════════════════════════
+    private void showCalendarForEvent(Evenement evenement) {
+        Stage calendarStage = new Stage();
+        calendarStage.setTitle("📅 Calendrier — " + evenement.getTitre());
+        calendarStage.initModality(Modality.APPLICATION_MODAL);
+        calendarStage.setWidth(950);
+        calendarStage.setHeight(720);
+
+        VBox root = new VBox(0);
+        root.setStyle("-fx-background-color:#f4f6f9;");
+
+        // ── Highlight banner ──
+        Label highlightLabel = new Label("📌 Événement sélectionné : " + evenement.getTitre()
+                + "   •   Glissez-déposez vers un autre jour pour changer la date");
+        highlightLabel.setStyle("-fx-background-color:#1f4f65; -fx-text-fill:white; " +
+                "-fx-padding:10 20; -fx-font-weight:bold; -fx-font-size:13px;");
+        highlightLabel.setMaxWidth(Double.MAX_VALUE);
+
+        // ── Mois courant ──
+        YearMonth[] currentMonth = {
+                evenement.getDateDebut() != null
+                        ? YearMonth.from(evenement.getDateDebut())
+                        : YearMonth.now()
+        };
+
+        Label titleLabel = new Label();
+        titleLabel.setFont(Font.font("System", FontWeight.BOLD, 20));
+        titleLabel.setTextFill(Color.web("#1f4f65"));
+
+        Button prevBtn  = new Button("← Précédent");
+        Button nextBtn  = new Button("Suivant →");
+        Button closeBtn = new Button("✖ Fermer");
+
+        prevBtn.setStyle("-fx-padding:8 16; -fx-background-color:#e8f4fd; -fx-cursor:hand;");
+        nextBtn.setStyle("-fx-padding:8 16; -fx-background-color:#e8f4fd; -fx-cursor:hand;");
+        closeBtn.setStyle("-fx-padding:8 16; -fx-background-color:#d9534f; -fx-text-fill:white; " +
+                "-fx-cursor:hand; -fx-font-weight:bold;");
+        closeBtn.setOnAction(e -> calendarStage.close());
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        HBox header = new HBox(15, prevBtn, titleLabel, nextBtn, spacer, closeBtn);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setPadding(new Insets(12, 20, 12, 20));
+        header.setStyle("-fx-background-color:white; -fx-border-color:#e0e0e0; -fx-border-width:0 0 1 0;");
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+        root.getChildren().addAll(highlightLabel, header, scrollPane);
+
+        // ── Conteneur mutable pour l'événement (peut être déplacé) ──
+        final Evenement[] currentEvenement = {evenement};
+
+        // ── Render ──
+        Runnable[] renderRef = new Runnable[1];
+
+        renderRef[0] = () -> {
+            titleLabel.setText(currentMonth[0].format(
+                    DateTimeFormatter.ofPattern("MMMM yyyy")));
+            try {
+                List<Evenement> allEvents = service.findAll();
+                LocalDate today    = LocalDate.now();
+                LocalDate firstDay = currentMonth[0].atDay(1);
+                LocalDate lastDay  = currentMonth[0].atEndOfMonth();
+
+                GridPane grid = new GridPane();
+                grid.setHgap(5);
+                grid.setVgap(5);
+                grid.setPadding(new Insets(15));
+                grid.setStyle("-fx-background-color:white;");
+
+                String[] days = {"Lun","Mar","Mer","Jeu","Ven","Sam","Dim"};
+                for (int i = 0; i < 7; i++) {
+                    Label d = new Label(days[i]);
+                    d.setFont(Font.font("System", FontWeight.BOLD, 13));
+                    d.setTextFill(Color.web("#64748b"));
+                    d.setPadding(new Insets(10));
+                    d.setStyle("-fx-background-color:#f8fafc; -fx-border-color:#e2e8f0; -fx-border-width:0 0 1 0;");
+                    d.setMaxWidth(Double.MAX_VALUE);
+                    d.setAlignment(Pos.CENTER);
+                    grid.add(d, i, 0);
+                    ColumnConstraints cc = new ColumnConstraints(120);
+                    cc.setHgrow(Priority.ALWAYS);
+                    grid.getColumnConstraints().add(cc);
+                }
+
+                int col = firstDay.getDayOfWeek().getValue() % 7;
+                int row = 1;
+
+                for (LocalDate date = firstDay; !date.isAfter(lastDay); date = date.plusDays(1)) {
+                    final LocalDate cellDate = date;
+
+                    VBox cell = new VBox(5);
+                    cell.setMinHeight(100);
+                    cell.setPadding(new Insets(8));
+                    cell.setAlignment(Pos.TOP_LEFT);
+
+                    boolean isEventDay = currentEvenement[0].getDateDebut() != null &&
+                            currentEvenement[0].getDateDebut().toLocalDate().equals(cellDate);
+
+                    cell.setStyle(isEventDay
+                            ? "-fx-border-color:#1f4f65; -fx-border-width:2; -fx-background-color:#e8f4fd;"
+                            : "-fx-border-color:#e2e8f0; -fx-border-width:1;");
+
+                    Label dayNum = new Label(String.valueOf(cellDate.getDayOfMonth()));
+                    dayNum.setFont(Font.font("System", FontWeight.BOLD, 14));
+                    dayNum.setStyle(cellDate.equals(today)
+                            ? "-fx-text-fill:#1f7a5e; -fx-background-color:#d1fae5; -fx-padding:4 8;"
+                            : "-fx-text-fill:#4a5568;");
+                    cell.getChildren().add(dayNum);
+
+                    // ── Événements du jour ──
+                    List<Evenement> dayEvents = allEvents.stream()
+                            .filter(e -> e.getDateDebut() != null &&
+                                    e.getDateDebut().toLocalDate().equals(cellDate))
+                            .collect(Collectors.toList());
+
+                    for (Evenement ev : dayEvents.stream().limit(3).collect(Collectors.toList())) {
+                        boolean isSelected = ev.getId() == currentEvenement[0].getId();
+                        Label evLabel = new Label(ev.getTitre());
+                        evLabel.setFont(Font.font("System", 11));
+                        evLabel.setTextFill(Color.WHITE);
+                        evLabel.setWrapText(true);
+                        evLabel.setMaxWidth(Double.MAX_VALUE);
+                        evLabel.setStyle(isSelected
+                                ? "-fx-background-color:#d9534f; -fx-padding:4 6; " +
+                                "-fx-background-radius:3; -fx-cursor:move;"
+                                : "-fx-background-color:#1f4f65; -fx-padding:4 6; " +
+                                "-fx-background-radius:3; -fx-cursor:hand;");
+
+                        // ── DRAG SOURCE : uniquement l'événement sélectionné ──
+                        if (isSelected) {
+                            evLabel.setOnDragDetected(mouseEvent -> {
+                                draggedEvenement = currentEvenement[0];
+                                Dragboard db = evLabel.startDragAndDrop(TransferMode.MOVE);
+                                ClipboardContent content = new ClipboardContent();
+                                content.put(EVENEMENT_FORMAT,
+                                        String.valueOf(currentEvenement[0].getId()));
+                                db.setContent(content);
+                                mouseEvent.consume();
+                            });
+                            evLabel.setOnDragDone(dragEvent -> {
+                                draggedEvenement = null;
+                                dragEvent.consume();
+                            });
+                        }
+
+                        evLabel.setOnMouseClicked(e -> {
+                            if (e.getClickCount() == 1) showEventDetailsModal(ev);
+                        });
+
+                        cell.getChildren().add(evLabel);
+                    }
+
+                    if (dayEvents.size() > 3) {
+                        Label more = new Label("+" + (dayEvents.size() - 3) + " plus");
+                        more.setStyle("-fx-text-fill:#3b82f6; -fx-font-size:10px;");
+                        cell.getChildren().add(more);
+                    }
+
+                    // ── DROP TARGET : chaque cellule accepte le drop ──
+                    cell.setOnDragOver(dragEvent -> {
+                        if (dragEvent.getGestureSource() != cell
+                                && dragEvent.getDragboard().hasContent(EVENEMENT_FORMAT)) {
+                            dragEvent.acceptTransferModes(TransferMode.MOVE);
+
+                            // Highlight visuel de la cellule cible
+                            cell.setStyle("-fx-border-color:#27ae60; -fx-border-width:3; " +
+                                    "-fx-background-color:#eafaf1;");
+                        }
+                        dragEvent.consume();
+                    });
+
+                    cell.setOnDragExited(dragEvent -> {
+                        // Restaurer le style d'origine en quittant la cellule
+                        boolean wasEventDay = currentEvenement[0].getDateDebut() != null &&
+                                currentEvenement[0].getDateDebut().toLocalDate().equals(cellDate);
+                        cell.setStyle(wasEventDay
+                                ? "-fx-border-color:#1f4f65; -fx-border-width:2; -fx-background-color:#e8f4fd;"
+                                : "-fx-border-color:#e2e8f0; -fx-border-width:1;");
+                        dragEvent.consume();
+                    });
+
+                    final Runnable render = renderRef[0];
+                    cell.setOnDragDropped(dragEvent -> {
+                        Dragboard db = dragEvent.getDragboard();
+                        boolean success = false;
+
+                        if (db.hasContent(EVENEMENT_FORMAT) && draggedEvenement != null) {
+                            LocalDateTime oldDebut = draggedEvenement.getDateDebut();
+
+                            // Calculer le décalage en jours et l'appliquer à dateDebut et dateFin
+                            long daysDelta = java.time.temporal.ChronoUnit.DAYS.between(
+                                    oldDebut.toLocalDate(), cellDate);
+
+                            LocalDateTime newDebut = oldDebut.plusDays(daysDelta);
+                            LocalDateTime newFin   = draggedEvenement.getDateFin() != null
+                                    ? draggedEvenement.getDateFin().plusDays(daysDelta)
+                                    : null;
+
+                            // Confirmation avant déplacement
+                            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                            confirm.setTitle("Déplacer l'événement");
+                            confirm.setHeaderText("Déplacer « " + draggedEvenement.getTitre() + " » ?");
+                            confirm.setContentText(
+                                    "Nouvelle date de début : "
+                                            + newDebut.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                                            + (newFin != null
+                                            ? "\nNouvelle date de fin : "
+                                            + newFin.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                                            : ""));
+
+                            boolean[] confirmed = {false};
+                            confirm.showAndWait().ifPresent(btn -> {
+                                if (btn == ButtonType.OK) confirmed[0] = true;
+                            });
+
+                            if (confirmed[0]) {
+                                try {
+                                    draggedEvenement.setDateDebut(newDebut);
+                                    draggedEvenement.setDateFin(newFin);
+                                    service.update(draggedEvenement);
+
+                                    // Mettre à jour currentEvenement et la table principale
+                                    currentEvenement[0] = draggedEvenement;
+                                    loadData();
+
+                                    // Re-rendre le calendrier sur le nouveau mois si besoin
+                                    currentMonth[0] = YearMonth.from(newDebut);
+                                    render.run();
+
+                                    showAlert(Alert.AlertType.INFORMATION, "Succès",
+                                            "La date de l'événement a été mise à jour.");
+                                } catch (SQLException ex) {
+                                    showAlert(Alert.AlertType.ERROR,
+                                            "Erreur mise à jour", ex.getMessage());
+                                    // Annuler le changement local
+                                    draggedEvenement.setDateDebut(oldDebut);
+                                    draggedEvenement.setDateFin(
+                                            newFin != null ? newFin.minusDays(daysDelta) : null);
+                                }
+                                success = true;
+                            }
+                        }
+
+                        dragEvent.setDropCompleted(success);
+                        dragEvent.consume();
+                    });
+
+                    grid.add(cell, col, row);
+                    col++;
+                    if (col > 6) { col = 0; row++; }
+                }
+
+                scrollPane.setContent(grid);
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        };
+
+        // Assigner le runnable dans le tableau pour que les lambdas y accèdent
+        renderRef[0] = renderRef[0]; // déjà assigné ci-dessus
+
+        prevBtn.setOnAction(e -> { currentMonth[0] = currentMonth[0].minusMonths(1); renderRef[0].run(); });
+        nextBtn.setOnAction(e -> { currentMonth[0] = currentMonth[0].plusMonths(1);  renderRef[0].run(); });
+
+        renderRef[0].run();
+
+        Scene scene = new Scene(root);
+        calendarStage.setScene(scene);
+        calendarStage.show();
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  EVENT DETAILS MODAL
+    // ══════════════════════════════════════════════════════════════════
     private void showEventDetailsModal(Evenement event) {
         Stage modalStage = new Stage();
         modalStage.setTitle("Détails de l'événement");
@@ -368,37 +646,29 @@ public class EvenementController {
         content.setPadding(new Insets(25));
         content.setStyle("-fx-background-color:#f4f6f9;");
 
-        // ── Title ──
         Label titleLabel = new Label(event.getTitre());
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 22));
         titleLabel.setTextFill(Color.web("#1f4f65"));
 
-        // ── Date/Time ──
         Label dateLabel = new Label("📅 " + (event.getDateDebut() != null ?
                 event.getDateDebut().format(DateTimeFormatter.ofPattern("dd MMMM yyyy - HH:mm")) : "Date non définie"));
         dateLabel.setStyle("-fx-font-size:13px; -fx-text-fill:#3b82f6; -fx-font-weight:bold;");
 
-        // ── Location ──
         Label locationLabel = new Label("📍 " + (event.getLieu() != null ? event.getLieu() : "-"));
         locationLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#ecc94b;");
 
-        // ── Mode ──
         Label modeLabel = new Label("🎯 Mode: " + (event.getMode() != null ? event.getMode() : "-"));
         modeLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#0f6b5e;");
 
-        // ── Capacity ──
         Label capacityLabel = new Label("👥 Capacité: " + event.getCapaciteMax());
         capacityLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#666;");
 
-        // ── Public Cible ──
         Label publicLabel = new Label("🎓 Public cible: " + (event.getPublicCible() != null ? event.getPublicCible() : "-"));
         publicLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#666;");
 
-        // ── Contact ──
         Label contactLabel = new Label("✉️ Contact: " + (event.getContactEmail() != null ? event.getContactEmail() : "-"));
         contactLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#666;");
 
-        // ── Description ──
         Label descLabel = new Label("Description:");
         descLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
         TextArea descArea = new TextArea(event.getDescription() != null ? event.getDescription() : "-");
@@ -407,7 +677,6 @@ public class EvenementController {
         descArea.setStyle("-fx-control-inner-background:#ffffff; -fx-font-size:12px;");
         descArea.setEditable(false);
 
-        // ── Close button ──
         Button closeBtn = new Button("Fermer");
         closeBtn.setStyle("-fx-padding:10 30; -fx-background-color:#e0e0e0; -fx-cursor:hand; -fx-font-weight:bold;");
         closeBtn.setOnAction(e -> modalStage.close());
@@ -417,8 +686,7 @@ public class EvenementController {
 
         content.getChildren().addAll(
                 titleLabel, dateLabel, locationLabel, modeLabel, capacityLabel,
-                publicLabel, contactLabel, descLabel, descArea, btnBox
-        );
+                publicLabel, contactLabel, descLabel, descArea, btnBox);
 
         ScrollPane scroll = new ScrollPane(content);
         scroll.setFitToWidth(true);
@@ -498,7 +766,6 @@ public class EvenementController {
         stage.setTitle("🌍 Recommandations Mondiales d'Orientation");
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        // ── Header ──────────────────────────────────────────────────
         Label titre = new Label("🌍  Événements d'Orientation dans le Monde");
         titre.setFont(Font.font("System", FontWeight.BOLD, 16));
         titre.setTextFill(Color.WHITE);
@@ -508,12 +775,10 @@ public class EvenementController {
         header.setPadding(new Insets(16, 24, 16, 24));
         header.setStyle("-fx-background-color:#2c3e50;");
 
-        // ── Loading ──────────────────────────────────────────────────
         Label loading = new Label("⏳  Chargement des événements mondiaux...");
         loading.setFont(Font.font("System", 14));
         loading.setPadding(new Insets(20));
 
-        // ── Cards container ──────────────────────────────────────────
         VBox cardsBox = new VBox(12);
         cardsBox.setPadding(new Insets(16));
 
@@ -521,7 +786,6 @@ public class EvenementController {
         scroll.setFitToWidth(true);
         scroll.setStyle("-fx-background-color:transparent; -fx-background:transparent;");
 
-        // ── Root ─────────────────────────────────────────────────────
         VBox root = new VBox(header, loading, scroll);
         root.setStyle("-fx-background-color:#f4f6f9;");
         VBox.setVgrow(scroll, Priority.ALWAYS);
@@ -530,15 +794,11 @@ public class EvenementController {
         stage.setScene(scene);
         stage.show();
 
-        // ── Appel API en arrière-plan ────────────────────────────────
         Thread thread = new Thread(() -> {
             try {
-                List<EvenementMondialDTO> events =
-                        recommendationService.getEvenementsOrientation();
-
+                List<EvenementMondialDTO> events = recommendationService.getEvenementsOrientation();
                 javafx.application.Platform.runLater(() -> {
                     root.getChildren().remove(loading);
-
                     if (events.isEmpty()) {
                         Label empty = new Label("Aucun événement trouvé.");
                         empty.setFont(Font.font("System", 14));
@@ -546,20 +806,15 @@ public class EvenementController {
                         cardsBox.getChildren().add(empty);
                         return;
                     }
-
-                    // Compteur en haut
-                    Label counter = new Label("✅  " + events.size()
-                            + " événement(s) trouvé(s) dans le monde");
+                    Label counter = new Label("✅  " + events.size() + " événement(s) trouvé(s) dans le monde");
                     counter.setFont(Font.font("System", FontWeight.BOLD, 13));
                     counter.setTextFill(Color.web("#2c3e50"));
                     counter.setPadding(new Insets(0, 0, 8, 0));
                     cardsBox.getChildren().add(counter);
-
                     for (EvenementMondialDTO ev : events) {
                         cardsBox.getChildren().add(buildEventCard(ev));
                     }
                 });
-
             } catch (Exception e) {
                 javafx.application.Platform.runLater(() -> {
                     loading.setText("❌  Erreur : " + e.getMessage());
@@ -571,47 +826,35 @@ public class EvenementController {
         thread.start();
     }
 
-    /** Construit une card pour un événement mondial */
     private VBox buildEventCard(EvenementMondialDTO ev) {
-        // Titre
         Label lbTitre = new Label(ev.getTitle() != null ? ev.getTitle() : "Sans titre");
         lbTitre.setFont(Font.font("System", FontWeight.BOLD, 14));
         lbTitre.setWrapText(true);
         lbTitre.setTextFill(Color.web("#2c3e50"));
 
-        // Date + Pays + Catégorie
         String dateStr = (ev.getStart() != null && ev.getStart().length() >= 10)
                 ? ev.getStart().substring(0, 10) : "Date inconnue";
-        String paysStr = ev.getCountry() != null
-                ? ev.getCountry().toUpperCase() : "Pays inconnu";
-        String catStr  = ev.getCategory() != null
-                ? ev.getCategory() : "—";
+        String paysStr = ev.getCountry() != null ? ev.getCountry().toUpperCase() : "Pays inconnu";
+        String catStr  = ev.getCategory() != null ? ev.getCategory() : "—";
 
-        Label lbMeta = new Label(
-                "📅 " + dateStr + "     🌍 " + paysStr + "     🏷️ " + catStr);
+        Label lbMeta = new Label("📅 " + dateStr + "     🌍 " + paysStr + "     🏷️ " + catStr);
         lbMeta.setStyle("-fx-text-fill:#555555; -fx-font-size:12px;");
 
-        // Participants
         String participants = ev.getPhqAttendance() > 0
                 ? ev.getPhqAttendance() + " participants estimés"
                 : "Nombre de participants non disponible";
         Label lbParticipants = new Label("👥 " + participants);
         lbParticipants.setStyle("-fx-text-fill:#888888; -fx-font-size:12px;");
 
-        // Date de fin
         String finStr = (ev.getEnd() != null && ev.getEnd().length() >= 10)
                 ? ev.getEnd().substring(0, 10) : null;
-        Label lbFin = finStr != null
-                ? new Label("🏁 Fin : " + finStr) : new Label("");
+        Label lbFin = finStr != null ? new Label("🏁 Fin : " + finStr) : new Label("");
         lbFin.setStyle("-fx-text-fill:#888888; -fx-font-size:12px;");
 
         VBox card = new VBox(6, lbTitre, lbMeta, lbParticipants, lbFin);
         card.setPadding(new Insets(14, 16, 14, 16));
-        card.setStyle(
-                "-fx-background-color:white;" +
-                        "-fx-background-radius:10;" +
-                        "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.10),8,0,0,3);"
-        );
+        card.setStyle("-fx-background-color:white; -fx-background-radius:10;" +
+                "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.10),8,0,0,3);");
         return card;
     }
 
@@ -622,10 +865,8 @@ public class EvenementController {
     private void showStatsCapacite() {
         try {
             List<Evenement> all = service.findAll();
-
             long petite  = all.stream().filter(e -> e.getCapaciteMax() <= 50).count();
-            long moyenne = all.stream().filter(e -> e.getCapaciteMax() > 50
-                    && e.getCapaciteMax() <= 200).count();
+            long moyenne = all.stream().filter(e -> e.getCapaciteMax() > 50 && e.getCapaciteMax() <= 200).count();
             long grande  = all.stream().filter(e -> e.getCapaciteMax() > 200).count();
 
             ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList(
@@ -644,7 +885,6 @@ public class EvenementController {
             HBox cards = buildCapaciteCards(all);
             VBox root  = buildStatsRoot("📊  Statistiques Capacité", "#1f7a5e", chart, cards);
             showStatsWindow("Statistiques Capacité", root);
-
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Erreur statistiques", e.getMessage());
         }
@@ -655,12 +895,11 @@ public class EvenementController {
         int    maxCap = all.stream().mapToInt(Evenement::getCapaciteMax).max().orElse(0);
         int    minCap = all.stream().mapToInt(Evenement::getCapaciteMax).min().orElse(0);
         double avg    = all.stream().mapToInt(Evenement::getCapaciteMax).average().orElse(0);
-
         return new HBox(12,
-                buildCard("Total événements", String.valueOf(total),         "#1f7a5e"),
-                buildCard("Capacité max",      String.valueOf(maxCap),       "#0d6efd"),
-                buildCard("Capacité min",      String.valueOf(minCap),       "#fd7e14"),
-                buildCard("Moyenne capacité",  String.format("%.0f", avg),  "#6f42c1")
+                buildCard("Total événements", String.valueOf(total),        "#1f7a5e"),
+                buildCard("Capacité max",      String.valueOf(maxCap),      "#0d6efd"),
+                buildCard("Capacité min",      String.valueOf(minCap),      "#fd7e14"),
+                buildCard("Moyenne capacité",  String.format("%.0f", avg), "#6f42c1")
         );
     }
 
@@ -671,12 +910,8 @@ public class EvenementController {
     private void showStatsCreations() {
         try {
             List<Evenement> all = service.findAll();
-
-            Map<String, Long> byMode = all.stream()
-                    .collect(Collectors.groupingBy(
-                            e -> e.getMode() != null ? e.getMode() : "Non défini",
-                            Collectors.counting()
-                    ));
+            Map<String, Long> byMode = all.stream().collect(Collectors.groupingBy(
+                    e -> e.getMode() != null ? e.getMode() : "Non défini", Collectors.counting()));
 
             ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
             byMode.forEach((mode, count) -> pieData.add(new PieChart.Data(mode, count)));
@@ -691,7 +926,6 @@ public class EvenementController {
             HBox cards = buildCreationsCards(all, byMode);
             VBox root  = buildStatsRoot("📊  Statistiques Créations", "#0d6efd", chart, cards);
             showStatsWindow("Statistiques Créations", root);
-
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Erreur statistiques", e.getMessage());
         }
@@ -701,7 +935,6 @@ public class EvenementController {
         long presentiel = byMode.getOrDefault("Présentiel", 0L);
         long enligne    = byMode.getOrDefault("En ligne",   0L);
         long hybride    = byMode.getOrDefault("Hybride",    0L);
-
         return new HBox(12,
                 buildCard("Total événements", String.valueOf(all.size()), "#0d6efd"),
                 buildCard("Présentiel",        String.valueOf(presentiel), "#1f7a5e"),
@@ -713,8 +946,7 @@ public class EvenementController {
     // ══════════════════════════════════════════════════════════════════
     //  HELPERS — UI
     // ══════════════════════════════════════════════════════════════════
-    private VBox buildStatsRoot(String titre, String headerColor,
-                                PieChart chart, HBox cards) {
+    private VBox buildStatsRoot(String titre, String headerColor, PieChart chart, HBox cards) {
         Label lbTitre = new Label(titre);
         lbTitre.setFont(Font.font("System", FontWeight.BOLD, 18));
         lbTitre.setTextFill(Color.WHITE);
@@ -758,11 +990,8 @@ public class EvenementController {
         card.setAlignment(Pos.CENTER);
         card.setPadding(new Insets(16, 20, 16, 20));
         card.setMinWidth(130);
-        card.setStyle(
-                "-fx-background-color:" + color + ";" +
-                        "-fx-background-radius:10;" +
-                        "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.18),8,0,0,3);"
-        );
+        card.setStyle("-fx-background-color:" + color + "; -fx-background-radius:10;" +
+                "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.18),8,0,0,3);");
         return card;
     }
 
@@ -794,11 +1023,9 @@ public class EvenementController {
         e.setMode(fMode.getValue());
         try { e.setCapaciteMax(Integer.parseInt(fCapaciteMax.getText().trim())); }
         catch (NumberFormatException ex) { e.setCapaciteMax(0); }
-        try { e.setDateDebut(
-                java.time.LocalDateTime.parse(fDateDebut.getText().trim(), FMT)); }
+        try { e.setDateDebut(java.time.LocalDateTime.parse(fDateDebut.getText().trim(), FMT)); }
         catch (Exception ex) { e.setDateDebut(null); }
-        try { e.setDateFin(
-                java.time.LocalDateTime.parse(fDateFin.getText().trim(), FMT)); }
+        try { e.setDateFin(java.time.LocalDateTime.parse(fDateFin.getText().trim(), FMT)); }
         catch (Exception ex) { e.setDateFin(null); }
         e.setPublicCible(fPublicCible.getText().trim());
         e.setContactEmail(fContactEmail.getText().trim());
@@ -825,18 +1052,16 @@ public class EvenementController {
             return false;
         }
         if (fMode.getValue() == null) {
-            showAlert(Alert.AlertType.WARNING, "Validation",
-                    "Veuillez sélectionner un mode.");
+            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un mode.");
             return false;
         }
         return true;
     }
 
     // ══════════════════════════════════════════════════════════════════
-    //  SHARE DIALOG — NGROK
+    //  SHARE DIALOG
     // ══════════════════════════════════════════════════════════════════
     private void showShareDialog(Evenement evenement) {
-        // Générer un lien de partage (simulé avec ngrok ou un UUID)
         String shareLink = "https://de3-196-238-42-231.ngro";
 
         Stage stage = new Stage();
@@ -848,12 +1073,10 @@ public class EvenementController {
         content.setStyle("-fx-background-color:#f4f6f9; -fx-padding:20;");
         content.setAlignment(Pos.TOP_CENTER);
 
-        // Titre
         Label titleLabel = new Label("⮡ Partager l'événement");
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
         titleLabel.setTextFill(Color.web("#2c3e50"));
 
-        // HBox pour le lien
         HBox linkBox = new HBox(8);
         linkBox.setStyle("-fx-background-color:white; -fx-border-color:#e0e0e0; " +
                 "-fx-border-radius:6; -fx-padding:12;");
@@ -868,25 +1091,20 @@ public class EvenementController {
         copyBtn.setStyle("-fx-background-color:#4caf50; -fx-text-fill:white; " +
                 "-fx-cursor:hand; -fx-background-radius:4; -fx-padding:8 12;");
         copyBtn.setOnAction(e -> {
-            // Copier dans le presse-papiers
-            javafx.scene.input.Clipboard clip = javafx.scene.input.Clipboard.getSystemClipboard();
-            javafx.scene.input.ClipboardContent content1 = new javafx.scene.input.ClipboardContent();
-            content1.putString(shareLink);
-            clip.setContent(content1);
+            Clipboard clip = Clipboard.getSystemClipboard();
+            ClipboardContent c = new ClipboardContent();
+            c.putString(shareLink);
+            clip.setContent(c);
             showAlert(Alert.AlertType.INFORMATION, "Succès", "Lien copié dans le presse-papiers!");
         });
 
         Button editBtn = new Button("✏️");
         editBtn.setStyle("-fx-background-color:#2196f3; -fx-text-fill:white; " +
                 "-fx-cursor:hand; -fx-background-radius:4; -fx-padding:8 12;");
-        editBtn.setOnAction(e -> {
-            linkField.setEditable(true);
-            linkField.requestFocus();
-        });
+        editBtn.setOnAction(e -> { linkField.setEditable(true); linkField.requestFocus(); });
 
         linkBox.getChildren().addAll(linkField, copyBtn, editBtn);
 
-        // Boutons de partage social
         VBox socialBox = new VBox(10);
         socialBox.setStyle("-fx-border-color:#e0e0e0; -fx-border-radius:6; " +
                 "-fx-padding:12; -fx-background-color:white;");
@@ -902,8 +1120,8 @@ public class EvenementController {
         twitterBtn.setOnAction(e -> {
             try {
                 String url = "https://twitter.com/intent/tweet?text=" +
-                        URLEncoder.encode("Découvrez cet événement: " + evenement.getTitre() +
-                                " " + shareLink, "UTF-8");
+                        java.net.URLEncoder.encode("Découvrez cet événement: " +
+                                evenement.getTitre() + " " + shareLink, "UTF-8");
                 openUrl(url);
             } catch (java.io.UnsupportedEncodingException ex) {
                 showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur d'encodage: " + ex.getMessage());
@@ -914,14 +1132,11 @@ public class EvenementController {
         linkedinBtn.setStyle("-fx-background-color:#0a66c2; -fx-text-fill:white; " +
                 "-fx-font-weight:bold; -fx-cursor:hand; -fx-background-radius:4; " +
                 "-fx-padding:8 16; -fx-font-size:12px; -fx-max-width:Infinity;");
-        linkedinBtn.setOnAction(e -> {
-            String url = "https://www.linkedin.com/sharing/share-offsite/?url=" + shareLink;
-            openUrl(url);
-        });
+        linkedinBtn.setOnAction(e -> openUrl(
+                "https://www.linkedin.com/sharing/share-offsite/?url=" + shareLink));
 
         socialBox.getChildren().addAll(socialLabel, twitterBtn, linkedinBtn);
 
-        // Bouton Fermer
         Button closeBtn = new Button("Fermer");
         closeBtn.setStyle("-fx-background-color:#e0e0e0; -fx-cursor:hand; " +
                 "-fx-background-radius:4; -fx-padding:8 20;");
@@ -934,7 +1149,7 @@ public class EvenementController {
 
         ScrollPane scroll = new ScrollPane(content);
         scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background-color:#f4f6f9; -fx-padding:0;");
+        scroll.setStyle("-fx-background-color:#f4f6f9;");
 
         Scene scene = new Scene(scroll, 500, 350);
         stage.setScene(scene);

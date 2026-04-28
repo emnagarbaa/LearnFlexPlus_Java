@@ -7,56 +7,57 @@
       fx:controller="org.example.controllers.EvenementController"
       spacing="0" style="-fx-background-color:#f4f6f9;">
 
-    <!-- ══ TOOLBAR ══════════════════════════════════════════════════ -->
-    <HBox alignment="CENTER_LEFT" spacing="12"
-          style="-fx-background-color:#ffffff; -fx-border-color:#e0e0e0;
-                 -fx-border-width:0 0 1 0; -fx-padding:14 20 14 20;">
+    <!-- ══ TOOLBAR LIGNE 1 ══════════════════════════════════════════ -->
+    <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-background-color:#ffffff;
+                 -fx-border-color:#e0e0e0; -fx-border-width:0 0 1 0; -fx-padding:14 20 14 20;">
 
-        <Label text="📅  Événements"
-               style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+        <Label text="📅 Événements"
+               style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
         <Region HBox.hgrow="ALWAYS"/>
 
-        <TextField fx:id="searchField" promptText="🔍  Rechercher par titre…"
-                   prefWidth="220" onKeyReleased="#onSearch"
+        <TextField fx:id="searchField" promptText="🔍 Rechercher…"
+                   prefWidth="180" onKeyReleased="#onSearch"
                    style="-fx-background-radius:20; -fx-border-radius:20;
-                          -fx-border-color:#ccc; -fx-padding:6 12;"/>
+                          -fx-border-color:#ccc; -fx-padding:6 12; -fx-font-size:11px;"/>
 
         <Button text="📅 Calendrier" onAction="#showCalendarView"
                 style="-fx-background-color:#9b59b6; -fx-text-fill:white;
-                       -fx-font-weight:bold; -fx-background-radius:6;
-                       -fx-cursor:hand; -fx-padding:8 16;"/>
+                       -fx-font-weight:bold; -fx-background-radius:6; -fx-font-size:11px;
+                       -fx-cursor:hand; -fx-padding:6 12;"/>
 
         <Button text="▲ Capacité" onAction="#sortAsc"
                 style="-fx-background-color:#e8f4fd; -fx-border-color:#b8d9f0;
-                       -fx-background-radius:6; -fx-cursor:hand; -fx-padding:6 12;"/>
+                       -fx-background-radius:6; -fx-font-size:11px; -fx-cursor:hand; -fx-padding:6 10;"/>
+
         <Button text="▼ Capacité" onAction="#sortDesc"
                 style="-fx-background-color:#fef9e7; -fx-border-color:#f0d9a0;
-                       -fx-background-radius:6; -fx-cursor:hand; -fx-padding:6 12;"/>
+                       -fx-background-radius:6; -fx-font-size:11px; -fx-cursor:hand; -fx-padding:6 10;"/>
 
-        <Button text="＋  Ajouter" onAction="#openAddPage"
+        <Button text="➕ Ajouter" onAction="#openAddPage"
                 style="-fx-background-color:#1f4f65; -fx-text-fill:white;
-                       -fx-font-weight:bold; -fx-background-radius:6;
-                       -fx-cursor:hand; -fx-padding:8 16;"/>
+                       -fx-font-weight:bold; -fx-background-radius:6; -fx-font-size:11px;
+                       -fx-cursor:hand; -fx-padding:6 12;"/>
     </HBox>
 
-    <!-- ══ STATISTICS BAR ═══════════════════════════════════════════ -->
-    <HBox alignment="CENTER" spacing="12" style="-fx-background-color:#ffffff; -fx-border-color:#e0e0e0;
-                                                   -fx-border-width:0 0 1 0; -fx-padding:12 20 12 20;">
-        <!-- ══ BOUTON STATISTIQUES CAPACITÉ ══ -->
-        <Button text="📊  Statistiques capacité" onAction="#showStatsCapacite"
-                style="-fx-background-color:#1f7a5e; -fx-text-fill:white;
+    <!-- ══ TOOLBAR LIGNE 2 ══════════════════════════════════════════ -->
+    <HBox alignment="CENTER" spacing="10"
+          style="-fx-background-color:#f8f9fa; -fx-border-color:#e0e0e0;
+                 -fx-border-width:0 0 1 0; -fx-padding:10 20 10 20;">
+
+        <Button text="📊 Stats capacité" onAction="#showStatsCapacite"
+                style="-fx-background-color:#1f7a5e; -fx-text-fill:white; -fx-font-size:11px;
                        -fx-font-weight:bold; -fx-background-radius:6;
-                       -fx-cursor:hand; -fx-padding:8 16;"/>
-        <!-- ══ BOUTON STATS CREATIONS ══ -->
-        <Button text="📊  Stats creations" onAction="#showStatsCreations"
-                style="-fx-background-color:#0d6efd; -fx-text-fill:white;
+                       -fx-cursor:hand; -fx-padding:6 12;"/>
+
+        <Button text="📊 Stats créations" onAction="#showStatsCreations"
+                style="-fx-background-color:#0d6efd; -fx-text-fill:white; -fx-font-size:11px;
                        -fx-font-weight:bold; -fx-background-radius:6;
-                       -fx-cursor:hand; -fx-padding:8 16;"/>
-        <!-- ══ BOUTON RECOMMANDATIONS MONDIALES ══ -->
-        <Button text="🌍 Recommandations Mondiales" onAction="#showRecommandationsMondiales"
-                style="-fx-background-color:#2c3e50; -fx-text-fill:white;
+                       -fx-cursor:hand; -fx-padding:6 12;"/>
+
+        <Button text="🌍 Recommandations" onAction="#showRecommandationsMondiales"
+                style="-fx-background-color:#2c3e50; -fx-text-fill:white; -fx-font-size:11px;
                        -fx-font-weight:bold; -fx-background-radius:6;
-                       -fx-cursor:hand; -fx-padding:8 16;"/>
+                       -fx-cursor:hand; -fx-padding:6 12;"/>
     </HBox>
 
     <!-- ══ TABLE ════════════════════════════════════════════════════ -->
@@ -74,7 +75,7 @@
             <TableColumn fx:id="colOrganisme"    text="Organisme"   prefWidth="110"/>
             <TableColumn fx:id="colEmail"        text="Email"       prefWidth="140"/>
             <TableColumn fx:id="colTelephone"    text="Tél."        prefWidth="100"/>
-            <TableColumn fx:id="colActions" text="Actions" minWidth="200" />
+            <TableColumn fx:id="colActions"      text="Actions"     minWidth="280" prefWidth="280"/>
         </columns>
         <placeholder>
             <Label text="Aucun événement trouvé."
@@ -82,7 +83,7 @@
         </placeholder>
     </TableView>
 
-    <!-- ══ EDIT DIALOG OVERLAY (modification uniquement) ════════════ -->
+    <!-- ══ EDIT DIALOG OVERLAY ══════════════════════════════════════ -->
     <StackPane fx:id="dialogOverlay" visible="false" managed="false"
                style="-fx-background-color:rgba(0,0,0,0.45);">
         <VBox.margin><Insets/></VBox.margin>
@@ -142,7 +143,7 @@
                 <Button text="Annuler" onAction="#closeDialog"
                         style="-fx-background-color:#e0e0e0; -fx-background-radius:6;
                                -fx-padding:8 20; -fx-cursor:hand;"/>
-                <Button text="💾  Enregistrer" onAction="#saveEvenement"
+                <Button text="💾 Enregistrer" onAction="#saveEvenement"
                         style="-fx-background-color:#1f4f65; -fx-text-fill:white;
                                -fx-font-weight:bold; -fx-background-radius:6;
                                -fx-padding:8 20; -fx-cursor:hand;"/>
