@@ -4,15 +4,21 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.example.entities.Organisme;
 import org.example.Services.OrganismeService;
 
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class OrganismeController {
 
@@ -34,7 +40,7 @@ public class OrganismeController {
     // ── Toolbar ───────────────────────────────────────────────────────
     @FXML private TextField searchField;
 
-    // ── Edit Dialog (kept for edit only) ──────────────────────────────
+    // ── Edit Dialog ───────────────────────────────────────────────────
     @FXML private StackPane        dialogOverlay;
     @FXML private Label            dialogTitle;
     @FXML private TextField        fNom;
@@ -55,7 +61,6 @@ public class OrganismeController {
     private final ObservableList<Organisme> data   = FXCollections.observableArrayList();
     private Organisme editingOrganisme = null;
 
-    // Dashboard reference for navigation
     private DashboardController dashboardController;
 
     public void setDashboardController(DashboardController dc) {
@@ -158,7 +163,7 @@ public class OrganismeController {
     }
 
     // ══════════════════════════════════════════════════════════════════
-    //  ADD — navigate to dedicated page
+    //  ADD
     // ══════════════════════════════════════════════════════════════════
     @FXML
     private void openAddDialog() {
@@ -168,7 +173,7 @@ public class OrganismeController {
     }
 
     // ══════════════════════════════════════════════════════════════════
-    //  EDIT DIALOG (inline, kept for editing existing records)
+    //  EDIT
     // ══════════════════════════════════════════════════════════════════
     private void openEditDialog(Organisme o) {
         if (dashboardController != null) {
@@ -215,6 +220,165 @@ public class OrganismeController {
                 }
             }
         });
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  ████  STATISTIQUES  ████
+    // ══════════════════════════════════════════════════════════════════
+
+    /**
+     * Stats par Type — PieChart violet
+     * Compte combien d'organismes pour chaque valeur du champ "type".
+     */
+    @FXML
+    private void showStatsByType() {
+        List<Organisme> all = getCurrentData();
+        if (all.isEmpty()) { showAlert(Alert.AlertType.INFORMATION, "Stats par Type", "Aucune donnée disponible."); return; }
+
+        // Compter par type
+        Map<String, Integer> counts = new LinkedHashMap<>();
+        for (Organisme o : all) {
+            String key = o.getType() != null && !o.getType().isBlank() ? o.getType() : "Non défini";
+            counts.merge(key, 1, Integer::sum);
+        }
+
+        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
+        counts.forEach((type, count) ->
+                pieData.add(new PieChart.Data(type + " (" + count + ")", count)));
+
+        openStatsWindow(
+                "📊  Statistiques par Type",
+                pieData,
+                "#7c3aed",   // violet — même couleur que le bouton
+                all.size()
+        );
+    }
+
+    /**
+     * Stats par Ville — PieChart vert foncé
+     * Compte combien d'organismes par ville.
+     */
+    @FXML
+    private void showStatsByVille() {
+        List<Organisme> all = getCurrentData();
+        if (all.isEmpty()) { showAlert(Alert.AlertType.INFORMATION, "Stats par Ville", "Aucune donnée disponible."); return; }
+
+        Map<String, Integer> counts = new TreeMap<>();
+        for (Organisme o : all) {
+            String key = o.getVille() != null && !o.getVille().isBlank() ? o.getVille() : "Non défini";
+            counts.merge(key, 1, Integer::sum);
+        }
+
+        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
+        counts.forEach((ville, count) ->
+                pieData.add(new PieChart.Data(ville + " (" + count + ")", count)));
+
+        openStatsWindow(
+                "📊  Statistiques par Ville",
+                pieData,
+                "#0f6b5e",   // vert foncé — même couleur que le bouton
+                all.size()
+        );
+    }
+
+    /**
+     * Stats Frais Min — PieChart marron/orange
+     * Regroupe les organismes par tranche de frais :
+     *   0–500 TND / 500–1000 / 1000–2000 / 2000–5000 / 5000+
+     */
+    @FXML
+    private void showStatsByFrais() {
+        List<Organisme> all = getCurrentData();
+        if (all.isEmpty()) { showAlert(Alert.AlertType.INFORMATION, "Stats Frais Min", "Aucune donnée disponible."); return; }
+
+        // Tranches de frais
+        Map<String, Integer> tranches = new LinkedHashMap<>();
+        tranches.put("0 – 500 TND",      0);
+        tranches.put("500 – 1 000 TND",  0);
+        tranches.put("1 000 – 2 000 TND",0);
+        tranches.put("2 000 – 5 000 TND",0);
+        tranches.put("5 000+ TND",        0);
+
+        for (Organisme o : all) {
+            double f = o.getFraisMin();
+            if      (f < 500)   tranches.merge("0 – 500 TND",       1, Integer::sum);
+            else if (f < 1000)  tranches.merge("500 – 1 000 TND",   1, Integer::sum);
+            else if (f < 2000)  tranches.merge("1 000 – 2 000 TND", 1, Integer::sum);
+            else if (f < 5000)  tranches.merge("2 000 – 5 000 TND", 1, Integer::sum);
+            else                tranches.merge("5 000+ TND",          1, Integer::sum);
+        }
+
+        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
+        tranches.forEach((label, count) -> {
+            if (count > 0)
+                pieData.add(new PieChart.Data(label + " (" + count + ")", count));
+        });
+
+        openStatsWindow(
+                "📈  Statistiques Frais Min",
+                pieData,
+                "#b45309",   // marron/orange — même couleur que le bouton
+                all.size()
+        );
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  HELPER : ouvrir une fenêtre popup avec PieChart stylisé
+    // ══════════════════════════════════════════════════════════════════
+    private void openStatsWindow(String title,
+                                 ObservableList<PieChart.Data> pieData,
+                                 String accentColor,
+                                 int total) {
+
+        // ── PieChart ────────────────────────────────────────────────
+        PieChart chart = new PieChart(pieData);
+        chart.setTitle(title);
+        chart.setLegendVisible(true);
+        chart.setLabelsVisible(true);
+        chart.setStartAngle(90);
+        chart.setPrefSize(520, 400);
+
+        // ── Label total ─────────────────────────────────────────────
+        Label lblTotal = new Label("Total : " + total + " organisme" + (total > 1 ? "s" : ""));
+        lblTotal.setStyle("-fx-font-size:13px; -fx-text-fill:#555; -fx-padding:0 0 8 0;");
+
+        // ── Bouton fermer ────────────────────────────────────────────
+        Button btnClose = new Button("Fermer");
+        btnClose.setStyle(
+                "-fx-background-color:" + accentColor + "; -fx-text-fill:white;" +
+                        "-fx-font-weight:bold; -fx-background-radius:8;" +
+                        "-fx-cursor:hand; -fx-padding:8 28; -fx-font-size:13px;");
+
+        // ── Layout ───────────────────────────────────────────────────
+        VBox root = new VBox(12, chart, lblTotal, btnClose);
+        root.setAlignment(javafx.geometry.Pos.CENTER);
+        root.setStyle(
+                "-fx-background-color:#ffffff;" +
+                        "-fx-padding:24;" +
+                        "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.15),16,0,0,4);");
+        root.setPrefWidth(580);
+
+        // ── Stage popup ──────────────────────────────────────────────
+        Stage popup = new Stage();
+        popup.setTitle(title);
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setResizable(false);
+
+        btnClose.setOnAction(e -> popup.close());
+
+        Scene scene = new Scene(root);
+        popup.setScene(scene);
+        popup.showAndWait();
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  HELPER : récupère les données actuellement affichées dans la table
+    //  (après recherche/filtre éventuel)
+    // ══════════════════════════════════════════════════════════════════
+    private List<Organisme> getCurrentData() {
+        // On utilise data (ObservableList) qui reflète déjà le résultat
+        // de la dernière recherche ou du tri.
+        return data;
     }
 
     // ══════════════════════════════════════════════════════════════════

@@ -11,10 +11,10 @@
     <!-- ══ MAIN CONTENT ══════════════════════════════════════════════ -->
     <VBox spacing="0">
 
-        <!-- ══ TOOLBAR ══════════════════════════════════════════════ -->
+        <!-- ══ TOOLBAR ROW 1 : titre + recherche + tri + ajouter ════ -->
         <HBox alignment="CENTER_LEFT" spacing="12"
               style="-fx-background-color:#ffffff; -fx-border-color:#e0e0e0;
-                     -fx-border-width:0 0 1 0; -fx-padding:14 20 14 20;">
+                     -fx-border-width:0 0 1 0; -fx-padding:14 20 10 20;">
 
             <Label text="🏢  Organismes"
                    style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
@@ -36,6 +36,30 @@
                     style="-fx-background-color:#1f4f65; -fx-text-fill:white;
                            -fx-font-weight:bold; -fx-background-radius:6;
                            -fx-cursor:hand; -fx-padding:8 16;"/>
+        </HBox>
+
+        <!-- ══ TOOLBAR ROW 2 : boutons statistiques ═════════════════ -->
+        <HBox alignment="CENTER" spacing="10"
+              style="-fx-background-color:#ffffff; -fx-border-color:#e0e0e0;
+                     -fx-border-width:0 0 1 0; -fx-padding:10 20 12 20;">
+
+            <!-- Stats par Type — violet -->
+            <Button text="📊  Stats par Type" onAction="#showStatsByType"
+                    style="-fx-background-color:#7c3aed; -fx-text-fill:white;
+                           -fx-font-weight:bold; -fx-background-radius:8;
+                           -fx-cursor:hand; -fx-padding:9 18; -fx-font-size:13px;"/>
+
+            <!-- Stats par Ville — vert foncé -->
+            <Button text="📊  Stats par Ville" onAction="#showStatsByVille"
+                    style="-fx-background-color:#0f6b5e; -fx-text-fill:white;
+                           -fx-font-weight:bold; -fx-background-radius:8;
+                           -fx-cursor:hand; -fx-padding:9 18; -fx-font-size:13px;"/>
+
+            <!-- Stats Frais Min — marron/orange -->
+            <Button text="📈  Stats Frais Min" onAction="#showStatsByFrais"
+                    style="-fx-background-color:#b45309; -fx-text-fill:white;
+                           -fx-font-weight:bold; -fx-background-radius:8;
+                           -fx-cursor:hand; -fx-padding:9 18; -fx-font-size:13px;"/>
         </HBox>
 
         <!-- ══ TABLE ════════════════════════════════════════════════ -->

@@ -21,7 +21,25 @@
             <version>8.0.33</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+
+
         <!-- JavaFX -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>17.0.2</version>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -29,10 +47,17 @@
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
+            <artifactId>javafx-media</artifactId>
             <version>17.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>javazoom</groupId>
+            <artifactId>jlayer</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
     </dependencies>
+
 
     <build>
         <resources>
@@ -41,13 +66,19 @@
             </resource>
         </resources>
         <plugins>
-            <!-- ✅ Plugin JavaFX -->
+            <!-- ✅ Plugin JavaFX avec configuration module -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>org.example.Main</mainClass>
+                    <options>
+                        <option>--add-opens</option>
+                        <option>javafx.graphics/com.sun.glass.utils=ALL-UNNAMED</option>
+                        <option>--add-opens</option>
+                        <option>javafx.media/com.sun.media.jfxmediaimpl=ALL-UNNAMED</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

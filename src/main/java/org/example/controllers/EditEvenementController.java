@@ -211,8 +211,8 @@ public class EditEvenementController {
         ok &= ValidationUtil.required(fMode, errMode,
                 "Veuillez sélectionner un mode.");
 
-        ok &= ValidationUtil.minLength(fTitre, errTitre, 3,
-                "Le titre doit contenir au moins 3 caractères.");
+        ok &= ValidationUtil.minLength(fTitre, errTitre, 1,
+                "Le titre doit contenir au moins 1 caractères.");
         ok &= ValidationUtil.maxLength(fTitre, errTitre, 100,
                 "Le titre ne peut pas dépasser 100 caractères.");
 

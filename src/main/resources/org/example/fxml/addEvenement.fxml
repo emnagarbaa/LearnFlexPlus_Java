@@ -3,7 +3,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
 
-
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="org.example.controllers.AddEvenementController"
            style="-fx-background-color:#f0f4f8;">
@@ -127,18 +126,34 @@
                                           -fx-border-color:#dce3ea; -fx-padding:10 14; -fx-font-size:13px;"/>
                     </VBox>
 
-                    <!-- Description -->
+                    <!-- ══ DESCRIPTION + BOUTON IA ══ -->
                     <VBox spacing="4">
                         <Label text="Description"
                                style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#555;"/>
-                        <TextArea fx:id="fDescription" prefRowCount="4"
-                                  promptText="Décrivez l'événement…"
-                                  style="-fx-background-radius:8; -fx-border-radius:8;
-                                         -fx-border-color:#dce3ea; -fx-padding:10 14; -fx-font-size:13px;"/>
+                        <StackPane>
+                            <TextArea fx:id="fDescription" prefRowCount="4"
+                                      promptText="Entrez un titre puis cliquez sur 🤖 pour générer…"
+                                      style="-fx-background-radius:8; -fx-border-radius:8;
+                                             -fx-border-color:#dce3ea; -fx-padding:10 10 40 14;
+                                             -fx-font-size:13px;"/>
+                            <Button fx:id="btnGenerateAI"
+                                    text="🤖 Générer avec l'IA"
+                                    onAction="#handleGenerateAI"
+                                    StackPane.alignment="BOTTOM_RIGHT"
+                                    style="-fx-translate-x:-8; -fx-translate-y:-8;
+                                           -fx-background-color:#e8f4fd; -fx-text-fill:#1f4f65;
+                                           -fx-border-color:#1f4f65; -fx-border-radius:6;
+                                           -fx-background-radius:6; -fx-font-size:11px;
+                                           -fx-font-weight:bold; -fx-cursor:hand; -fx-padding:5 10;"/>
+                        </StackPane>
+                        <Label fx:id="aiLoadingLabel" text="⏳ Génération en cours..."
+                               visible="false" managed="false"
+                               style="-fx-text-fill:#1f4f65; -fx-font-size:11px;"/>
                         <Label fx:id="errDescription" text=""
                                style="-fx-text-fill:#e74c3c; -fx-font-size:11px;"
                                visible="false" managed="false"/>
                     </VBox>
+
                 </VBox>
 
                 <!-- RIGHT COLUMN -->

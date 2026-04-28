@@ -21,6 +21,11 @@
                    style="-fx-background-radius:20; -fx-border-radius:20;
                           -fx-border-color:#ccc; -fx-padding:6 12;"/>
 
+        <Button text="📅 Calendrier" onAction="#showCalendarView"
+                style="-fx-background-color:#9b59b6; -fx-text-fill:white;
+                       -fx-font-weight:bold; -fx-background-radius:6;
+                       -fx-cursor:hand; -fx-padding:8 16;"/>
+
         <Button text="▲ Capacité" onAction="#sortAsc"
                 style="-fx-background-color:#e8f4fd; -fx-border-color:#b8d9f0;
                        -fx-background-radius:6; -fx-cursor:hand; -fx-padding:6 12;"/>
@@ -30,6 +35,26 @@
 
         <Button text="＋  Ajouter" onAction="#openAddPage"
                 style="-fx-background-color:#1f4f65; -fx-text-fill:white;
+                       -fx-font-weight:bold; -fx-background-radius:6;
+                       -fx-cursor:hand; -fx-padding:8 16;"/>
+    </HBox>
+
+    <!-- ══ STATISTICS BAR ═══════════════════════════════════════════ -->
+    <HBox alignment="CENTER" spacing="12" style="-fx-background-color:#ffffff; -fx-border-color:#e0e0e0;
+                                                   -fx-border-width:0 0 1 0; -fx-padding:12 20 12 20;">
+        <!-- ══ BOUTON STATISTIQUES CAPACITÉ ══ -->
+        <Button text="📊  Statistiques capacité" onAction="#showStatsCapacite"
+                style="-fx-background-color:#1f7a5e; -fx-text-fill:white;
+                       -fx-font-weight:bold; -fx-background-radius:6;
+                       -fx-cursor:hand; -fx-padding:8 16;"/>
+        <!-- ══ BOUTON STATS CREATIONS ══ -->
+        <Button text="📊  Stats creations" onAction="#showStatsCreations"
+                style="-fx-background-color:#0d6efd; -fx-text-fill:white;
+                       -fx-font-weight:bold; -fx-background-radius:6;
+                       -fx-cursor:hand; -fx-padding:8 16;"/>
+        <!-- ══ BOUTON RECOMMANDATIONS MONDIALES ══ -->
+        <Button text="🌍 Recommandations Mondiales" onAction="#showRecommandationsMondiales"
+                style="-fx-background-color:#2c3e50; -fx-text-fill:white;
                        -fx-font-weight:bold; -fx-background-radius:6;
                        -fx-cursor:hand; -fx-padding:8 16;"/>
     </HBox>

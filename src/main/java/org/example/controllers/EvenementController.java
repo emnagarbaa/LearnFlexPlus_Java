@@ -4,34 +4,53 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.example.entities.Evenement;
+import org.example.entities.EvenementMondialDTO;
 import org.example.entities.Organisme;
 import org.example.Services.EvenementService;
 import org.example.Services.OrganismeService;
+import org.example.Services.RecommendationService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EvenementController {
 
     // ── Table ─────────────────────────────────────────────────────────
-    @FXML private TableView<Evenement>              table;
-    @FXML private TableColumn<Evenement,Integer>    colId;
-    @FXML private TableColumn<Evenement,String>     colTitre;
-    @FXML private TableColumn<Evenement,String>     colLieu;
-    @FXML private TableColumn<Evenement,String>     colMode;
-    @FXML private TableColumn<Evenement,String>     colCapacite;
-    @FXML private TableColumn<Evenement,String>     colDateDebut;
-    @FXML private TableColumn<Evenement,String>     colDateFin;
-    @FXML private TableColumn<Evenement,String>     colPublicCible;
-    @FXML private TableColumn<Evenement,String>     colOrganisme;
-    @FXML private TableColumn<Evenement,String>     colEmail;
-    @FXML private TableColumn<Evenement,String>     colTelephone;
-    @FXML private TableColumn<Evenement,Void>       colActions;
+    @FXML private TableView<Evenement>           table;
+    @FXML private TableColumn<Evenement,Integer> colId;
+    @FXML private TableColumn<Evenement,String>  colTitre;
+    @FXML private TableColumn<Evenement,String>  colLieu;
+    @FXML private TableColumn<Evenement,String>  colMode;
+    @FXML private TableColumn<Evenement,String>  colCapacite;
+    @FXML private TableColumn<Evenement,String>  colDateDebut;
+    @FXML private TableColumn<Evenement,String>  colDateFin;
+    @FXML private TableColumn<Evenement,String>  colPublicCible;
+    @FXML private TableColumn<Evenement,String>  colOrganisme;
+    @FXML private TableColumn<Evenement,String>  colEmail;
+    @FXML private TableColumn<Evenement,String>  colTelephone;
+    @FXML private TableColumn<Evenement,Void>    colActions;
 
     // ── Toolbar ───────────────────────────────────────────────────────
     @FXML private TextField searchField;
@@ -53,13 +72,15 @@ public class EvenementController {
     @FXML private TextArea         fDescription;
 
     // ── State ─────────────────────────────────────────────────────────
-    private final EvenementService service  = new EvenementService();
-    private final OrganismeService          orgService = new OrganismeService();
-    private final ObservableList<Evenement> data     = FXCollections.observableArrayList();
+    private final EvenementService       service               = new EvenementService();
+    private final OrganismeService       orgService            = new OrganismeService();
+    private final RecommendationService  recommendationService = new RecommendationService();
+    private final ObservableList<Evenement> data = FXCollections.observableArrayList();
     private Evenement editingEvenement = null;
     private DashboardController dashboardController;
 
-    private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter FMT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public void setDashboardController(DashboardController dc) {
         this.dashboardController = dc;
@@ -96,11 +117,11 @@ public class EvenementController {
         colEmail.setCellValueFactory(new PropertyValueFactory<>("contactEmail"));
         colTelephone.setCellValueFactory(new PropertyValueFactory<>("contactTelephone"));
 
-        // Actions
         colActions.setCellFactory(col -> new TableCell<>() {
             private final Button btnEdit   = new Button("Modifier");
             private final Button btnDelete = new Button("Supprimer");
-            private final HBox   box       = new HBox(8, btnEdit, btnDelete);
+            private final Button btnShare  = new Button("🌐 Partager");
+            private final HBox   box       = new HBox(8, btnEdit, btnDelete, btnShare);
             {
                 btnEdit.setStyle(
                         "-fx-background-color:#f0ad4e; -fx-text-fill:white; -fx-cursor:hand;" +
@@ -108,9 +129,14 @@ public class EvenementController {
                 btnDelete.setStyle(
                         "-fx-background-color:#d9534f; -fx-text-fill:white;" +
                                 "-fx-cursor:hand; -fx-background-radius:4; -fx-padding:6 12; -fx-font-size:12px; -fx-font-weight:bold;");
+                btnShare.setStyle(
+                        "-fx-background-color:#2c3e50; -fx-text-fill:white; -fx-cursor:hand;" +
+                                "-fx-background-radius:4; -fx-padding:6 12; -fx-font-size:12px; -fx-font-weight:bold;");
                 btnEdit.setOnAction(e -> openEditDialog(
                         getTableView().getItems().get(getIndex())));
                 btnDelete.setOnAction(e -> confirmDelete(
+                        getTableView().getItems().get(getIndex())));
+                btnShare.setOnAction(e -> showShareDialog(
                         getTableView().getItems().get(getIndex())));
             }
             @Override
@@ -126,7 +152,6 @@ public class EvenementController {
     private void setupComboBoxes() {
         fMode.setItems(FXCollections.observableArrayList(
                 "Présentiel", "En ligne", "Hybride"));
-        // Load organismes into combobox
         try {
             ObservableList<String> orgNames = FXCollections.observableArrayList();
             orgNames.add("-- Aucun --");
@@ -158,8 +183,10 @@ public class EvenementController {
         }
     }
 
-    @FXML private void sortAsc()  { sortBy(true); }
-    @FXML private void sortDesc() { sortBy(false); }
+    @FXML
+    private void sortAsc()  { sortBy(true); }
+    @FXML
+    private void sortDesc() { sortBy(false); }
 
     private void sortBy(boolean asc) {
         try {
@@ -170,7 +197,240 @@ public class EvenementController {
     }
 
     // ══════════════════════════════════════════════════════════════════
-    //  ADD — navigate to dedicated add page
+    //  📅 CALENDAR VIEW
+    // ══════════════════════════════════════════════════════════════════
+    @FXML
+    private void showCalendarView() {
+        Stage calendarStage = new Stage();
+        calendarStage.setTitle("📅 Calendrier des Événements");
+        calendarStage.initModality(Modality.APPLICATION_MODAL);
+        calendarStage.setWidth(900);
+        calendarStage.setHeight(700);
+
+        VBox root = new VBox(10);
+        root.setPadding(new Insets(20));
+        root.setStyle("-fx-background-color:#f4f6f9;");
+
+        // ── Header avec titre et navigation ──
+        HBox header = createCalendarHeader();
+        root.getChildren().add(header);
+
+        // ── Calendar grid ──
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        GridPane calendarGrid = createCalendarGrid();
+        scrollPane.setContent(calendarGrid);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+        root.getChildren().add(scrollPane);
+
+        Scene scene = new Scene(root);
+        calendarStage.setScene(scene);
+        calendarStage.show();
+    }
+
+    private HBox createCalendarHeader() {
+        YearMonth currentMonth = YearMonth.now();
+        Label titleLabel = new Label(currentMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy")));
+        titleLabel.setFont(Font.font("System", FontWeight.BOLD, 20));
+        titleLabel.setTextFill(Color.web("#1f4f65"));
+
+        Button prevBtn = new Button("← Précédent");
+        Button nextBtn = new Button("Suivant →");
+        Button todayBtn = new Button("Aujourd'hui");
+
+        prevBtn.setStyle("-fx-padding:8 16; -fx-background-color:#e8f4fd; -fx-cursor:hand;");
+        nextBtn.setStyle("-fx-padding:8 16; -fx-background-color:#e8f4fd; -fx-cursor:hand;");
+        todayBtn.setStyle("-fx-padding:8 16; -fx-background-color:#1f4f65; -fx-text-fill:white; -fx-cursor:hand;");
+
+        HBox header = new HBox(15, prevBtn, titleLabel, nextBtn, todayBtn);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setPadding(new Insets(10));
+        header.setStyle("-fx-background-color:white; -fx-border-color:#e0e0e0; -fx-border-width:0 0 1 0;");
+
+        return header;
+    }
+
+    private GridPane createCalendarGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(5);
+        grid.setVgap(5);
+        grid.setPadding(new Insets(15));
+        grid.setStyle("-fx-background-color:white;");
+
+        try {
+            List<Evenement> allEvents = service.findAll();
+
+            // ── Days of week header ──
+            String[] daysOfWeek = {"Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"};
+            for (int i = 0; i < 7; i++) {
+                Label dayLabel = new Label(daysOfWeek[i]);
+                dayLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+                dayLabel.setTextFill(Color.web("#64748b"));
+                dayLabel.setPadding(new Insets(10));
+                dayLabel.setStyle("-fx-background-color:#f8fafc; -fx-border-color:#e2e8f0; -fx-border-width:0 0 1 0;");
+                dayLabel.setMaxWidth(Double.MAX_VALUE);
+                dayLabel.setAlignment(Pos.CENTER);
+                grid.add(dayLabel, i, 0);
+            }
+
+            // ── Calendar days ──
+            LocalDate today = LocalDate.now();
+            YearMonth currentMonth = YearMonth.now();
+            LocalDate firstDay = currentMonth.atDay(1);
+            LocalDate lastDay = currentMonth.atEndOfMonth();
+            int dayOfWeekOffset = firstDay.getDayOfWeek().getValue() % 7;
+
+            int row = 1;
+            int col = dayOfWeekOffset;
+
+            for (LocalDate date = firstDay; !date.isAfter(lastDay); date = date.plusDays(1)) {
+                VBox dayCell = createDayCell(date, allEvents, today);
+                grid.add(dayCell, col, row);
+
+                col++;
+                if (col > 6) {
+                    col = 0;
+                    row++;
+                }
+            }
+
+            // ── Column constraints ──
+            for (int i = 0; i < 7; i++) {
+                ColumnConstraints cc = new ColumnConstraints(120);
+                cc.setHgrow(Priority.ALWAYS);
+                grid.getColumnConstraints().add(cc);
+            }
+
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de charger le calendrier: " + e.getMessage());
+        }
+
+        return grid;
+    }
+
+    private VBox createDayCell(LocalDate date, List<Evenement> allEvents, LocalDate today) {
+        VBox cellBox = new VBox(5);
+        cellBox.setMinHeight(100);
+        cellBox.setPadding(new Insets(8));
+        cellBox.setStyle("-fx-border-color:#e2e8f0; -fx-border-width:1;");
+        cellBox.setAlignment(Pos.TOP_LEFT);
+
+        // ── Day number ──
+        Label dayLabel = new Label(String.valueOf(date.getDayOfMonth()));
+        dayLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
+        if (date.equals(today)) {
+            dayLabel.setStyle("-fx-text-fill:#1f7a5e; -fx-background-color:#d1fae5; -fx-padding:4 8; -fx-border-radius:4;");
+        } else {
+            dayLabel.setStyle("-fx-text-fill:#4a5568;");
+        }
+
+        cellBox.getChildren().add(dayLabel);
+
+        // ── Filter events for this date ──
+        List<Evenement> dayEvents = allEvents.stream()
+                .filter(e -> e.getDateDebut() != null && e.getDateDebut().toLocalDate().equals(date))
+                .collect(Collectors.toList());
+
+        // ── Display events ──
+        for (Evenement event : dayEvents.stream().limit(3).collect(Collectors.toList())) {
+            Label eventLabel = new Label(event.getTitre());
+            eventLabel.setFont(Font.font("System", 11));
+            eventLabel.setTextFill(Color.WHITE);
+            eventLabel.setWrapText(true);
+            eventLabel.setStyle(
+                    "-fx-background-color:#1f4f65; -fx-padding:4 6; -fx-border-radius:3; " +
+                            "-fx-cursor:hand; -fx-background-insets:0;");
+            eventLabel.setMaxWidth(Double.MAX_VALUE);
+            eventLabel.setOnMouseClicked(e -> showEventDetailsModal(event));
+
+            cellBox.getChildren().add(eventLabel);
+        }
+
+        // ── Show more indicator ──
+        if (dayEvents.size() > 3) {
+            Label moreLabel = new Label("+" + (dayEvents.size() - 3) + " plus");
+            moreLabel.setFont(Font.font("System", 10));
+            moreLabel.setStyle("-fx-text-fill:#3b82f6; -fx-cursor:hand;");
+            cellBox.getChildren().add(moreLabel);
+        }
+
+        return cellBox;
+    }
+
+    private void showEventDetailsModal(Evenement event) {
+        Stage modalStage = new Stage();
+        modalStage.setTitle("Détails de l'événement");
+        modalStage.initModality(Modality.APPLICATION_MODAL);
+        modalStage.setWidth(500);
+        modalStage.setHeight(600);
+
+        VBox content = new VBox(15);
+        content.setPadding(new Insets(25));
+        content.setStyle("-fx-background-color:#f4f6f9;");
+
+        // ── Title ──
+        Label titleLabel = new Label(event.getTitre());
+        titleLabel.setFont(Font.font("System", FontWeight.BOLD, 22));
+        titleLabel.setTextFill(Color.web("#1f4f65"));
+
+        // ── Date/Time ──
+        Label dateLabel = new Label("📅 " + (event.getDateDebut() != null ?
+                event.getDateDebut().format(DateTimeFormatter.ofPattern("dd MMMM yyyy - HH:mm")) : "Date non définie"));
+        dateLabel.setStyle("-fx-font-size:13px; -fx-text-fill:#3b82f6; -fx-font-weight:bold;");
+
+        // ── Location ──
+        Label locationLabel = new Label("📍 " + (event.getLieu() != null ? event.getLieu() : "-"));
+        locationLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#ecc94b;");
+
+        // ── Mode ──
+        Label modeLabel = new Label("🎯 Mode: " + (event.getMode() != null ? event.getMode() : "-"));
+        modeLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#0f6b5e;");
+
+        // ── Capacity ──
+        Label capacityLabel = new Label("👥 Capacité: " + event.getCapaciteMax());
+        capacityLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#666;");
+
+        // ── Public Cible ──
+        Label publicLabel = new Label("🎓 Public cible: " + (event.getPublicCible() != null ? event.getPublicCible() : "-"));
+        publicLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#666;");
+
+        // ── Contact ──
+        Label contactLabel = new Label("✉️ Contact: " + (event.getContactEmail() != null ? event.getContactEmail() : "-"));
+        contactLabel.setStyle("-fx-font-size:12px; -fx-text-fill:#666;");
+
+        // ── Description ──
+        Label descLabel = new Label("Description:");
+        descLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        TextArea descArea = new TextArea(event.getDescription() != null ? event.getDescription() : "-");
+        descArea.setWrapText(true);
+        descArea.setPrefRowCount(5);
+        descArea.setStyle("-fx-control-inner-background:#ffffff; -fx-font-size:12px;");
+        descArea.setEditable(false);
+
+        // ── Close button ──
+        Button closeBtn = new Button("Fermer");
+        closeBtn.setStyle("-fx-padding:10 30; -fx-background-color:#e0e0e0; -fx-cursor:hand; -fx-font-weight:bold;");
+        closeBtn.setOnAction(e -> modalStage.close());
+
+        HBox btnBox = new HBox(closeBtn);
+        btnBox.setAlignment(Pos.CENTER_RIGHT);
+
+        content.getChildren().addAll(
+                titleLabel, dateLabel, locationLabel, modeLabel, capacityLabel,
+                publicLabel, contactLabel, descLabel, descArea, btnBox
+        );
+
+        ScrollPane scroll = new ScrollPane(content);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background-color:#f4f6f9;");
+
+        Scene scene = new Scene(scroll);
+        modalStage.setScene(scene);
+        modalStage.showAndWait();
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  ADD
     // ══════════════════════════════════════════════════════════════════
     @FXML
     private void openAddPage() {
@@ -230,6 +490,283 @@ public class EvenementController {
     }
 
     // ══════════════════════════════════════════════════════════════════
+    //  🌍 RECOMMANDATIONS MONDIALES
+    // ══════════════════════════════════════════════════════════════════
+    @FXML
+    private void showRecommandationsMondiales() {
+        Stage stage = new Stage();
+        stage.setTitle("🌍 Recommandations Mondiales d'Orientation");
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        // ── Header ──────────────────────────────────────────────────
+        Label titre = new Label("🌍  Événements d'Orientation dans le Monde");
+        titre.setFont(Font.font("System", FontWeight.BOLD, 16));
+        titre.setTextFill(Color.WHITE);
+
+        HBox header = new HBox(titre);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setPadding(new Insets(16, 24, 16, 24));
+        header.setStyle("-fx-background-color:#2c3e50;");
+
+        // ── Loading ──────────────────────────────────────────────────
+        Label loading = new Label("⏳  Chargement des événements mondiaux...");
+        loading.setFont(Font.font("System", 14));
+        loading.setPadding(new Insets(20));
+
+        // ── Cards container ──────────────────────────────────────────
+        VBox cardsBox = new VBox(12);
+        cardsBox.setPadding(new Insets(16));
+
+        ScrollPane scroll = new ScrollPane(cardsBox);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background-color:transparent; -fx-background:transparent;");
+
+        // ── Root ─────────────────────────────────────────────────────
+        VBox root = new VBox(header, loading, scroll);
+        root.setStyle("-fx-background-color:#f4f6f9;");
+        VBox.setVgrow(scroll, Priority.ALWAYS);
+
+        Scene scene = new Scene(root, 720, 580);
+        stage.setScene(scene);
+        stage.show();
+
+        // ── Appel API en arrière-plan ────────────────────────────────
+        Thread thread = new Thread(() -> {
+            try {
+                List<EvenementMondialDTO> events =
+                        recommendationService.getEvenementsOrientation();
+
+                javafx.application.Platform.runLater(() -> {
+                    root.getChildren().remove(loading);
+
+                    if (events.isEmpty()) {
+                        Label empty = new Label("Aucun événement trouvé.");
+                        empty.setFont(Font.font("System", 14));
+                        empty.setPadding(new Insets(20));
+                        cardsBox.getChildren().add(empty);
+                        return;
+                    }
+
+                    // Compteur en haut
+                    Label counter = new Label("✅  " + events.size()
+                            + " événement(s) trouvé(s) dans le monde");
+                    counter.setFont(Font.font("System", FontWeight.BOLD, 13));
+                    counter.setTextFill(Color.web("#2c3e50"));
+                    counter.setPadding(new Insets(0, 0, 8, 0));
+                    cardsBox.getChildren().add(counter);
+
+                    for (EvenementMondialDTO ev : events) {
+                        cardsBox.getChildren().add(buildEventCard(ev));
+                    }
+                });
+
+            } catch (Exception e) {
+                javafx.application.Platform.runLater(() -> {
+                    loading.setText("❌  Erreur : " + e.getMessage());
+                    loading.setStyle("-fx-text-fill:#d9534f; -fx-font-size:13px;");
+                });
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    /** Construit une card pour un événement mondial */
+    private VBox buildEventCard(EvenementMondialDTO ev) {
+        // Titre
+        Label lbTitre = new Label(ev.getTitle() != null ? ev.getTitle() : "Sans titre");
+        lbTitre.setFont(Font.font("System", FontWeight.BOLD, 14));
+        lbTitre.setWrapText(true);
+        lbTitre.setTextFill(Color.web("#2c3e50"));
+
+        // Date + Pays + Catégorie
+        String dateStr = (ev.getStart() != null && ev.getStart().length() >= 10)
+                ? ev.getStart().substring(0, 10) : "Date inconnue";
+        String paysStr = ev.getCountry() != null
+                ? ev.getCountry().toUpperCase() : "Pays inconnu";
+        String catStr  = ev.getCategory() != null
+                ? ev.getCategory() : "—";
+
+        Label lbMeta = new Label(
+                "📅 " + dateStr + "     🌍 " + paysStr + "     🏷️ " + catStr);
+        lbMeta.setStyle("-fx-text-fill:#555555; -fx-font-size:12px;");
+
+        // Participants
+        String participants = ev.getPhqAttendance() > 0
+                ? ev.getPhqAttendance() + " participants estimés"
+                : "Nombre de participants non disponible";
+        Label lbParticipants = new Label("👥 " + participants);
+        lbParticipants.setStyle("-fx-text-fill:#888888; -fx-font-size:12px;");
+
+        // Date de fin
+        String finStr = (ev.getEnd() != null && ev.getEnd().length() >= 10)
+                ? ev.getEnd().substring(0, 10) : null;
+        Label lbFin = finStr != null
+                ? new Label("🏁 Fin : " + finStr) : new Label("");
+        lbFin.setStyle("-fx-text-fill:#888888; -fx-font-size:12px;");
+
+        VBox card = new VBox(6, lbTitre, lbMeta, lbParticipants, lbFin);
+        card.setPadding(new Insets(14, 16, 14, 16));
+        card.setStyle(
+                "-fx-background-color:white;" +
+                        "-fx-background-radius:10;" +
+                        "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.10),8,0,0,3);"
+        );
+        return card;
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  STATISTIQUES CAPACITÉ
+    // ══════════════════════════════════════════════════════════════════
+    @FXML
+    private void showStatsCapacite() {
+        try {
+            List<Evenement> all = service.findAll();
+
+            long petite  = all.stream().filter(e -> e.getCapaciteMax() <= 50).count();
+            long moyenne = all.stream().filter(e -> e.getCapaciteMax() > 50
+                    && e.getCapaciteMax() <= 200).count();
+            long grande  = all.stream().filter(e -> e.getCapaciteMax() > 200).count();
+
+            ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList(
+                    new PieChart.Data("Petite (≤ 50)",    petite),
+                    new PieChart.Data("Moyenne (51-200)", moyenne),
+                    new PieChart.Data("Grande (> 200)",   grande)
+            );
+
+            PieChart chart = new PieChart(pieData);
+            chart.setTitle("Répartition par capacité");
+            chart.setLegendVisible(true);
+            chart.setLabelsVisible(true);
+            chart.setPrefSize(500, 400);
+            chart.setStyle("-fx-font-size:13px;");
+
+            HBox cards = buildCapaciteCards(all);
+            VBox root  = buildStatsRoot("📊  Statistiques Capacité", "#1f7a5e", chart, cards);
+            showStatsWindow("Statistiques Capacité", root);
+
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur statistiques", e.getMessage());
+        }
+    }
+
+    private HBox buildCapaciteCards(List<Evenement> all) {
+        int    total  = all.size();
+        int    maxCap = all.stream().mapToInt(Evenement::getCapaciteMax).max().orElse(0);
+        int    minCap = all.stream().mapToInt(Evenement::getCapaciteMax).min().orElse(0);
+        double avg    = all.stream().mapToInt(Evenement::getCapaciteMax).average().orElse(0);
+
+        return new HBox(12,
+                buildCard("Total événements", String.valueOf(total),         "#1f7a5e"),
+                buildCard("Capacité max",      String.valueOf(maxCap),       "#0d6efd"),
+                buildCard("Capacité min",      String.valueOf(minCap),       "#fd7e14"),
+                buildCard("Moyenne capacité",  String.format("%.0f", avg),  "#6f42c1")
+        );
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  STATISTIQUES CRÉATIONS
+    // ══════════════════════════════════════════════════════════════════
+    @FXML
+    private void showStatsCreations() {
+        try {
+            List<Evenement> all = service.findAll();
+
+            Map<String, Long> byMode = all.stream()
+                    .collect(Collectors.groupingBy(
+                            e -> e.getMode() != null ? e.getMode() : "Non défini",
+                            Collectors.counting()
+                    ));
+
+            ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
+            byMode.forEach((mode, count) -> pieData.add(new PieChart.Data(mode, count)));
+
+            PieChart chart = new PieChart(pieData);
+            chart.setTitle("Répartition par mode de création");
+            chart.setLegendVisible(true);
+            chart.setLabelsVisible(true);
+            chart.setPrefSize(500, 400);
+            chart.setStyle("-fx-font-size:13px;");
+
+            HBox cards = buildCreationsCards(all, byMode);
+            VBox root  = buildStatsRoot("📊  Statistiques Créations", "#0d6efd", chart, cards);
+            showStatsWindow("Statistiques Créations", root);
+
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur statistiques", e.getMessage());
+        }
+    }
+
+    private HBox buildCreationsCards(List<Evenement> all, Map<String, Long> byMode) {
+        long presentiel = byMode.getOrDefault("Présentiel", 0L);
+        long enligne    = byMode.getOrDefault("En ligne",   0L);
+        long hybride    = byMode.getOrDefault("Hybride",    0L);
+
+        return new HBox(12,
+                buildCard("Total événements", String.valueOf(all.size()), "#0d6efd"),
+                buildCard("Présentiel",        String.valueOf(presentiel), "#1f7a5e"),
+                buildCard("En ligne",          String.valueOf(enligne),    "#fd7e14"),
+                buildCard("Hybride",           String.valueOf(hybride),    "#6f42c1")
+        );
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  HELPERS — UI
+    // ══════════════════════════════════════════════════════════════════
+    private VBox buildStatsRoot(String titre, String headerColor,
+                                PieChart chart, HBox cards) {
+        Label lbTitre = new Label(titre);
+        lbTitre.setFont(Font.font("System", FontWeight.BOLD, 18));
+        lbTitre.setTextFill(Color.WHITE);
+
+        HBox header = new HBox(lbTitre);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setPadding(new Insets(16, 24, 16, 24));
+        header.setStyle("-fx-background-color:" + headerColor + ";");
+
+        cards.setPadding(new Insets(0, 24, 0, 24));
+        cards.setAlignment(Pos.CENTER);
+
+        VBox chartBox = new VBox(chart);
+        chartBox.setAlignment(Pos.CENTER);
+        chartBox.setPadding(new Insets(8, 24, 8, 24));
+
+        VBox root = new VBox(12, header, cards, chartBox);
+        root.setStyle("-fx-background-color:#f4f6f9;");
+        return root;
+    }
+
+    private void showStatsWindow(String windowTitle, VBox root) {
+        Stage stage = new Stage();
+        stage.setTitle(windowTitle);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(true);
+        stage.setScene(new Scene(root, 640, 560));
+        stage.showAndWait();
+    }
+
+    private VBox buildCard(String label, String value, String color) {
+        Label lbValue = new Label(value);
+        lbValue.setFont(Font.font("System", FontWeight.BOLD, 26));
+        lbValue.setTextFill(Color.WHITE);
+
+        Label lbLabel = new Label(label);
+        lbLabel.setFont(Font.font("System", 12));
+        lbLabel.setTextFill(Color.web("#ffffffcc"));
+
+        VBox card = new VBox(4, lbValue, lbLabel);
+        card.setAlignment(Pos.CENTER);
+        card.setPadding(new Insets(16, 20, 16, 20));
+        card.setMinWidth(130);
+        card.setStyle(
+                "-fx-background-color:" + color + ";" +
+                        "-fx-background-radius:10;" +
+                        "-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.18),8,0,0,3);"
+        );
+        return card;
+    }
+
+    // ══════════════════════════════════════════════════════════════════
     //  FORM HELPERS
     // ══════════════════════════════════════════════════════════════════
     private void fillForm(Evenement e) {
@@ -257,9 +794,11 @@ public class EvenementController {
         e.setMode(fMode.getValue());
         try { e.setCapaciteMax(Integer.parseInt(fCapaciteMax.getText().trim())); }
         catch (NumberFormatException ex) { e.setCapaciteMax(0); }
-        try { e.setDateDebut(java.time.LocalDateTime.parse(fDateDebut.getText().trim(), FMT)); }
+        try { e.setDateDebut(
+                java.time.LocalDateTime.parse(fDateDebut.getText().trim(), FMT)); }
         catch (Exception ex) { e.setDateDebut(null); }
-        try { e.setDateFin(java.time.LocalDateTime.parse(fDateFin.getText().trim(), FMT)); }
+        try { e.setDateFin(
+                java.time.LocalDateTime.parse(fDateFin.getText().trim(), FMT)); }
         catch (Exception ex) { e.setDateFin(null); }
         e.setPublicCible(fPublicCible.getText().trim());
         e.setContactEmail(fContactEmail.getText().trim());
@@ -267,7 +806,6 @@ public class EvenementController {
         e.setLienInscription(fLienInscription.getText().trim());
         e.setDescription(fDescription.getText().trim());
 
-        // Parse organisme from combobox "id - nom"
         String orgVal = fOrganisme.getValue();
         if (orgVal != null && !orgVal.startsWith("--")) {
             try {
@@ -287,10 +825,128 @@ public class EvenementController {
             return false;
         }
         if (fMode.getValue() == null) {
-            showAlert(Alert.AlertType.WARNING, "Validation", "Veuillez sélectionner un mode.");
+            showAlert(Alert.AlertType.WARNING, "Validation",
+                    "Veuillez sélectionner un mode.");
             return false;
         }
         return true;
+    }
+
+    // ══════════════════════════════════════════════════════════════════
+    //  SHARE DIALOG — NGROK
+    // ══════════════════════════════════════════════════════════════════
+    private void showShareDialog(Evenement evenement) {
+        // Générer un lien de partage (simulé avec ngrok ou un UUID)
+        String shareLink = "https://de3-196-238-42-231.ngro";
+
+        Stage stage = new Stage();
+        stage.setTitle("Partager l'événement");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+
+        VBox content = new VBox(16);
+        content.setStyle("-fx-background-color:#f4f6f9; -fx-padding:20;");
+        content.setAlignment(Pos.TOP_CENTER);
+
+        // Titre
+        Label titleLabel = new Label("⮡ Partager l'événement");
+        titleLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
+        titleLabel.setTextFill(Color.web("#2c3e50"));
+
+        // HBox pour le lien
+        HBox linkBox = new HBox(8);
+        linkBox.setStyle("-fx-background-color:white; -fx-border-color:#e0e0e0; " +
+                "-fx-border-radius:6; -fx-padding:12;");
+        linkBox.setAlignment(Pos.CENTER_LEFT);
+
+        TextField linkField = new TextField(shareLink);
+        linkField.setEditable(false);
+        linkField.setStyle("-fx-font-size:12px; -fx-padding:8;");
+        HBox.setHgrow(linkField, Priority.ALWAYS);
+
+        Button copyBtn = new Button("📋");
+        copyBtn.setStyle("-fx-background-color:#4caf50; -fx-text-fill:white; " +
+                "-fx-cursor:hand; -fx-background-radius:4; -fx-padding:8 12;");
+        copyBtn.setOnAction(e -> {
+            // Copier dans le presse-papiers
+            javafx.scene.input.Clipboard clip = javafx.scene.input.Clipboard.getSystemClipboard();
+            javafx.scene.input.ClipboardContent content1 = new javafx.scene.input.ClipboardContent();
+            content1.putString(shareLink);
+            clip.setContent(content1);
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Lien copié dans le presse-papiers!");
+        });
+
+        Button editBtn = new Button("✏️");
+        editBtn.setStyle("-fx-background-color:#2196f3; -fx-text-fill:white; " +
+                "-fx-cursor:hand; -fx-background-radius:4; -fx-padding:8 12;");
+        editBtn.setOnAction(e -> {
+            linkField.setEditable(true);
+            linkField.requestFocus();
+        });
+
+        linkBox.getChildren().addAll(linkField, copyBtn, editBtn);
+
+        // Boutons de partage social
+        VBox socialBox = new VBox(10);
+        socialBox.setStyle("-fx-border-color:#e0e0e0; -fx-border-radius:6; " +
+                "-fx-padding:12; -fx-background-color:white;");
+
+        Label socialLabel = new Label("Partager sur les réseaux sociaux:");
+        socialLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        socialLabel.setTextFill(Color.web("#1f4f65"));
+
+        Button twitterBtn = new Button("𝕏  Partager sur Twitter");
+        twitterBtn.setStyle("-fx-background-color:#000000; -fx-text-fill:white; " +
+                "-fx-font-weight:bold; -fx-cursor:hand; -fx-background-radius:4; " +
+                "-fx-padding:8 16; -fx-font-size:12px; -fx-max-width:Infinity;");
+        twitterBtn.setOnAction(e -> {
+            try {
+                String url = "https://twitter.com/intent/tweet?text=" +
+                        URLEncoder.encode("Découvrez cet événement: " + evenement.getTitre() +
+                                " " + shareLink, "UTF-8");
+                openUrl(url);
+            } catch (java.io.UnsupportedEncodingException ex) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur d'encodage: " + ex.getMessage());
+            }
+        });
+
+        Button linkedinBtn = new Button("in  Partager sur LinkedIn");
+        linkedinBtn.setStyle("-fx-background-color:#0a66c2; -fx-text-fill:white; " +
+                "-fx-font-weight:bold; -fx-cursor:hand; -fx-background-radius:4; " +
+                "-fx-padding:8 16; -fx-font-size:12px; -fx-max-width:Infinity;");
+        linkedinBtn.setOnAction(e -> {
+            String url = "https://www.linkedin.com/sharing/share-offsite/?url=" + shareLink;
+            openUrl(url);
+        });
+
+        socialBox.getChildren().addAll(socialLabel, twitterBtn, linkedinBtn);
+
+        // Bouton Fermer
+        Button closeBtn = new Button("Fermer");
+        closeBtn.setStyle("-fx-background-color:#e0e0e0; -fx-cursor:hand; " +
+                "-fx-background-radius:4; -fx-padding:8 20;");
+        closeBtn.setOnAction(e -> stage.close());
+
+        HBox btnBox = new HBox(closeBtn);
+        btnBox.setAlignment(Pos.CENTER_RIGHT);
+
+        content.getChildren().addAll(titleLabel, linkBox, socialBox, btnBox);
+
+        ScrollPane scroll = new ScrollPane(content);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background-color:#f4f6f9; -fx-padding:0;");
+
+        Scene scene = new Scene(scroll, 500, 350);
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+
+    private void openUrl(String url) {
+        try {
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(url));
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir le navigateur: " + e.getMessage());
+        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String msg) {
