@@ -146,9 +146,22 @@ public class LoginController {
 
                     SessionManager.login(user);
 
-                    Parent root = FXMLLoader.load(
-                            getClass().getResource("/fxml/Dashboard.fxml")
-                    );
+                    // ── ROLE-BASED REDIRECT ────────────────────────────────────
+                    String role = rs.getString("role");
+                    String targetFxml;
+                    String targetTitle;
+
+                    if (role.equalsIgnoreCase("Admin") || role.equalsIgnoreCase("Enseignant")) {
+                        targetFxml  = "/fxml/dashboard.fxml";
+                        targetTitle = "LearnFlex+ Dashboard";
+                    } else {
+                        // Etudiant → front only
+                        targetFxml  = "/fxml/front.fxml";
+                        targetTitle = "LearnFlex+";
+                    }
+                    // ── END ROLE-BASED REDIRECT ────────────────────────────────
+
+                    Parent root = FXMLLoader.load(getClass().getResource(targetFxml));
 
                     Stage stage = (Stage) ((Node) event.getSource())
                             .getScene()
@@ -157,7 +170,7 @@ public class LoginController {
                     Scene scene = new Scene(root, 1200, 800);
 
                     stage.setScene(scene);
-                    stage.setTitle("LearnFlex+ Dashboard");
+                    stage.setTitle(targetTitle);
                     stage.centerOnScreen();
                     stage.show();
 
@@ -191,8 +204,32 @@ public class LoginController {
     }
 
     @FXML
+    private void openFaceAuth(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/face_auth.fxml"));
+            Parent root = loader.load();
+            FaceAuthController controller = loader.getController();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 720, 560));
+            stage.setTitle("Face ID Login");
+            stage.setOnCloseRequest(closeEvent -> controller.stop());
+            stage.centerOnScreen();
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showNotification("Face ID error: " + e.getMessage(), false);
+        }
+    }
+
+    @FXML
     private void goToForgotPassword(MouseEvent event) {
         switchScene(event, "/fxml/forgot_password.fxml", "Forgot Password");
+    }
+
+    @FXML
+    private void goToFront(MouseEvent event) {
+        switchScene(event, "/fxml/front.fxml", "LearnFlex+");
     }
 
     // ---------------- HELPER ----------------

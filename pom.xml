@@ -12,7 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
-        <javafx.version>21.0.2</javafx.version>
+        <javafx.version>17.0.12</javafx.version>
     </properties>
 
     <dependencies>
@@ -35,9 +35,21 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <version>8.0.33</version>
+        </dependency>
+        <!-- Twilio SDK — SMS OTP for forgot password -->
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>10.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openpnp</groupId>
+            <artifactId>opencv</artifactId>
+            <version>4.9.0-0</version>
         </dependency>
     </dependencies>
 
@@ -59,9 +71,6 @@
 
                 <configuration>
                     <mainClass>Main.MainApp</mainClass>
-                    <options>
-                        <option>--enable-native-access=javafx.graphics</option>
-                    </options>
                 </configuration>
             </plugin>
         </plugins>

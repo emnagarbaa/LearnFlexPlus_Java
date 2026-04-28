@@ -9,6 +9,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
+import javafx.stage.Modality;
+import javafx.scene.control.Label;
 
 import java.io.IOException;
 
@@ -22,6 +24,12 @@ public class DashboardController {
 
     @FXML
     private ImageView logoImage;
+
+    @FXML
+    private Label lblUserName;
+
+    @FXML
+    private Label lblUserRole;
 
     private void loadPage(String fxmlFile) {
         try {
@@ -80,14 +88,18 @@ public class DashboardController {
     @FXML
     public void logout() {
         try {
+            // ── CLEAR SESSION ──────────────────────────
+            Main.java.Utils.SessionManager.logout();
+            // ── END CLEAR SESSION ──────────────────────
+
             Parent root = FXMLLoader.load(
-                    getClass().getResource("/fxml/front.fxml")
+                    getClass().getResource("/fxml/login.fxml")
             );
 
             Stage stage = (Stage) mainContent.getScene().getWindow();
 
             stage.setScene(new Scene(root, 1200, 800));
-            stage.setTitle("LearnFlex+");
+            stage.setTitle("LearnFlex+ Login");
             stage.centerOnScreen();
             stage.show();
 
@@ -111,8 +123,25 @@ public class DashboardController {
             logoImage.setImage(
                     new Image(getClass().getResourceAsStream("/images/logo1.png"))
             );
-        } catch (Exception ignored) {
+        } catch (Exception ignored) {}
+
+        // ── REAL-TIME USER INFO ──────────────────────────────────
+        Main.java.Models.User current = Main.java.Utils.SessionManager.getCurrentUser();
+        if (current != null) {
+            lblUserName.setText(current.getNom());
+
+            // Map role to French display label
+            String role = current.getRole();
+            String roleDisplay;
+            switch (role) {
+                case "Admin", "ADMIN"     -> roleDisplay = "Administrateur";
+                case "Enseignant"         -> roleDisplay = "Enseignant";
+                case "Etudiant"           -> roleDisplay = "Étudiant";
+                default                   -> roleDisplay = role;
+            }
+            lblUserRole.setText(roleDisplay);
         }
+        // ── END USER INFO ────────────────────────────────────────
     }
 
     @FXML
@@ -132,5 +161,36 @@ public class DashboardController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void openWebsocketChat() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/hercules_chat.fxml")
+            );
+
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 520, 420);
+
+            Stage stage = new Stage();
+            stage.initOwner(mainContent.getScene().getWindow());
+            stage.initModality(Modality.NONE);
+            stage.setTitle("WebSocket Messages (TCP :8888)");
+            stage.setScene(scene);
+            stage.centerOnScreen();
+
+            HerculesChatController controller = loader.getController();
+            stage.setOnHidden(e -> controller.shutdown());
+
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void openHerculesChat() {
+        openWebsocketChat();
     }
 }

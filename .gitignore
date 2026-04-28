@@ -28,3 +28,12 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# Ignore Twilio SMS utility (NOT recommended for production)
+src/main/java/Utils/SmsUtil.java
+
+/target/
+*.class
+*.log
+.idea/
+*.iml

@@ -12,6 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.File;
+import Services.ServiceUsers;
+import entities.Users;
 
 public class    SignupController {
 
@@ -28,6 +30,7 @@ public class    SignupController {
 
 
     private File selectedImage;
+    private final ServiceUsers serviceUsers = new ServiceUsers();
 
     @FXML
     public void initialize() {
@@ -70,14 +73,14 @@ public class    SignupController {
     @FXML
     public void register(ActionEvent event) {
 
-        String prenom = prenomField.getText();
-        String nom = nomField.getText();
-        String email = emailField.getText();
-        String phone = phoneField.getText();
+        String prenom = prenomField.getText().trim();
+        String nom = nomField.getText().trim();
+        String email = emailField.getText().trim().toLowerCase();
+        String phone = phoneField.getText().trim();
         String role = roleCombo.getValue();
         String password = passwordField.getText();
-        String age = ageField.getText();
-        String address = addressField.getText();
+        String age = ageField.getText().trim();
+        String address = addressField.getText().trim();
 
         if (prenom.isEmpty() || nom.isEmpty() || email.isEmpty() || password.isEmpty()) {
             showAlert("Please fill required fields");
@@ -85,11 +88,22 @@ public class    SignupController {
         }
 
         try {
-            // TODO: insert into DB
-            System.out.println("REGISTER USER:");
-            System.out.println(prenom + " " + nom);
-            System.out.println(email);
-            System.out.println(role);
+            Users user = new Users();
+            user.setPrenom(prenom);
+            user.setNom(nom);
+            user.setEmail(email);
+            user.setTelephone(phone);
+            user.setRole(role);
+            user.setPassword(password);
+            user.setAdresseResidence(address);
+            user.setVerified(false);
+            user.setProfileImage(selectedImage != null ? selectedImage.getAbsolutePath() : null);
+
+            if (!age.isEmpty()) {
+                user.setAge(Integer.parseInt(age));
+            }
+
+            serviceUsers.ajouter(user);
 
             showAlert("User registered successfully!");
 
@@ -125,7 +139,27 @@ public class    SignupController {
 
     @FXML
     public void openFaceModal() {
-        System.out.println("Face ID modal placeholder");
+        String email = emailField.getText() == null ? "" : emailField.getText().trim().toLowerCase();
+        if (email.isEmpty()) {
+            showAlert("Enter your email before saving Face ID.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/face_register.fxml"));
+            Parent root = loader.load();
+            FaceRegisterController controller = loader.getController();
+            controller.setEmail(email);
+
+            Stage stage = new Stage();
+            stage.setTitle("Face ID");
+            stage.setScene(new Scene(root, 720, 560));
+            stage.setOnCloseRequest(closeEvent -> controller.stop());
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Face ID error: " + e.getMessage());
+        }
     }
 
     private void showAlert(String msg) {

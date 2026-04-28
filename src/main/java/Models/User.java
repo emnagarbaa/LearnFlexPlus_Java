@@ -14,12 +14,8 @@ public class User {
 
     public User(int id, String username, String email, String password, String role, String image) {
         this.id = id;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.age = age;
-        this.adresse_residence = adresse_residence;
+        this.nom = username;
         this.email = email;
-        this.telephone = telephone;
         this.password = password;
         this.role = role;
         this.image = image;

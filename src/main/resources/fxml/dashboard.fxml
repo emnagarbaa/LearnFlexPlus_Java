@@ -81,6 +81,7 @@
             <Button text=" Forum"
                     styleClass="nav-btn"
                     onAction="#showForum"/>
+
         </VBox>
 
         <!-- Footer -->
@@ -89,8 +90,8 @@
                 <Label text="👤" styleClass="user-avatar"/>
 
                 <VBox spacing="2">
-                    <Label text="Admin User" styleClass="user-name"/>
-                    <Label text="Administrateur" styleClass="user-role"/>
+                    <Label fx:id="lblUserName" text="" styleClass="user-name"/>
+                    <Label fx:id="lblUserRole" text="" styleClass="user-role"/>
                 </VBox>
             </HBox>
 
@@ -129,6 +130,10 @@
                            styleClass="badge"
                            StackPane.alignment="TOP_RIGHT"/>
                 </StackPane>
+
+                <Button text="WebSocket"
+                        styleClass="search-btn"
+                        onAction="#openWebsocketChat"/>
             </HBox>
         </HBox>
 

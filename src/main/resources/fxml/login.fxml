@@ -6,7 +6,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
+<BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Controllers.LoginController"
             style="-fx-background-color: #f5f7fb;">
@@ -26,7 +26,9 @@
 
                 <ImageView fx:id="logoImage"
                            fitWidth="120"
-                           preserveRatio="true"/>
+                           preserveRatio="true"
+                           style="-fx-cursor: hand;"
+                           onMouseClicked="#goToFront"/>
 
                 <Label text="LearnFlexPlus"
                        style="-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;"/>
@@ -129,6 +131,7 @@
 
                         <Button text="Face ID"
                                 fx:id="faceAuthBtn"
+                                onAction="#openFaceAuth"
                                 style="-fx-background-color: #1f4f65;
                                        -fx-text-fill: white;
                                        -fx-background-radius: 10;

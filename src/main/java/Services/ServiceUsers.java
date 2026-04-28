@@ -79,7 +79,7 @@ public class ServiceUsers implements Iservice<Users> {
         if (u.getRole() == null || u.getRole().isBlank())
             throw new IllegalArgumentException("Le rôle est obligatoire.");
 
-        if (!u.getRole().matches("Admin|Etudiant|Enseignant"))
+        if (!u.getRole().matches("ADMIN|STUDENT|TEACHER|Admin|Etudiant|Enseignant"))
             throw new IllegalArgumentException("Rôle invalide.");
     }
     private void validateUpdate(Users u) {
@@ -152,7 +152,7 @@ public class ServiceUsers implements Iservice<Users> {
         if (u.getRole() == null || u.getRole().isBlank())
             throw new IllegalArgumentException("Le rôle est obligatoire.");
 
-        if (!u.getRole().matches("Admin|Etudiant|Enseignant"))
+        if (!u.getRole().matches("ADMIN|STUDENT|TEACHER|Admin|Etudiant|Enseignant"))
             throw new IllegalArgumentException("Rôle invalide.");
     }
 
@@ -295,10 +295,43 @@ public class ServiceUsers implements Iservice<Users> {
             u.setEmail(rs.getString("email"));
             u.setPassword(rs.getString("password"));
             u.setRole(rs.getString("role"));
+            u.setProfileImage(rs.getString("profile_image"));
+            u.setTelephone(rs.getString("telephone"));
 
             return u;
         }
 
         return null;
     }
+    public Users findByPhone(String telephone) throws SQLException {
+
+        String sql = "SELECT * FROM users WHERE telephone = ?";
+
+        Connection conn = MyDatabase.getInstance().getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, telephone);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            Users u = new Users();
+            u.setId(rs.getInt("id"));
+            u.setNom(rs.getString("nom"));
+            u.setPrenom(rs.getString("prenom"));
+            u.setAge(rs.getInt("age"));
+            u.setAdresseResidence(rs.getString("adresse_residence"));
+            u.setEmail(rs.getString("email"));
+            u.setTelephone(rs.getString("telephone"));
+            u.setPassword(rs.getString("password"));
+            u.setRole(rs.getString("role"));
+            u.setCreatedAt(rs.getTimestamp("created_at"));
+            u.setUpdatedAt(rs.getTimestamp("updated_at"));
+            u.setVerified(rs.getBoolean("is_verified"));
+            u.setProfileImage(rs.getString("profile_image"));
+            return u;
+        }
+
+        return null;
+    }
+
 }
