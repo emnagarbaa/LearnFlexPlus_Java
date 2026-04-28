@@ -1,13 +1,21 @@
 package org.example.Services;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.*;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -116,7 +124,25 @@ public class CertificatGenerator {
         drawCentered(cs, "LearnFlex+", bold, 13, W, H - 455);
         cs.setNonStrokingColor(gris);
         drawCentered(cs, "Plateforme d'apprentissage en ligne", normal, 11, W, H - 472);
+// ── QR CODE ──────────────────────────────────────────────
+        try {
+            String qrText = "http://localhost:8080/certificats/certificat_123.pdf";
 
+            File qrFile = genererQRCode(qrText);
+
+            PDImageXObject qrImage = PDImageXObject.createFromFile(
+                    qrFile.getAbsolutePath(), doc
+            );
+
+            float qrSize = 100;
+            float qrX = W - qrSize - 40;
+            float qrY = 40;
+
+            cs.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         cs.close();
 
         // ── SAUVEGARDE ─────────────────────────────────────────────
@@ -145,5 +171,23 @@ public class CertificatGenerator {
         cs.newLineAtOffset(x, y);
         cs.showText(text);
         cs.endText();
+    }
+    private static File genererQRCode(String text) throws Exception {
+        int width = 150;
+        int height = 150;
+
+        BitMatrix matrix = new MultiFormatWriter().encode(
+                text,
+                BarcodeFormat.QR_CODE,
+                width,
+                height
+        );
+
+        String filePath = System.getProperty("java.io.tmpdir") + "/qrcode.png";
+        Path path = FileSystems.getDefault().getPath(filePath);
+
+        MatrixToImageWriter.writeToPath(matrix, "PNG", path);
+
+        return new File(filePath);
     }
 }

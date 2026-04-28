@@ -23,6 +23,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class QuizFrontController {
 
     // ── FXML BINDINGS ──────────────────────────────────────────────
@@ -44,10 +45,28 @@ public class QuizFrontController {
     @FXML private VBox        blocQuestion;
     @FXML private VBox        ecranCorrectionContainer;
     @FXML private ScrollPane  scrollPrincipal;
+    @FXML private VBox ecranTempsEcoule;
+    @FXML private ProgressBar progressBarResult;
+    @FXML private Label lblScorePercent;
+    @FXML private Label lblScoreFinal;
+    @FXML private Label lblStatut;
+    @FXML private Label lblMessage;
+    @FXML private Label lblRapportScore;
+    @FXML private Label lblRapportStatut;
+    @FXML private Label lblRapportTemps;
+    @FXML private VBox rapportContainer;
+    @FXML private Label lblNiveauIA;
+    @FXML private Label lblForcesIA;
+    @FXML private Label lblFaiblessesIA;
+    @FXML private Label lblConseilsIA;
+    @FXML private HBox ecranQuiz;
+    @FXML private ScrollPane scrollCorrectionContainer;
     // ── SERVICES ────────────────────────────────────────────────────
     private final ServiceQuiz    serviceQuiz    = new ServiceQuiz();
     private final ServiceReponse serviceReponse = new ServiceReponse();
-    private static final String GROQ_API_KEY = System.getenv("GROQ_API_KEY");    private static final String GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+    private static final String GROQ_API_KEY = "";
+
+    private static final String GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private List<Quiz> allQuiz = new ArrayList<>();
@@ -67,6 +86,7 @@ public class QuizFrontController {
     private int totalQuestions;
     private boolean quizTermine = false;
     private String nomEtudiant = "Étudiant";
+
     // ── INITIALISATION ───────────────────────────────────────────────
     @FXML
     public void initialize() {
@@ -92,8 +112,8 @@ public class QuizFrontController {
 
         afficherQuestion();
 
-        int duree = quizCourant.getDuree() * 60;
-        demarrerTimer(duree > 0 ? duree : 180);
+        int duree = Math.min(quizCourant.getDuree() * 60, 10); // max 60 sec
+        demarrerTimer(duree);
     }
     // ── APPEL API GROQ ───────────────────────────────────────────────
     private String getExplication(String question, String reponseEtudiant,
@@ -328,9 +348,16 @@ public class QuizFrontController {
 
             if (secondesRestantes <= 0) {
                 timer.stop();
-                lblAlerteTemps.setVisible(true);
-                lblAlerteTemps.setManaged(true);
-                terminerQuiz();
+
+                blocFiltres.setVisible(false);
+                blocQuestion.setVisible(false);
+                blocHero.setVisible(false);
+
+                ecranCorrectionContainer.setVisible(false);
+                ecranCorrectionContainer.setManaged(false);
+
+                ecranTempsEcoule.setVisible(true);
+                ecranTempsEcoule.setManaged(true);
             }
         }));
 
@@ -338,6 +365,214 @@ public class QuizFrontController {
         timer.play();
     }
 
+    @FXML
+    public void voirRapportTentative() {
+
+        System.out.println("OUVERT RAPPORT");
+
+        ecranTempsEcoule.setVisible(false);
+        ecranTempsEcoule.setManaged(false);
+
+        ecranCorrectionContainer.setVisible(true);
+        ecranCorrectionContainer.setManaged(true);
+
+        construireRapport();
+
+        scrollPrincipal.setVvalue(0);
+        analyserPerformanceGlobaleIA();
+    }
+    private void construireRapport() {
+
+        rapportContainer.getChildren().clear();
+
+        int total = quizList.size();
+        double pct = total == 0 ? 0 : (double) score / total;
+
+        // SCORE
+        lblRapportScore.setText(score + " / " + total);
+        progressBarResult.setProgress(pct);
+        lblScorePercent.setText((int)(pct * 100) + "%");
+
+        // STATUT
+        if (pct >= 0.8) {
+            lblRapportStatut.setText("🏆 Excellent - Certification validée");
+            lblRapportStatut.setStyle("-fx-text-fill:#389e0d;");
+            lblMessage.setText("Excellent travail ! Vous maîtrisez très bien le sujet.");
+        } else if (pct >= 0.5) {
+            lblRapportStatut.setText("👍 Moyen - Peut être amélioré");
+            lblRapportStatut.setStyle("-fx-text-fill:#d46b08;");
+            lblMessage.setText("Bon niveau, mais encore quelques efforts nécessaires.");
+        } else {
+            lblRapportStatut.setText("❌ Insuffisant");
+            lblRapportStatut.setStyle("-fx-text-fill:#cf1322;");
+            lblMessage.setText("Il faut revoir le cours avant de retenter.");
+        }
+
+        // QUESTIONS
+        int size = Math.min(quizHistorique.size(), reponsesChoisies.size());
+
+        for (int i = 0; i < size; i++) {
+
+            Quiz q = quizHistorique.get(i);
+            Reponse r = reponsesChoisies.get(i);
+
+            boolean correct = r.isEstCorrecte();
+
+            VBox card = new VBox(6);
+            card.setPadding(new Insets(12));
+            card.setStyle(
+                    "-fx-background-color:white;" +
+                            "-fx-background-radius:12;" +
+                            "-fx-border-color:" + (correct ? "#52c41a" : "#ff4d4f") + ";" +
+                            "-fx-border-width:0 0 0 4;"
+            );
+
+            Label question = new Label("Q" + (i + 1) + " : " + q.getQuestion());
+            question.setWrapText(true);
+            question.setStyle("-fx-font-weight:bold; -fx-text-fill:#142341;");
+
+            Label rep = new Label("Votre réponse : " + r.getTexte());
+            rep.setStyle("-fx-text-fill:" + (correct ? "#389e0d" : "#cf1322"));
+
+            Label statut = new Label(correct ? "✔ Correct" : "✖ Incorrect");
+            statut.setStyle("-fx-font-size:12px;");
+
+            card.getChildren().addAll(question, rep, statut);
+
+            rapportContainer.getChildren().add(card);
+        }
+
+        ecranCorrectionContainer.setVisible(true);
+        ecranCorrectionContainer.setManaged(true);
+    }
+    private void analyserPerformanceGlobaleIA() {
+
+        javafx.application.Platform.runLater(() -> {
+            lblNiveauIA.setText("Niveau : ⏳ Analyse en cours...");
+            lblForcesIA.setText("💪 Forces : ⏳");
+            lblFaiblessesIA.setText("⚠ Faiblesses : ⏳");
+            lblConseilsIA.setText("📌 Conseils : ⏳");
+
+            // ✅ Cacher l'écran quiz
+            ecranQuiz.setVisible(false);
+            ecranQuiz.setManaged(false);
+
+            // ✅ Afficher les deux : ScrollPane + VBox
+            scrollCorrectionContainer.setVisible(true);
+            scrollCorrectionContainer.setManaged(true);
+            ecranCorrectionContainer.setVisible(true);
+            ecranCorrectionContainer.setManaged(true);
+        });
+
+        new Thread(() -> {
+            try {
+                int total = quizList.size();
+                double pct = total == 0 ? 0 : (double) score / total;
+
+                StringBuilder data = new StringBuilder();
+                for (int i = 0; i < quizHistorique.size(); i++) {
+                    Quiz q = quizHistorique.get(i);
+                    Reponse r = reponsesChoisies.get(i);
+                    data.append("Q: ").append(q.getQuestion()).append("\n")
+                            .append("R: ").append(r.getTexte()).append("\n")
+                            .append("Correct: ").append(r.isEstCorrecte()).append("\n\n");
+                }
+
+                String prompt = """
+                Tu es un professeur expert.
+                SCORE: %d / %d (%.2f%%)
+                REPONSES:
+                %s
+                Reponds UNIQUEMENT avec ces 4 lignes :
+                NIVEAU: Debutant ou Intermediaire ou Avance
+                FORCES: ce que l eleve maitrise
+                FAIBLESSES: ce qu il doit ameliorer
+                CONSEILS: comment progresser
+                """.formatted(score, total, pct * 100, data);
+
+                String requestBody = """
+                {
+                  "model": "llama-3.1-8b-instant",
+                  "messages": [
+                    {"role": "system", "content": "Tu es un professeur. Reponds UNIQUEMENT avec 4 lignes: NIVEAU:, FORCES:, FAIBLESSES:, CONSEILS:."},
+                    {"role": "user", "content": %s}
+                  ],
+                  "temperature": 0.3,
+                  "max_tokens": 400
+                }
+                """.formatted(objectMapper.writeValueAsString(prompt));
+
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(GROQ_API_URL))
+                        .header("Authorization", "Bearer " + GROQ_API_KEY)
+                        .header("Content-Type", "application/json; charset=utf-8")
+                        .POST(HttpRequest.BodyPublishers.ofString(requestBody, java.nio.charset.StandardCharsets.UTF_8))
+                        .build();
+
+                HttpResponse<String> response = httpClient.send(
+                        request,
+                        HttpResponse.BodyHandlers.ofString(java.nio.charset.StandardCharsets.UTF_8)
+                );
+
+                var json = objectMapper.readTree(response.body());
+
+                if (json.has("error")) {
+                    String errMsg = json.path("error").path("message").asText();
+                    javafx.application.Platform.runLater(() ->
+                            lblNiveauIA.setText("❌ Erreur API : " + errMsg));
+                    return;
+                }
+
+                String result = json.path("choices").get(0)
+                        .path("message").path("content").asText();
+
+                System.out.println("=== RÉPONSE IA ===\n" + result + "\n==================");
+
+                String niveau     = extract(result, "NIVEAU:");
+                String forces     = extract(result, "FORCES:");
+                String faiblesses = extract(result, "FAIBLESSES:");
+                String conseils   = extract(result, "CONSEILS:");
+
+                javafx.application.Platform.runLater(() -> {
+                    lblNiveauIA.setText("Niveau : " + niveau);
+                    lblForcesIA.setText("💪 Forces : " + forces);
+                    lblFaiblessesIA.setText("⚠ Faiblesses : " + faiblesses);
+                    lblConseilsIA.setText("📌 Conseils : " + conseils);
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() ->
+                        lblNiveauIA.setText("❌ Erreur : " + e.getMessage()));
+            }
+        }).start();
+    }
+    private String extract(String text, String key) {
+        try {
+            // Chercher la clé (insensible à la casse)
+            String upper = text.toUpperCase();
+            int index = upper.indexOf(key.toUpperCase());
+            if (index == -1) return "Non disponible";
+
+            // Extraire ce qui vient après la clé
+            String sub = text.substring(index + key.length()).trim();
+
+            // S'arrêter à la prochaine section
+            String[] keys = {"NIVEAU:", "FORCES:", "FAIBLESSES:", "CONSEILS:"};
+            int nextIndex = sub.length();
+            for (String k : keys) {
+                int ki = sub.toUpperCase().indexOf(k);
+                if (ki > 0 && ki < nextIndex) {
+                    nextIndex = ki;
+                }
+            }
+
+            return sub.substring(0, nextIndex).trim();
+
+        } catch (Exception e) {
+            return "Erreur d'extraction";
+        }
+    }
     // ── FIN DU QUIZ + CORRECTION COMPLÈTE ───────────────────────────
     private void terminerQuiz() {
         quizTermine = true;
