@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.controllers.FrontPublicationController"
+      spacing="0" style="-fx-background-color: #f8fafc;">
+
+    <!-- NAVBAR -->
+    <HBox alignment="CENTER_LEFT" spacing="15"
+          style="-fx-background-color: #1f4f65; -fx-padding: 12 30 12 30;">
+        <HBox alignment="CENTER_LEFT" spacing="10"
+              onMouseClicked="#goToAccueil" style="-fx-cursor:hand;">
+            <ImageView fx:id="logo" fitHeight="45" fitWidth="45"
+                       pickOnBounds="true" preserveRatio="true"/>
+            <Label text="LearnFlex+"
+                   style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="🏠 Accueil"        style="-fx-background-color:transparent; -fx-text-fill:white; -fx-cursor:hand; -fx-padding:8 16;" onAction="#goToAccueil"/>
+            <Button text="📝 Publications"   style="-fx-background-color:transparent; -fx-text-fill:white; -fx-cursor:hand; -fx-padding:8 16;" onAction="#goToPublications"/>
+            <Button text="💬 Communications" style="-fx-background-color:transparent; -fx-text-fill:white; -fx-cursor:hand; -fx-padding:8 16;" onAction="#goToCommunications"/>
+            <Button text="📚 Cours"           style="-fx-background-color:transparent; -fx-text-fill:white; -fx-cursor:hand; -fx-padding:8 16;" onAction="#goToCours"/>
+            <Button text="❓ Quiz"            style="-fx-background-color:transparent; -fx-text-fill:white; -fx-cursor:hand; -fx-padding:8 16;" onAction="#goToQuiz"/>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔐 Connexion"
+                style="-fx-background-color:#97c3a2; -fx-text-fill:#1f4f65; -fx-background-radius:25; -fx-padding:8 20; -fx-cursor:hand;"
+                onAction="#goToConnexion"/>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                style="-fx-background:transparent; -fx-background-color:transparent;">
+        <VBox spacing="25" style="-fx-padding:25; -fx-background-color:#f8fafc;">
+
+            <!-- HEADER -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="📝" style="-fx-font-size:32px;"/>
+                <VBox>
+                    <Label text="Publications de la communauté"
+                           style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                    <Label text="Partagez vos questions et réactions"
+                           style="-fx-text-fill:#7f8c8d; -fx-font-size:13px;"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="statsLabel"
+                       style="-fx-background-color:#2ecc71; -fx-background-radius:20; -fx-padding:8 15; -fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:12px;"/>
+            </HBox>
+
+            <!-- BOUTON CHATBOT -->
+            <HBox alignment="CENTER_RIGHT">
+                <Button text="🤖 Assistant LearnFlex+"
+                        onAction="#openChatBot"
+                        style="-fx-background-color:#8e44ad; -fx-text-fill:white; -fx-background-radius:25; -fx-padding:10 22; -fx-cursor:hand; -fx-font-weight:bold; -fx-font-size:13px;"/>
+            </HBox>
+
+            <!-- FORMULAIRE AJOUT/MODIFICATION -->
+            <VBox fx:id="formBox" spacing="12"
+                  style="-fx-background-color:white; -fx-background-radius:15; -fx-padding:20; -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.08),10,0,0,2);">
+
+                <Label fx:id="formTitle" text="✏️ Nouvelle publication"
+                       style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+
+                <TextField fx:id="titreField" promptText="Titre (min. 3 caractères) *"
+                           style="-fx-background-radius:8; -fx-padding:10; -fx-border-color:#e0e0e0; -fx-border-radius:8;"/>
+                <Label fx:id="titreError" text=""
+                       style="-fx-text-fill:#e74c3c; -fx-font-size:11px;" visible="false" managed="false"/>
+
+                <!-- BOUTONS : GÉNÉRER TEXTE IA + AJOUTER PHOTO -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button fx:id="generateAIBtn" text="🤖 Générer avec l'IA"
+                            onAction="#generateWithAI"
+                            style="-fx-background-color:#9b59b6; -fx-text-fill:white; -fx-background-radius:20; -fx-padding:8 20; -fx-cursor:hand; -fx-font-weight:bold;"/>
+                    <Button fx:id="addPhotoBtn" text="📷 Ajouter une photo"
+                            onAction="#addPhoto"
+                            style="-fx-background-color:#3498db; -fx-text-fill:white; -fx-background-radius:20; -fx-padding:8 20; -fx-cursor:hand; -fx-font-weight:bold;"/>
+                </HBox>
+
+                <!-- ═══════════════════════════════════════════════ -->
+                <!-- 🎨 NOUVELLE SECTION : GÉNÉRER IMAGE PAR IA     -->
+                <!-- ═══════════════════════════════════════════════ -->
+                <VBox spacing="8"
+                      style="-fx-background-color:#f5f0ff;
+                             -fx-background-radius:10;
+                             -fx-padding:12;
+                             -fx-border-color:#c39bd3;
+                             -fx-border-radius:10;
+                             -fx-border-width:1;">
+
+                    <!-- Titre de la section -->
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="🎨"
+                               style="-fx-font-size:16px;"/>
+                        <Label text="Générer une image avec l'IA"
+                               style="-fx-font-size:13px; -fx-font-weight:bold; -fx-text-fill:#6c3483;"/>
+                        <Label text="Gratuit • Pollinations AI"
+                               style="-fx-background-color:#e8d5f5;
+                                      -fx-text-fill:#6c3483;
+                                      -fx-background-radius:12;
+                                      -fx-padding:2 8;
+                                      -fx-font-size:10px;
+                                      -fx-font-weight:bold;"/>
+                    </HBox>
+
+                    <!-- Champ prompt + bouton -->
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="imagePromptField"
+                                   promptText="Décrivez l'image souhaitée... (ex: forêt magique au coucher du soleil)"
+                                   HBox.hgrow="ALWAYS"
+                                   style="-fx-background-radius:20;
+                                          -fx-padding:8 15;
+                                          -fx-border-color:#c39bd3;
+                                          -fx-border-radius:20;
+                                          -fx-background-color:white;"/>
+                        <Button fx:id="generateImageBtn"
+                                text="🎨 Générer"
+                                onAction="#generateImageWithAI"
+                                style="-fx-background-color:#6c3483;
+                                       -fx-text-fill:white;
+                                       -fx-background-radius:20;
+                                       -fx-padding:8 18;
+                                       -fx-cursor:hand;
+                                       -fx-font-weight:bold;"/>
+                    </HBox>
+
+                    <!-- Label de statut (erreur / succès / chargement) -->
+                    <Label fx:id="imageGenStatus" text=""
+                           style="-fx-text-fill:#6c3483; -fx-font-size:11px;"
+                           visible="false" managed="false"/>
+                </VBox>
+                <!-- ═══════════════════════════════════════════════ -->
+
+                <!-- APERÇU DE L'IMAGE -->
+                <VBox spacing="8" fx:id="imagePreviewBox" visible="false" managed="false">
+                    <Label text="📸 Aperçu de l'image :"
+                           style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#2c3e50;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView fx:id="imagePreview" fitHeight="100" fitWidth="150"
+                                   preserveRatio="true"
+                                   style="-fx-effect:dropshadow(gaussian,rgba(0,0,0,0.1),5,0,0,2);"/>
+                        <Button text="❌ Supprimer"
+                                onAction="#removePhoto"
+                                style="-fx-background-color:#e74c3c; -fx-text-fill:white; -fx-background-radius:15; -fx-padding:5 15; -fx-cursor:hand; -fx-font-size:11px;"/>
+                    </HBox>
+                </VBox>
+
+                <TextArea fx:id="descriptionArea" promptText="Description (min. 10 caractères) *"
+                          prefHeight="80"
+                          style="-fx-background-radius:8; -fx-padding:10; -fx-border-color:#e0e0e0; -fx-border-radius:8;"/>
+                <Label fx:id="descError" text=""
+                       style="-fx-text-fill:#e74c3c; -fx-font-size:11px;" visible="false" managed="false"/>
+
+                <ComboBox fx:id="categorieCombo" promptText="Catégorie *"
+                          maxWidth="Infinity"
+                          style="-fx-background-radius:8; -fx-padding:5; -fx-border-color:#e0e0e0; -fx-border-radius:8;"/>
+                <Label fx:id="categorieError" text=""
+                       style="-fx-text-fill:#e74c3c; -fx-font-size:11px;" visible="false" managed="false"/>
+
+                <HBox spacing="10">
+                    <Button fx:id="saveBtn" text="💾 Publier"
+                            onAction="#savePublication"
+                            style="-fx-background-color:#2ecc71; -fx-text-fill:white; -fx-background-radius:20; -fx-padding:8 20; -fx-cursor:hand; -fx-font-weight:bold;"/>
+                    <Button text="🔄 Annuler"
+                            onAction="#clearForm"
+                            style="-fx-background-color:#95a5a6; -fx-text-fill:white; -fx-background-radius:20; -fx-padding:8 20; -fx-cursor:hand;"/>
+                </HBox>
+
+            </VBox>
+
+            <!-- SECTION PUBLICATIONS GÉNÉRÉES PAR IA -->
+            <VBox spacing="12" fx:id="aiGeneratedSection" visible="false" managed="false">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="🤖" style="-fx-font-size:24px;"/>
+                    <Label text="Publications générées par IA"
+                           style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#9b59b6;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="✨ Contenu intelligent"
+                           style="-fx-background-color:#f39c12; -fx-background-radius:15; -fx-padding:5 12; -fx-text-fill:white; -fx-font-size:11px; -fx-font-weight:bold;"/>
+                </HBox>
+                <Separator/>
+                <FlowPane fx:id="aiCardsContainer" hgap="20" vgap="20" alignment="TOP_CENTER"/>
+            </VBox>
+
+            <!-- FILTRES ET RECHERCHE -->
+            <HBox spacing="15">
+                <ComboBox fx:id="categorieFilter" promptText="Filtrer par catégorie"
+                          HBox.hgrow="ALWAYS"
+                          style="-fx-background-color:white; -fx-background-radius:25; -fx-border-color:#e0e0e0; -fx-border-radius:25; -fx-padding:8 15;"/>
+                <TextField fx:id="searchField" promptText="Rechercher..."
+                           HBox.hgrow="ALWAYS"
+                           style="-fx-background-color:white; -fx-background-radius:25; -fx-padding:8 15; -fx-border-color:#e0e0e0; -fx-border-radius:25;"/>
+                <Button text="🔍" onAction="#searchPublications"
+                        style="-fx-background-color:#3498db; -fx-text-fill:white; -fx-background-radius:25; -fx-padding:8 20; -fx-cursor:hand;"/>
+            </HBox>
+
+            <!-- CARTES NORMALES -->
+            <FlowPane fx:id="cardsContainer" hgap="20" vgap="20" alignment="TOP_CENTER"/>
+            <Label fx:id="noDataLabel" text="Aucune publication disponible"
+                   style="-fx-text-fill:#95a5a6; -fx-font-size:14px;"
+                   visible="false" managed="false" alignment="CENTER"/>
+
+        </VBox>
+    </ScrollPane>
+</VBox>

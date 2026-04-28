@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.controllers.CommunicationController"
+      spacing="20">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Titre -->
+    <Label text="💬 Gestion des Communications" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <!-- Statistiques -->
+    <Label fx:id="statsLabel" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+
+    <!-- Formulaire d'ajout -->
+    <VBox spacing="15" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-border-radius: 10; -fx-background-radius: 10;">
+        <Label text="✏️ Nouvelle communication" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+
+        <HBox spacing="10">
+            <ComboBox fx:id="typeCombo" promptText="Type" HBox.hgrow="ALWAYS" style="-fx-pref-height: 35px;"/>
+            <TextField fx:id="lienField" promptText="Lien (URL)" HBox.hgrow="ALWAYS" style="-fx-pref-height: 35px;"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <DatePicker fx:id="datePicker" promptText="Date" HBox.hgrow="ALWAYS" style="-fx-pref-height: 35px;"/>
+            <TextField fx:id="heureField" promptText="Heure (HH:MM:SS)" HBox.hgrow="ALWAYS" style="-fx-pref-height: 35px;"/>
+            <TextField fx:id="dureeField" promptText="Durée (minutes)" HBox.hgrow="ALWAYS" style="-fx-pref-height: 35px;"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <ComboBox fx:id="etatCombo" promptText="État" HBox.hgrow="ALWAYS" style="-fx-pref-height: 35px;"/>
+            <ComboBox fx:id="publicationCombo" promptText="Lier à une publication" HBox.hgrow="ALWAYS" style="-fx-pref-height: 35px;"/>
+        </HBox>
+
+        <TextArea fx:id="descriptionArea" promptText="Description détaillée..." prefHeight="60"/>
+
+        <HBox spacing="10">
+            <Button fx:id="saveButton" text="Enregistrer" onAction="#saveCommunication"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-pref-width: 100px; -fx-pref-height: 35px;"/>
+            <Button text="Annuler" onAction="#clearForm"
+                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-pref-width: 100px; -fx-pref-height: 35px;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Barre de recherche et filtres -->
+    <HBox spacing="10">
+        <TextField fx:id="searchField" promptText="Rechercher..." HBox.hgrow="ALWAYS" style="-fx-pref-height: 35px;"/>
+        <Button text="🔍 Rechercher" onAction="#searchCommunications"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white;"/>
+        <Button text="🎥 Live" onAction="#filterByLive"
+                style="-fx-background-color: #e67e22; -fx-text-fill: white;"/>
+        <Button text="📹 Record" onAction="#filterByRecord"
+                style="-fx-background-color: #e67e22; -fx-text-fill: white;"/>
+        <Button text="✅ Actif" onAction="#filterByActive"
+                style="-fx-background-color: #e67e22; -fx-text-fill: white;"/>
+    </HBox>
+
+    <!-- Tableau des communications -->
+    <TableView fx:id="communicationTable" VBox.vgrow="ALWAYS" prefHeight="400">
+        <placeholder>
+            <Label text="Aucune communication disponible"/>
+        </placeholder>
+    </TableView>
+
+</VBox>

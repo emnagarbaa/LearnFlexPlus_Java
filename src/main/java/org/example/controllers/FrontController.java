@@ -1,0 +1,84 @@
+package org.example.controllers;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class FrontController {
+
+    @FXML private ImageView logo;
+    @FXML private ImageView heroImage;
+    @FXML private ImageView serviceImage1;
+    @FXML private ImageView serviceImage2;
+    @FXML private ImageView serviceImage3;
+    @FXML private VBox forumMenuPane;
+    @FXML private VBox forumDropdown;
+
+
+    @FXML
+    public void initialize() {
+        loadImage(logo,          "/org/example/images/logo1.png");
+        loadImage(heroImage,     "/org/example/images/hero1.png");
+        loadImage(serviceImage1, "/org/example/images/service1.png");
+        loadImage(serviceImage2, "/org/example/images/service2.png");
+        loadImage(serviceImage3, "/org/example/images/service3.png");
+    }
+
+    private void loadImage(ImageView imageView, String path) {
+        var stream = getClass().getResourceAsStream(path);
+        if (stream == null) {
+            System.err.println("❌ Image introuvable : " + path);
+            return;
+        }
+        imageView.setImage(new Image(stream));
+    }
+
+    // ===== DROPDOWN FORUM =====
+    @FXML
+    public void showForumMenu() {
+        forumDropdown.setVisible(true);
+        forumDropdown.setManaged(true);
+        forumDropdown.toFront();
+    }
+
+    @FXML
+    public void hideForumMenu() {
+        forumDropdown.setVisible(false);
+        forumDropdown.setManaged(false);
+    }
+
+    // ===== NAVIGATION =====
+    @FXML private void goToCours()         { navigateTo("/org/example/fxml/cours.fxml", "Cours"); }
+    @FXML private void explorerCours()     { navigateTo("/org/example/fxml/cours.fxml", "Cours"); }
+    @FXML private void voirCours()         { navigateTo("/org/example/fxml/cours.fxml", "Cours"); }
+    @FXML private void passerQuiz()        { navigateTo("/org/example/fxml/ExamenView.fxml", "Examens"); }
+    @FXML private void accederForum()      { navigateTo("/org/example/fxml/forum.fxml", "Forum"); }
+    @FXML private void goToConnexion()     { navigateTo("/org/example/fxml/login.fxml", "Connexion"); }
+    @FXML private void goToAccueil()       { navigateTo("/org/example/fxml/front.fxml", "LearnFlex+"); }
+    @FXML private void goToEvaluation()    { navigateTo("/org/example/fxml/EvaluationFront.fxml", "Évaluation"); }
+    @FXML private void goToQuestionnaire() { navigateTo("/org/example/fxml/questionnaire.fxml", "Questionnaire"); }
+    @FXML private void goToOrientation()   { navigateTo("/org/example/fxml/orientation.fxml", "Orientation"); }
+    @FXML private void goToForum()         { navigateTo("/org/example/fxml/forum.fxml", "Forum"); }
+    @FXML private void goToPublication()   { navigateTo("/org/example/fxml/PublicationsFrontPage.fxml", "Publications"); }
+    @FXML private void goToCommunication() { navigateTo("/org/example/fxml/CommunicationsFrontPage.fxml", "Communications"); }
+
+    private void navigateTo(String fxmlPath, String title) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+            Stage stage = (Stage) logo.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle(title);
+            stage.show();
+        } catch (Exception e) {
+            System.err.println("❌ Erreur navigation : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}
