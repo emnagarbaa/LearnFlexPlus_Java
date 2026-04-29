@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 
 <HBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.example.controllers.DashboardController"
@@ -12,8 +14,15 @@
     <!-- ===== SIDEBAR ===== -->
     <VBox styleClass="sidebar" prefWidth="260" minWidth="260" maxWidth="260">
 
-        <!-- Logo -->
-        <HBox styleClass="sidebar-header" alignment="CENTER_LEFT">
+        <HBox styleClass="sidebar-header" alignment="CENTER_LEFT" spacing="10">
+            <ImageView fx:id="logoImage"
+                       fitHeight="60"
+                       fitWidth="60"
+                       pickOnBounds="true"
+                       preserveRatio="true"
+                       onMouseClicked="#goToFront"
+                       style="-fx-cursor:hand;"/>
+
             <HBox alignment="CENTER_LEFT" spacing="4">
                 <Label text="LearnFlex" styleClass="logo-main"/>
                 <Label text="+" styleClass="logo-highlight"/>
@@ -96,12 +105,15 @@
         <VBox styleClass="sidebar-footer" spacing="10">
             <HBox styleClass="user-profile" alignment="CENTER_LEFT" spacing="12">
                 <Label text="👤" styleClass="user-avatar"/>
+
                 <VBox spacing="2">
-                    <Label text="Admin User" styleClass="user-name"/>
-                    <Label text="Administrateur" styleClass="user-role"/>
+                    <Label fx:id="lblUserName" text="" styleClass="user-name"/>
+                    <Label fx:id="lblUserRole" text="" styleClass="user-role"/>
                 </VBox>
             </HBox>
-            <Button text="  Déconnexion" styleClass="logout-btn"
+
+            <Button text=" Déconnexion"
+                    styleClass="logout-btn"
                     onAction="#logout"/>
         </VBox>
     </VBox>
@@ -130,8 +142,7 @@
         </HBox>
 
         <!-- Scrollable content -->
-        <ScrollPane fitToWidth="true" fitToHeight="false"
-                    VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
             <VBox styleClass="dashboard-content" spacing="25">
 
                 <!-- STAT CARDS -->
@@ -146,6 +157,7 @@
                             </VBox>
                         </HBox>
                     </VBox>
+
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <HBox spacing="15" alignment="CENTER_LEFT">
                             <Label text="📚" styleClass="stat-icon-courses"/>
@@ -156,6 +168,7 @@
                             </VBox>
                         </HBox>
                     </VBox>
+
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <HBox spacing="15" alignment="CENTER_LEFT">
                             <Label text="💻" styleClass="stat-icon-eval"/>
@@ -166,6 +179,7 @@
                             </VBox>
                         </HBox>
                     </VBox>
+
                     <VBox styleClass="stat-card" HBox.hgrow="ALWAYS">
                         <HBox spacing="15" alignment="CENTER_LEFT">
                             <Label text="❓" styleClass="stat-icon-quiz"/>
@@ -179,16 +193,21 @@
                 </HBox>
 
                 <!-- ZONE DYNAMIQUE -->
-                <StackPane fx:id="mainContent" styleClass="content-area"
-                           minHeight="50" managed="true" visible="true"/>
+                <StackPane fx:id="mainContent"
+                           styleClass="content-area"
+                           minHeight="400"
+                           managed="true"
+                           visible="true"/>
 
                 <!-- ACTIVITÉ RÉCENTE -->
                 <VBox styleClass="section-box" spacing="15">
                     <HBox alignment="CENTER_LEFT">
-                        <Label text="Activité récente" styleClass="section-title"
+                        <Label text="Activité récente"
+                               styleClass="section-title"
                                HBox.hgrow="ALWAYS"/>
                         <Hyperlink text="Voir tout" styleClass="view-all"/>
                     </HBox>
+
                     <VBox spacing="12">
                         <HBox styleClass="activity-item" spacing="15" alignment="CENTER_LEFT">
                             <Label text="👤" styleClass="activity-icon"/>
@@ -198,6 +217,7 @@
                                 <Label text="Il y a 2 heures" styleClass="activity-time"/>
                             </VBox>
                         </HBox>
+
                         <HBox styleClass="activity-item" spacing="15" alignment="CENTER_LEFT">
                             <Label text="📖" styleClass="activity-icon"/>
                             <VBox spacing="3">
@@ -206,6 +226,7 @@
                                 <Label text="Il y a 3 heures" styleClass="activity-time"/>
                             </VBox>
                         </HBox>
+
                         <HBox styleClass="activity-item" spacing="15" alignment="CENTER_LEFT">
                             <Label text="✅" styleClass="activity-icon"/>
                             <VBox spacing="3">
@@ -214,6 +235,7 @@
                                 <Label text="Il y a 5 heures" styleClass="activity-time"/>
                             </VBox>
                         </HBox>
+
                         <HBox styleClass="activity-item" spacing="15" alignment="CENTER_LEFT">
                             <Label text="📝" styleClass="activity-icon"/>
                             <VBox spacing="3">
@@ -228,19 +250,46 @@
                 <!-- ÉVALUATIONS RÉCENTES -->
                 <VBox styleClass="section-box" spacing="15">
                     <HBox alignment="CENTER_LEFT">
-                        <Label text="Évaluations récentes" styleClass="section-title"
+                        <Label text="Évaluations récentes"
+                               styleClass="section-title"
                                HBox.hgrow="ALWAYS"/>
                         <Hyperlink text="Voir tout" styleClass="view-all"/>
                     </HBox>
-                    <TableView styleClass="parcels-table" prefHeight="200"
+
+                    <TableView fx:id="recentEvaluationsTable" styleClass="parcels-table"
+                               prefHeight="200"
                                maxWidth="Infinity">
                         <columns>
-                            <TableColumn text="ID"       prefWidth="60"/>
-                            <TableColumn text="Cours"    prefWidth="180"/>
-                            <TableColumn text="Étudiant" prefWidth="160"/>
-                            <TableColumn text="Type"     prefWidth="100"/>
-                            <TableColumn text="Date"     prefWidth="120"/>
-                            <TableColumn text="Statut"   prefWidth="100"/>
+                            <TableColumn text="ID" prefWidth="60">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="id"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Cours" prefWidth="180">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="coursNom"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Étudiant" prefWidth="160">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="etudiantNom"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Type" prefWidth="100">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="type"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Date" prefWidth="120">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="date"/>
+                                </cellValueFactory>
+                            </TableColumn>
+                            <TableColumn text="Statut" prefWidth="100">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="statut"/>
+                                </cellValueFactory>
+                            </TableColumn>
                         </columns>
                         <placeholder>
                             <Label text="Aucune évaluation récente." styleClass="stat-label"/>

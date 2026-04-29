@@ -80,6 +80,90 @@ public class ServiceChallenge implements Iservice<Challenge> {
         if (v.contains("<script") || v.contains("javascript:") || v.contains("onerror="))
             throw new IllegalArgumentException("Contenu dangereux détecté dans le champ : " + champ);
     }
+// Ajoutez cette méthode dans ServiceChallenge.java
+
+    /**
+     * Récupère un challenge par son titre (recherche approximative)
+     */
+    public Challenge getChallengeByTitre(String titre) throws SQLException {
+        Connection connection = MyDatabase.getInstance().getConnection();
+        String sql = "SELECT * FROM challenge WHERE LOWER(titrec) LIKE ?";
+
+        // Recherche approximative avec LIKE
+        String searchPattern = "%" + titre.toLowerCase() + "%";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, searchPattern);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Challenge c = new Challenge();
+                    c.setId(rs.getInt("id"));
+                    c.setTitrec(rs.getString("titrec"));
+                    c.setDescriptionc(rs.getString("descriptionc"));
+                    c.setObjectifscore(rs.getDouble("objectifscore"));
+                    c.setProgressionactuelle(rs.getDouble("progressionactuelle"));
+                    c.setNiveaudifficulte(rs.getString("niveaudifficulte"));
+                    c.setNiveauatteint(rs.getString("niveauatteint"));
+                    c.setTyperecomponse(rs.getString("typerecomponse"));
+                    c.setContenurecompense(rs.getString("contenurecompense"));
+                    c.setEtat(rs.getString("etat"));
+                    c.setDated(rs.getDate("dated"));
+                    c.setDatef(rs.getDate("datef"));
+                    c.setDatelimite(rs.getDate("datelimite"));
+                    c.setAlerte(rs.getBoolean("alerte"));
+                    c.setQuestion(rs.getString("question"));
+                    c.setImages(rs.getString("images"));
+                    c.setDernier_score(rs.getInt("dernier_score"));
+                    c.setDernier_niveau(rs.getString("dernier_niveau"));
+                    c.setReponses(rs.getString("reponses"));
+                    c.setInteracty_hash(rs.getString("interacty_hash"));
+                    c.setExamen_id(rs.getInt("examen_id"));
+                    return c;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Récupère un challenge par son ID
+     */
+    public Challenge getChallengeById(int id) throws SQLException {
+        Connection connection = MyDatabase.getInstance().getConnection();
+        String sql = "SELECT * FROM challenge WHERE id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Challenge c = new Challenge();
+                    c.setId(rs.getInt("id"));
+                    c.setTitrec(rs.getString("titrec"));
+                    c.setDescriptionc(rs.getString("descriptionc"));
+                    c.setObjectifscore(rs.getDouble("objectifscore"));
+                    c.setProgressionactuelle(rs.getDouble("progressionactuelle"));
+                    c.setNiveaudifficulte(rs.getString("niveaudifficulte"));
+                    c.setNiveauatteint(rs.getString("niveauatteint"));
+                    c.setTyperecomponse(rs.getString("typerecomponse"));
+                    c.setContenurecompense(rs.getString("contenurecompense"));
+                    c.setEtat(rs.getString("etat"));
+                    c.setDated(rs.getDate("dated"));
+                    c.setDatef(rs.getDate("datef"));
+                    c.setDatelimite(rs.getDate("datelimite"));
+                    c.setAlerte(rs.getBoolean("alerte"));
+                    c.setQuestion(rs.getString("question"));
+                    c.setImages(rs.getString("images"));
+                    c.setDernier_score(rs.getInt("dernier_score"));
+                    c.setDernier_niveau(rs.getString("dernier_niveau"));
+                    c.setReponses(rs.getString("reponses"));
+                    c.setInteracty_hash(rs.getString("interacty_hash"));
+                    c.setExamen_id(rs.getInt("examen_id"));
+                    return c;
+                }
+            }
+        }
+        return null;
+    }
 
     // ══════════════════════════════════════════════
     //  AJOUTER

@@ -14,21 +14,24 @@
     <!-- ===== HEADER ===== -->
     <HBox styleClass="header" alignment="CENTER_LEFT" spacing="15">
         <padding><Insets top="15" right="40" bottom="15" left="40"/></padding>
+
         <HBox alignment="CENTER_LEFT" spacing="10">
             <ImageView fx:id="logo" fitHeight="45" fitWidth="45"
                        pickOnBounds="true" preserveRatio="true"
                        onMouseClicked="#switchToBack" style="-fx-cursor:hand;"/>
             <Label text="LearnFlex+" styleClass="logo-text"/>
         </HBox>
+
         <Region HBox.hgrow="ALWAYS"/>
 
         <!-- NAV BUTTONS -->
         <HBox spacing="5" alignment="CENTER">
             <Button text="Accueil"       styleClass="nav-btn" onAction="#goToAccueil"/>
             <Button text="Cours"         styleClass="nav-btn" onAction="#goToCours"/>
-            <Button text="Évaluation"    styleClass="nav-btn" onAction="#goToEvaluation"/>
+            <Button fx:id="btnEvaluation" text="Évaluation" styleClass="nav-btn" onAction="#goToEvaluation"/>
             <Button text="Questionnaire" styleClass="nav-btn" onAction="#goToQuestionnaire"/>
             <Button text="Orientation"   styleClass="nav-btn" onAction="#goToOrientation"/>
+
 
             <!-- Forum avec dropdown hover -->
             <StackPane onMouseEntered="#showForumDropdown"
@@ -39,43 +42,48 @@
                 <VBox fx:id="forumDropdown"
                       visible="false" managed="false"
                       styleClass="forum-dropdown"
-                      style="-fx-background-color:white;
-                             -fx-border-color:#e0e0e0;
-                             -fx-border-width:1;
-                             -fx-border-radius:8;
-                             -fx-background-radius:8;
-                             -fx-effect:dropshadow(gaussian,rgba(0,0,0,0.15),10,0,0,4);
-                             -fx-padding:6 0 6 0;"
                       StackPane.alignment="BOTTOM_LEFT"
                       translateY="36">
                     <Button text="💬  Publications"
                             onAction="#goToPublication"
-                            style="-fx-background-color:transparent;
-                                   -fx-text-fill:#1f4f65;
-                                   -fx-font-size:13px;
-                                   -fx-cursor:hand;
-                                   -fx-padding:10 20 10 20;
-                                   -fx-alignment:CENTER_LEFT;
-                                   -fx-min-width:180;"
+                            styleClass="dropdown-item"
                             maxWidth="Infinity"/>
                     <Button text="📢  Communication"
                             onAction="#goToCommunication"
-                            style="-fx-background-color:transparent;
-                                   -fx-text-fill:#1f4f65;
-                                   -fx-font-size:13px;
-                                   -fx-cursor:hand;
-                                   -fx-padding:10 20 10 20;
-                                   -fx-alignment:CENTER_LEFT;
-                                   -fx-min-width:180;"
+                            styleClass="dropdown-item"
                             maxWidth="Infinity"/>
                 </VBox>
             </StackPane>
         </HBox>
 
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="🔐  Connexion" styleClass="btn-primary" onAction="#goToConnexion"/>
+
+        <!-- AUTH AREA -->
+        <Button fx:id="btnConnexion"
+                text="🔐  Connexion"
+                styleClass="btn-primary"
+                onAction="#goToConnexion"/>
+
+        <MenuButton fx:id="userMenu"
+                    visible="false" managed="false"
+                    styleClass="btn-primary">
+            <items>
+                <MenuItem fx:id="menuProfile"
+                          text="👤  Mon profil"
+                          onAction="#goToProfile"/>
+                <SeparatorMenuItem/>
+                <MenuItem fx:id="menuDashboard"
+                          text="🖥  Dashboard"
+                          onAction="#goToDashboardMenu"
+                          visible="false"/>
+                <SeparatorMenuItem fx:id="sepDashboard" visible="false"/>
+                <MenuItem text="🚪  Déconnexion"
+                          onAction="#logout"/>
+            </items>
+        </MenuButton>
     </HBox>
 
+    <!-- SCROLLPANE PRINCIPAL -->
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
                 styleClass="scroll-pane" hbarPolicy="NEVER">
         <VBox spacing="0">
@@ -89,18 +97,13 @@
                     <padding><Insets top="0" right="0" bottom="0" left="80"/></padding>
 
                     <VBox alignment="CENTER_LEFT" spacing="25" maxWidth="520">
-
                         <Label text="Apprends malin, ton bac en main."
-                               style="-fx-font-size:44px; -fx-font-weight:bold;
-                                      -fx-text-fill:#1a3d4f; -fx-wrap-text:true;
-                                      -fx-text-alignment:LEFT;
-                                      -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.7), 6, 0, 0, 0);"
-                               wrapText="true" maxWidth="500" alignment="CENTER_LEFT"/>
+                               wrapText="true" maxWidth="500" alignment="CENTER_LEFT"
+                               style="-fx-font-size:44px; -fx-font-weight:bold; -fx-text-fill:#1a3d4f;"/>
 
                         <Label text="LearnFlex+ accompagne les élèves du bac avec des cours interactifs, des quiz intelligents et un suivi personnalisé."
-                               style="-fx-font-size:15px; -fx-text-fill:#2d5a6b;
-                                      -fx-wrap-text:true; -fx-text-alignment:LEFT;"
-                               wrapText="true" maxWidth="460" alignment="CENTER_LEFT"/>
+                               wrapText="true" maxWidth="460" alignment="CENTER_LEFT"
+                               style="-fx-font-size:15px; -fx-text-fill:#2d5a6b;"/>
 
                         <HBox spacing="15" alignment="CENTER_LEFT">
                             <Button text="🚀  Commencer maintenant"
@@ -111,28 +114,24 @@
 
                         <!-- Stats -->
                         <HBox spacing="20" alignment="CENTER_LEFT">
-                            <VBox alignment="CENTER_LEFT" spacing="3"
-                                  style="-fx-background-color:rgba(255,255,255,0.55);
-                                         -fx-background-radius:10; -fx-padding:10 18 10 18;">
+                            <VBox spacing="3" alignment="CENTER_LEFT"
+                                  style="-fx-background-color:rgba(255,255,255,0.55); -fx-background-radius:10; -fx-padding:10 18 10 18;">
                                 <Label text="1,423" style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#1a3d4f;"/>
                                 <Label text="Étudiants" style="-fx-font-size:12px; -fx-text-fill:#2d5a6b;"/>
                             </VBox>
                             <Label text="|" style="-fx-text-fill:#4a8a6f; -fx-font-size:26px;"/>
-                            <VBox alignment="CENTER_LEFT" spacing="3"
-                                  style="-fx-background-color:rgba(255,255,255,0.55);
-                                         -fx-background-radius:10; -fx-padding:10 18 10 18;">
+                            <VBox spacing="3" alignment="CENTER_LEFT"
+                                  style="-fx-background-color:rgba(255,255,255,0.55); -fx-background-radius:10; -fx-padding:10 18 10 18;">
                                 <Label text="856" style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#1a3d4f;"/>
                                 <Label text="Cours" style="-fx-font-size:12px; -fx-text-fill:#2d5a6b;"/>
                             </VBox>
                             <Label text="|" style="-fx-text-fill:#4a8a6f; -fx-font-size:26px;"/>
-                            <VBox alignment="CENTER_LEFT" spacing="3"
-                                  style="-fx-background-color:rgba(255,255,255,0.55);
-                                         -fx-background-radius:10; -fx-padding:10 18 10 18;">
+                            <VBox spacing="3" alignment="CENTER_LEFT"
+                                  style="-fx-background-color:rgba(255,255,255,0.55); -fx-background-radius:10; -fx-padding:10 18 10 18;">
                                 <Label text="128" style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#1a3d4f;"/>
                                 <Label text="Examens" style="-fx-font-size:12px; -fx-text-fill:#2d5a6b;"/>
                             </VBox>
                         </HBox>
-
                     </VBox>
                 </HBox>
             </StackPane>
@@ -140,8 +139,10 @@
             <!-- ===== FEATURES SECTION ===== -->
             <VBox styleClass="features-section" spacing="30" alignment="CENTER">
                 <padding><Insets top="50" right="80" bottom="50" left="80"/></padding>
+
                 <Label text="Tout ce qu'il vous faut pour réussir"
                        style="-fx-font-size:26px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+
                 <HBox spacing="30" alignment="CENTER">
                     <VBox styleClass="feature-card" spacing="15" alignment="CENTER" prefWidth="250">
                         <Label text="📖" styleClass="feature-icon"/>
@@ -149,31 +150,34 @@
                                style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
                         <Label text="Des cours clairs et structurés adaptés au programme du bac."
                                wrapText="true" alignment="CENTER"
-                               style="-fx-font-size:13px; -fx-text-fill:#777; -fx-text-alignment:CENTER;"/>
+                               style="-fx-font-size:13px; -fx-text-fill:#777;"/>
                     </VBox>
+
                     <VBox styleClass="feature-card" spacing="15" alignment="CENTER" prefWidth="250">
                         <Label text="❓" styleClass="feature-icon"/>
                         <Label text="Quiz &amp; Exercices"
                                style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
                         <Label text="Testez vos connaissances avec des quiz corrigés automatiquement."
                                wrapText="true" alignment="CENTER"
-                               style="-fx-font-size:13px; -fx-text-fill:#777; -fx-text-alignment:CENTER;"/>
+                               style="-fx-font-size:13px; -fx-text-fill:#777;"/>
                     </VBox>
+
                     <VBox styleClass="feature-card" spacing="15" alignment="CENTER" prefWidth="250">
                         <Label text="🧭" styleClass="feature-icon"/>
                         <Label text="Orientation intelligente"
                                style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
                         <Label text="Découvrez les filières qui correspondent à votre profil."
                                wrapText="true" alignment="CENTER"
-                               style="-fx-font-size:13px; -fx-text-fill:#777; -fx-text-alignment:CENTER;"/>
+                               style="-fx-font-size:13px; -fx-text-fill:#777;"/>
                     </VBox>
+
                     <VBox styleClass="feature-card" spacing="15" alignment="CENTER" prefWidth="250">
                         <Label text="💬" styleClass="feature-icon"/>
                         <Label text="Forum communautaire"
                                style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
                         <Label text="Échangez avec d'autres élèves et enseignants."
                                wrapText="true" alignment="CENTER"
-                               style="-fx-font-size:13px; -fx-text-fill:#777; -fx-text-alignment:CENTER;"/>
+                               style="-fx-font-size:13px; -fx-text-fill:#777;"/>
                     </VBox>
                 </HBox>
             </VBox>
@@ -181,9 +185,11 @@
             <!-- ===== BENEFITS SECTION ===== -->
             <VBox styleClass="benefits-section" spacing="30" alignment="CENTER">
                 <padding><Insets top="50" right="80" bottom="50" left="80"/></padding>
+
                 <Label text="Nos avantages" styleClass="section-badge"/>
                 <Label text="Pourquoi choisir LearnFlex+ ?"
                        style="-fx-font-size:26px; -fx-font-weight:bold; -fx-text-fill:white;"/>
+
                 <HBox spacing="30" alignment="CENTER">
                     <VBox styleClass="benefit-card" spacing="12" alignment="CENTER" prefWidth="220">
                         <Label text="⏱️" style="-fx-font-size:36px;"/>
@@ -191,31 +197,34 @@
                                style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                         <Label text="Apprends à ton rythme, quand et où tu veux."
                                wrapText="true" alignment="CENTER"
-                               style="-fx-font-size:12px; -fx-text-fill:rgba(255,255,255,0.8); -fx-text-alignment:CENTER;"/>
+                               style="-fx-font-size:12px; -fx-text-fill:rgba(255,255,255,0.8);"/>
                     </VBox>
+
                     <VBox styleClass="benefit-card" spacing="12" alignment="CENTER" prefWidth="220">
                         <Label text="📚" style="-fx-font-size:36px;"/>
                         <Label text="Cours complets"
                                style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                         <Label text="Accède à tous les cours du programme du bac."
                                wrapText="true" alignment="CENTER"
-                               style="-fx-font-size:12px; -fx-text-fill:rgba(255,255,255,0.8); -fx-text-alignment:CENTER;"/>
+                               style="-fx-font-size:12px; -fx-text-fill:rgba(255,255,255,0.8);"/>
                     </VBox>
+
                     <VBox styleClass="benefit-card" spacing="12" alignment="CENTER" prefWidth="220">
                         <Label text="📝" style="-fx-font-size:36px;"/>
                         <Label text="Évaluations régulières"
                                style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                         <Label text="Suivez votre progression avec des résultats détaillés."
                                wrapText="true" alignment="CENTER"
-                               style="-fx-font-size:12px; -fx-text-fill:rgba(255,255,255,0.8); -fx-text-alignment:CENTER;"/>
+                               style="-fx-font-size:12px; -fx-text-fill:rgba(255,255,255,0.8);"/>
                     </VBox>
+
                     <VBox styleClass="benefit-card" spacing="12" alignment="CENTER" prefWidth="220">
                         <Label text="🏆" style="-fx-font-size:36px;"/>
                         <Label text="Challenges"
                                style="-fx-font-size:15px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                         <Label text="Relevez des défis et gagnez des récompenses."
                                wrapText="true" alignment="CENTER"
-                               style="-fx-font-size:12px; -fx-text-fill:rgba(255,255,255,0.8); -fx-text-alignment:CENTER;"/>
+                               style="-fx-font-size:12px; -fx-text-fill:rgba(255,255,255,0.8);"/>
                     </VBox>
                 </HBox>
             </VBox>
@@ -223,8 +232,10 @@
             <!-- ===== SERVICES SECTION ===== -->
             <VBox styleClass="services-section" spacing="40" alignment="CENTER">
                 <padding><Insets top="60" right="80" bottom="60" left="80"/></padding>
+
                 <Label text="Nos Services"
                        style="-fx-font-size:26px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+
                 <HBox styleClass="service-card" spacing="40" alignment="CENTER">
                     <VBox spacing="15" maxWidth="420">
                         <Label text="📖  Cours" styleClass="service-title"/>
@@ -235,6 +246,7 @@
                     <ImageView fx:id="serviceImage1" fitWidth="250" fitHeight="180"
                                pickOnBounds="true" preserveRatio="true"/>
                 </HBox>
+
                 <HBox styleClass="service-card" spacing="40" alignment="CENTER">
                     <ImageView fx:id="serviceImage2" fitWidth="250" fitHeight="180"
                                pickOnBounds="true" preserveRatio="true"/>
@@ -245,6 +257,7 @@
                         <Button text="Passer un quiz →" styleClass="btn-primary" onAction="#passerQuiz"/>
                     </VBox>
                 </HBox>
+
                 <HBox styleClass="service-card" spacing="40" alignment="CENTER">
                     <VBox spacing="15" maxWidth="420">
                         <Label text="💬  Forum" styleClass="service-title"/>
@@ -260,6 +273,7 @@
             <!-- ===== CTA SECTION ===== -->
             <VBox styleClass="cta-section" spacing="20" alignment="CENTER">
                 <padding><Insets top="60" right="80" bottom="60" left="80"/></padding>
+
                 <Label text="Prêt à commencer ?"
                        style="-fx-font-size:30px; -fx-font-weight:bold; -fx-text-fill:white;"/>
                 <Label text="Rejoignez des milliers d'élèves qui réussissent leur bac avec LearnFlex+"
@@ -271,12 +285,14 @@
             <!-- ===== FOOTER ===== -->
             <VBox styleClass="footer" spacing="20" alignment="CENTER">
                 <padding><Insets top="40" right="60" bottom="30" left="60"/></padding>
+
                 <HBox spacing="60" alignment="CENTER">
                     <VBox spacing="10" alignment="TOP_LEFT">
                         <Label text="LearnFlex+" styleClass="footer-logo"/>
                         <Label text="Apprends malin, ton bac en main."
                                style="-fx-text-fill:rgba(255,255,255,0.6); -fx-font-size:13px;"/>
                     </VBox>
+
                     <VBox spacing="8" alignment="TOP_LEFT">
                         <Label text="Navigation"
                                style="-fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:14px;"/>
@@ -286,6 +302,7 @@
                         <Hyperlink text="Publications"   styleClass="footer-link" onAction="#goToPublication"/>
                         <Hyperlink text="Communication"  styleClass="footer-link" onAction="#goToCommunication"/>
                     </VBox>
+
                     <VBox spacing="8" alignment="TOP_LEFT">
                         <Label text="Contact"
                                style="-fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:14px;"/>
@@ -295,6 +312,7 @@
                                style="-fx-text-fill:rgba(255,255,255,0.6); -fx-font-size:13px;"/>
                     </VBox>
                 </HBox>
+
                 <Separator style="-fx-background-color:rgba(255,255,255,0.2);"/>
                 <Label text="© 2026 LearnFlex+. Tous droits réservés."
                        style="-fx-text-fill:rgba(255,255,255,0.4); -fx-font-size:12px;"/>

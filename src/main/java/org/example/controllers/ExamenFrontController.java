@@ -15,6 +15,8 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.example.Services.ServiceReponseExamen;
 import org.example.entities.Examen;
 import org.example.entities.ReponseExamen;
+import org.example.entities.User;
+import org.example.utils.SessionManager;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -42,6 +44,8 @@ public class ExamenFrontController implements Initializable {
     private Examen examen;
     private List<TextArea> reponsesFields = new ArrayList<>();
     private boolean examenSoumis = false;
+    private int currentUserId = -1;  // Initialisé à -1
+    private String currentUserEmail = "";  // Ajouté pour le débogage
 
     public void setExamen(Examen examen) {
         this.examen = examen;
@@ -51,11 +55,21 @@ public class ExamenFrontController implements Initializable {
         lblDuree.setText(examen.getDuree() + " min");
         lblNbQuestions.setText(String.valueOf(examen.getNbquestion()));
         lblDescription.setText(examen.getDescription());
+
+        // Récupérer l'ID de l'utilisateur connecté
+        User currentUser = SessionManager.getCurrentUser();
+        if (currentUser != null) {
+            currentUserId = currentUser.getId();
+            currentUserEmail = currentUser.getEmail();
+            System.out.println("✅ Utilisateur connecté: " + currentUserEmail + " (ID: " + currentUserId + ", Rôle: " + currentUser.getRole() + ")");
+        } else {
+            System.err.println("⚠️ Aucun utilisateur connecté!");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Vous devez être connecté pour passer un examen.");
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Configuration des ScrollPanes
         if (mainScrollPane != null) {
             mainScrollPane.setFitToWidth(true);
             mainScrollPane.setFitToHeight(true);
@@ -67,26 +81,22 @@ public class ExamenFrontController implements Initializable {
 
     @FXML
     private void handleCommencer() {
-        // Cacher la section de démarrage
         if (startSection != null) {
             startSection.setVisible(false);
             startSection.setManaged(false);
         }
 
-        // Afficher le conteneur des questions
         if (questionsScrollPane != null) {
             questionsScrollPane.setVisible(true);
             questionsScrollPane.setManaged(true);
         }
 
-        // Nettoyer et construire les questions
         if (questionContainer != null) {
             questionContainer.getChildren().clear();
             afficherPDF();
             buildQuestions();
         }
 
-        // Remonter en haut du scroll principal
         if (mainScrollPane != null) {
             mainScrollPane.setVvalue(0);
         }
@@ -114,7 +124,6 @@ public class ExamenFrontController implements Initializable {
             return;
         }
 
-        // TitledPane pour le PDF
         TitledPane pdfTitledPane = new TitledPane();
         pdfTitledPane.setText("📄 Document PDF");
         pdfTitledPane.setExpanded(true);
@@ -140,7 +149,6 @@ public class ExamenFrontController implements Initializable {
             pdfTitledPane.setContent(pdfBox);
             questionContainer.getChildren().add(pdfTitledPane);
 
-            // Séparateur
             Separator separator = new Separator();
             separator.setPadding(new Insets(20, 0, 20, 0));
             questionContainer.getChildren().add(separator);
@@ -167,7 +175,6 @@ public class ExamenFrontController implements Initializable {
             return;
         }
 
-        // Titre de section
         Label sectionTitle = new Label("📝 QUESTIONS DE L'EXAMEN");
         sectionTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;");
         sectionTitle.setPadding(new Insets(10, 0, 10, 0));
@@ -196,7 +203,6 @@ public class ExamenFrontController implements Initializable {
             questionContainer.getChildren().add(questionBox);
         }
 
-        // Bouton de soumission
         Button btnSubmit = new Button("📤 SOUMETTRE L'EXAMEN");
         btnSubmit.setStyle(
                 "-fx-background-color: linear-gradient(#1f4f65, #163d4f);" +
@@ -220,7 +226,12 @@ public class ExamenFrontController implements Initializable {
             return;
         }
 
-        // Vérifier qu'au moins une réponse existe
+        // Vérifier que l'utilisateur est connecté
+        if (currentUserId <= 0) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Vous devez être connecté pour soumettre un examen.");
+            return;
+        }
+
         boolean hasAnswer = reponsesFields.stream().anyMatch(ta -> !ta.getText().trim().isEmpty());
 
         if (!hasAnswer) {
@@ -228,7 +239,6 @@ public class ExamenFrontController implements Initializable {
             return;
         }
 
-        // Confirmation
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAlert.setTitle("Confirmation");
         confirmAlert.setHeaderText("Soumettre l'examen ?");
@@ -238,7 +248,6 @@ public class ExamenFrontController implements Initializable {
             return;
         }
 
-        // Construire les réponses
         StringBuilder sb = new StringBuilder();
         sb.append("=== RÉPONSES EXAMEN ===\n");
         sb.append("Titre: ").append(examen.getTitre()).append("\n");
@@ -254,13 +263,14 @@ public class ExamenFrontController implements Initializable {
         }
 
         try {
-            // ✅ UTILISATION CORRECTE DE ServiceReponseExamen ET ReponseExamen
             ServiceReponseExamen service = new ServiceReponseExamen();
-            ReponseExamen r = new ReponseExamen(examen.getId(), 1, sb.toString());
+            // Utilisation de l'ID de l'utilisateur connecté
+            ReponseExamen r = new ReponseExamen(examen.getId(), currentUserId, sb.toString());
             r.setDateSoumission(new Timestamp(System.currentTimeMillis()));
             service.soumettre(r);
 
             examenSoumis = true;
+            System.out.println("✅ Examen soumis avec succès par l'utilisateur ID: " + currentUserId + " (" + currentUserEmail + ")");
             afficherResultat();
 
         } catch (SQLException e) {

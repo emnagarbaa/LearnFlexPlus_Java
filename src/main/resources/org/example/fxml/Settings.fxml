@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" spacing="15" styleClass="root"
+      stylesheets="@/org/example/css/Settings.css" xmlns="http://javafx.com/javafx/17.0.2-ea"
+      fx:controller="org.example.controllers.SettingsController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Label styleClass="view-title" text="Change Password"/>
+
+    <VBox alignment="CENTER_LEFT" maxWidth="300" spacing="5">
+        <Label styleClass="input-label" text="Old Password"/>
+        <PasswordField fx:id="oldPasswordField" promptText="Enter your current password" styleClass="input-field"/>
+    </VBox>
+
+    <VBox alignment="CENTER_LEFT" maxWidth="300" spacing="5">
+        <Label styleClass="input-label" text="New Password"/>
+        <PasswordField fx:id="newPasswordField" promptText="Enter a new password" styleClass="input-field"/>
+    </VBox>
+
+    <VBox alignment="CENTER_LEFT" maxWidth="300" spacing="5">
+        <Label styleClass="input-label" text="Confirm New Password"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirm the new password" styleClass="input-field"/>
+    </VBox>
+
+    <!--
+      FIX: Changed onAction from "#handleUpdatePassword" to "#handleSaveChanges"
+      This now correctly matches the method name in SettingsController.java
+    -->
+    <Button onAction="#handleSaveChanges" styleClass="save-button" text="Save Changes"/>
+
+</VBox>
+

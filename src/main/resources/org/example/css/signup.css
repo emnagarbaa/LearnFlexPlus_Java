@@ -1,0 +1,81 @@
+.root {
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== Title ===== */
+.title-label {
+    -fx-text-fill: linear-gradient(to right, #8E2DE2, #4A00E0);
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(180,0,255,0.4), 15, 0, 0, 0);
+}
+
+/* ===== Input fields ===== */
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: #8E2DE2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #aaa;
+    -fx-font-size: 12px;
+    -fx-pref-width: 220;  /* <<< Makes all TextFields same width */
+    -fx-max-width: 220;   /* <<< Prevents stretching */
+    -fx-pref-height: 28;  /* <<< Keeps consistent height */
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 4 10;
+    -fx-focus-color: transparent;
+}
+
+.input-field:focused {
+    -fx-border-color: linear-gradient(to right, #8E2DE2, #4A00E0);
+    -fx-effect: dropshadow(one-pass-box, rgba(180,0,255,0.4), 10, 0, 0, 0);
+}
+
+/* ===== Eye Icon ===== */
+.eye-icon {
+        -fx-font-size: 16px;
+        -fx-text-fill: #00bfff;
+        -fx-opacity: 1;
+        -fx-padding: 0 0 0 3;
+        -fx-min-width: 18;
+        -fx-min-height: 18;
+        -fx-label-padding: 0;
+}
+.eye-icon:hover {
+    -fx-opacity: 1;
+}
+
+/* ===== Neon Button ===== */
+.neon-button {
+    -fx-background-color: linear-gradient(to right, #8E2DE2, #4A00E0);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 15;
+    -fx-padding: 6 20;
+    -fx-effect: dropshadow(one-pass-box, rgba(180,0,255,0.3), 10, 0, 0, 0);
+    -fx-cursor: hand;
+}
+
+.neon-button:hover {
+    -fx-background-color: linear-gradient(to right, #9B30FF, #5A00E5);
+    -fx-effect: dropshadow(one-pass-box, rgba(180,0,255,0.6), 15, 0, 0, 0);
+}
+
+.neon-button:pressed {
+    -fx-background-color: #5A00E5;
+    -fx-effect: dropshadow(one-pass-box, rgba(180,0,255,0.8), 10, 0, 0, 0);
+}
+
+/* ===== Link Button ===== */
+.link-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #BB86FC;
+    -fx-font-size: 11px;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
+.link-button:hover {
+    -fx-text-fill: #E2B3FF;
+}

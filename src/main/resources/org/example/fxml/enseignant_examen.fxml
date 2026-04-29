@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controllers.EnseignantExamenController"
+      spacing="20" prefWidth="1400" prefHeight="800"
+      stylesheets="@../css/dashboard.css"
+      style="-fx-background-color: #f4f8f7; -fx-padding: 20;">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Button text="← Retour" onAction="#retourFront"
+                style="-fx-background-color: #1f4f65; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15; -fx-background-radius: 8; -fx-cursor: hand;"/>
+        <Label text="📝 Gestion des Examens" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label text="👨‍🏫 Enseignant" style="-fx-text-fill: #666;"/>
+    </HBox>
+
+    <Separator/>
+
+    <!-- Sélection examen -->
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Label text="Sélectionner un examen :" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+        <ComboBox fx:id="cmbExamen" prefWidth="400" promptText="📚 Choisissez un examen"/>
+    </HBox>
+
+    <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS">
+
+        <!-- Tab Correction -->
+        <Tab fx:id="tabCorrection" text="✏️ Correction" closable="false">
+            <SplitPane dividerPositions="0.35">
+
+                <!-- Liste des réponses -->
+                <VBox spacing="10" style="-fx-padding: 10;">
+                    <Label text="📋 Réponses des étudiants" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label text="Cliquez sur une réponse pour la corriger" style="-fx-text-fill: #666; -fx-font-size: 11px;"/>
+                    <ListView fx:id="listReponses" VBox.vgrow="ALWAYS" prefHeight="500"/>
+                </VBox>
+
+                <!-- Détails et correction -->
+                <VBox spacing="15" style="-fx-padding: 10;">
+
+                    <!-- Infos étudiant -->
+                    <VBox spacing="5" style="-fx-background-color: #e8f0fe; -fx-padding: 15; -fx-background-radius: 10;">
+                        <Label fx:id="lblEtudiantInfo" text="Aucune réponse sélectionnée" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                        <Label fx:id="lblDateSoumission" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                        <Label fx:id="lblStatut" style="-fx-font-size: 12px;"/>
+                    </VBox>
+
+                    <!-- Sujet PDF -->
+                    <Label text="📄 Sujet de l'examen" style="-fx-font-weight: bold;"/>
+                    <ScrollPane fx:id="pdfScrollPane" prefHeight="250" style="-fx-background-color: #f5f5f5;">
+                        <content>
+                            <VBox spacing="5">
+                                <Label text="Sélectionnez une réponse pour voir le sujet" style="-fx-padding: 20;"/>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+
+                    <!-- Réponse étudiant -->
+                    <Label text="📝 Réponse de l'étudiant" style="-fx-font-weight: bold;"/>
+                    <TextArea fx:id="txtReponseEtudiant" prefHeight="150" wrapText="true" editable="false"
+                              style="-fx-background-color: #fafafa;"/>
+
+                    <!-- Correction -->
+                    <Label text="✏️ Correction" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Note /20 :"/>
+                        <TextField fx:id="txtNote" prefWidth="80" promptText="0"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </HBox>
+
+                    <Label text="Commentaire :"/>
+                    <TextArea fx:id="txtCommentaire" prefHeight="80" wrapText="true" promptText="Ajoutez un commentaire..."/>
+
+                    <HBox spacing="15" alignment="CENTER">
+                        <Button text="💾 Enregistrer la correction" onAction="#enregistrerCorrection"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                        <Button text="🤖 Détecter IA" onAction="#detecterIA"
+                                style="-fx-background-color:#7c3aed; -fx-text-fill:white;
+                   -fx-font-weight:bold; -fx-background-radius:8;
+                   -fx-padding:10 20; -fx-cursor:hand;"/>
+                    </HBox>
+                </VBox>
+            </SplitPane>
+        </Tab>
+
+        <!-- Tab Statistiques -->
+        <Tab fx:id="tabStatistiques" text="📊 Statistiques" closable="false">
+            <VBox spacing="20" style="-fx-padding: 20;">
+
+                <Label text="📈 Statistiques de l'examen" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;"/>
+
+                <GridPane hgap="20" vgap="15">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                        <ColumnConstraints percentWidth="25"/>
+                    </columnConstraints>
+
+                    <!-- Carte Nb Soumissions -->
+                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="0">
+                        <Label text="📋" style="-fx-font-size: 30px;"/>
+                        <Label text="Soumissions" style="-fx-text-fill: #666;"/>
+                        <Label fx:id="lblNbSoumissions" text="0" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;"/>
+                    </VBox>
+
+                    <!-- Carte Moyenne -->
+                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="1">
+                        <Label text="📊" style="-fx-font-size: 30px;"/>
+                        <Label text="Moyenne" style="-fx-text-fill: #666;"/>
+                        <Label fx:id="lblMoyenne" text="0/20" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                    </VBox>
+
+                    <!-- Carte Note Max -->
+                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="2">
+                        <Label text="🏆" style="-fx-font-size: 30px;"/>
+                        <Label text="Note Maximale" style="-fx-text-fill: #666;"/>
+                        <Label fx:id="lblNoteMax" text="0/20" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
+                    </VBox>
+
+                    <!-- Carte Note Min -->
+                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="3">
+                        <Label text="⚠️" style="-fx-font-size: 30px;"/>
+                        <Label text="Note Minimale" style="-fx-text-fill: #666;"/>
+                        <Label fx:id="lblNoteMin" text="0/20" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+                    </VBox>
+                </GridPane>
+
+                <Separator/>
+
+                <VBox spacing="10">
+                    <Label text="📊 Distribution des notes" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                    <Label text="(Fonctionnalité à venir: graphique des notes)" style="-fx-text-fill: #999; -fx-font-style: italic;"/>
+                </VBox>
+
+                <!-- Bouton actualiser les stats -->
+                <Button text="🔄 Actualiser les statistiques" onAction="#chargerStatistiques"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand;"
+                        maxWidth="200"/>
+
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>
