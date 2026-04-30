@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.FaceAuthController"
+            prefWidth="720"
+            prefHeight="560"
+            style="-fx-background-color: #f5f7fb;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="14" style="-fx-padding: 24;">
+            <Label text="Connexion Face ID"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;"/>
+
+            <ImageView fx:id="cameraView"
+                       fitWidth="640"
+                       fitHeight="400"
+                       preserveRatio="true"
+                       style="-fx-background-color: #101820;"/>
+
+            <Button text="Annuler"
+                    onAction="#cancel"
+                    prefWidth="120"
+                    style="-fx-background-color: #eef2f6; -fx-background-radius: 10;"/>
+        </VBox>
+    </center>
+</BorderPane>

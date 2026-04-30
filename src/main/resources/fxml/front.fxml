@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.FrontController"
+      styleClass="front-root"
+      prefWidth="1200"
+      prefHeight="900"
+      stylesheets="@../css/front.css">
+
+    <!-- ===== HEADER ===== -->
+    <HBox styleClass="header" alignment="CENTER_LEFT" spacing="15">
+
+        <padding>
+            <Insets top="15" right="40" bottom="15" left="40"/>
+        </padding>
+
+        <!-- LOGO + NAME -->
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <ImageView fx:id="logo"
+                       fitHeight="45"
+                       fitWidth="45"
+                       pickOnBounds="true"
+                       preserveRatio="true"
+                       onMouseClicked="#goToDashboard"
+                       style="-fx-cursor:hand;"/>
+            <Label text="LearnFlex+" styleClass="logo-text"/>
+        </HBox>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- NAV BUTTONS -->
+        <HBox spacing="5" alignment="CENTER">
+            <Button text="Accueil"       styleClass="nav-btn" onAction="#goToAccueil"/>
+            <Button text="Cours"         styleClass="nav-btn" onAction="#goToCours"/>
+            <Button text="Évaluation"    styleClass="nav-btn" onAction="#goToEvaluation"/>
+            <Button text="Questionnaire" styleClass="nav-btn" onAction="#goToQuestionnaire"/>
+            <Button text="Orientation"   styleClass="nav-btn" onAction="#goToOrientation"/>
+            <Button text="Forum"         styleClass="nav-btn" onAction="#goToForum"/>
+        </HBox>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <!-- ── AUTH AREA ──────────────────────────────────────────────────────
+             Two children share the same spot:
+               • btnConnexion  : shown when NOT logged in
+               • userMenu      : shown when logged in (MenuButton dropdown)
+             Visibility is toggled in FrontController.initialize()
+        ──────────────────────────────────────────────────────────────────── -->
+
+        <!-- NOT logged in → show this -->
+        <Button fx:id="btnConnexion"
+                text="🔐 Connexion"
+                styleClass="btn-primary"
+                onAction="#goToConnexion"/>
+
+        <!-- Logged in → show this (hidden by default) -->
+        <MenuButton fx:id="userMenu"
+                    visible="false"
+                    managed="false"
+                    styleClass="btn-primary"
+                    style="-fx-background-color: #2e7d9f;
+                           -fx-text-fill: white;
+                           -fx-font-weight: bold;
+                           -fx-background-radius: 10;
+                           -fx-cursor: hand;">
+
+            <items>
+                <MenuItem fx:id="menuProfile"
+                          text="👤  Mon profil"
+                          onAction="#goToProfile"/>
+
+                <SeparatorMenuItem/>
+
+                <MenuItem fx:id="menuDashboard"
+                          text="🖥  Dashboard"
+                          onAction="#goToDashboardMenu"
+                          visible="false"/>
+
+                <SeparatorMenuItem fx:id="sepDashboard" visible="false"/>
+
+                <MenuItem text="🚪  Déconnexion"
+                          onAction="#logout"/>
+            </items>
+        </MenuButton>
+
+    </HBox>
+
+    <!-- ===== CONTENT (unchanged) ===== -->
+    <ScrollPane fitToWidth="true"
+                VBox.vgrow="ALWAYS"
+                styleClass="scroll-pane"
+                hbarPolicy="NEVER">
+
+        <VBox spacing="0">
+
+            <!-- ===== HERO SECTION ===== -->
+            <StackPane prefHeight="520">
+
+                <ImageView fx:id="heroImage"
+                           fitWidth="1200"
+                           fitHeight="520"
+                           preserveRatio="false"
+                           pickOnBounds="true"/>
+
+                <HBox alignment="CENTER_LEFT"
+                      prefHeight="520"
+                      prefWidth="1200">
+
+                    <padding>
+                        <Insets top="0" right="0" bottom="0" left="80"/>
+                    </padding>
+
+                    <VBox alignment="CENTER_LEFT" spacing="25" maxWidth="520">
+
+                        <Label text="Apprends malin, ton bac en main."
+                               wrapText="true"
+                               maxWidth="500"
+                               alignment="CENTER_LEFT"
+                               style="-fx-font-size:44px; -fx-font-weight:bold; -fx-text-fill:#1a3d4f;"/>
+
+                        <Label text="LearnFlex+ accompagne les élèves du bac avec des cours interactifs, des quiz intelligents et un suivi personnalisé."
+                               wrapText="true"
+                               maxWidth="460"
+                               alignment="CENTER_LEFT"
+                               style="-fx-font-size:15px; -fx-text-fill:#2d5a6b;"/>
+
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Button text="🚀 Commencer maintenant"
+                                    styleClass="btn-primary"
+                                    onAction="#goToCours"/>
+                            <Button text="📚 Explorer les cours"
+                                    styleClass="btn-outline-dark"
+                                    onAction="#explorerCours"/>
+                        </HBox>
+
+                        <!-- Stats -->
+                        <HBox spacing="20" alignment="CENTER_LEFT">
+                            <VBox spacing="3" alignment="CENTER_LEFT"
+                                  style="-fx-background-color:rgba(255,255,255,0.55); -fx-background-radius:10; -fx-padding:10 18 10 18;">
+                                <Label text="1,423" style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#1a3d4f;"/>
+                                <Label text="Étudiants" style="-fx-font-size:12px; -fx-text-fill:#2d5a6b;"/>
+                            </VBox>
+                            <Label text="|" style="-fx-text-fill:#4a8a6f; -fx-font-size:26px;"/>
+                            <VBox spacing="3" alignment="CENTER_LEFT"
+                                  style="-fx-background-color:rgba(255,255,255,0.55); -fx-background-radius:10; -fx-padding:10 18 10 18;">
+                                <Label text="856" style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#1a3d4f;"/>
+                                <Label text="Cours" style="-fx-font-size:12px; -fx-text-fill:#2d5a6b;"/>
+                            </VBox>
+                            <Label text="|" style="-fx-text-fill:#4a8a6f; -fx-font-size:26px;"/>
+                            <VBox spacing="3" alignment="CENTER_LEFT"
+                                  style="-fx-background-color:rgba(255,255,255,0.55); -fx-background-radius:10; -fx-padding:10 18 10 18;">
+                                <Label text="128" style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#1a3d4f;"/>
+                                <Label text="Examens" style="-fx-font-size:12px; -fx-text-fill:#2d5a6b;"/>
+                            </VBox>
+                        </HBox>
+
+                    </VBox>
+                </HBox>
+            </StackPane>
+
+            <!-- ===== FEATURES SECTION ===== -->
+            <VBox styleClass="features-section" spacing="30" alignment="CENTER">
+                <padding>
+                    <Insets top="50" right="80" bottom="50" left="80"/>
+                </padding>
+
+                <Label text="Tout ce qu'il vous faut pour réussir"
+                       style="-fx-font-size:26px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+
+                <HBox spacing="30" alignment="CENTER">
+
+                    <VBox styleClass="feature-card" spacing="15" alignment="CENTER" prefWidth="250">
+                        <Label text="📖" styleClass="feature-icon"/>
+                        <Label text="Cours interactifs" style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+                        <Label text="Des cours clairs et structurés adaptés au programme du bac."
+                               wrapText="true" alignment="CENTER"
+                               style="-fx-font-size:13px; -fx-text-fill:#777;"/>
+                    </VBox>
+
+                    <VBox styleClass="feature-card" spacing="15" alignment="CENTER" prefWidth="250">
+                        <Label text="❓" styleClass="feature-icon"/>
+                        <Label text="Quiz &amp; Exercices"
+                               style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+                        <Label text="Testez vos connaissances avec des quiz corrigés automatiquement."
+                               wrapText="true" alignment="CENTER"
+                               style="-fx-font-size:13px; -fx-text-fill:#777;"/>
+                    </VBox>
+
+                    <VBox styleClass="feature-card" spacing="15" alignment="CENTER" prefWidth="250">
+                        <Label text="🧭" styleClass="feature-icon"/>
+                        <Label text="Orientation intelligente"
+                               style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+                        <Label text="Découvrez les filières qui correspondent à votre profil."
+                               wrapText="true" alignment="CENTER"
+                               style="-fx-font-size:13px; -fx-text-fill:#777;"/>
+                    </VBox>
+
+                    <VBox styleClass="feature-card" spacing="15" alignment="CENTER" prefWidth="250">
+                        <Label text="💬" styleClass="feature-icon"/>
+                        <Label text="Forum communautaire"
+                               style="-fx-font-size:16px; -fx-font-weight:bold; -fx-text-fill:#1f4f65;"/>
+                        <Label text="Échangez avec d'autres élèves et enseignants."
+                               wrapText="true" alignment="CENTER"
+                               style="-fx-font-size:13px; -fx-text-fill:#777;"/>
+                    </VBox>
+
+                </HBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+</VBox>
