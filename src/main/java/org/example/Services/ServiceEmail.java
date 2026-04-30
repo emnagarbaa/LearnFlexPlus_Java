@@ -1,5 +1,8 @@
 package org.example.Services;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -11,42 +14,65 @@ public class ServiceEmail {
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
     private static final String EMAIL_EXPEDITEUR = "emnagarbaa200@gmail.com";
-    private static final String MOT_DE_PASSE = "vkduvjpzxrzlybvg";
+    private static final String MOT_DE_PASSE = "dewd cuxj jbke vkvk";
 
+    // ✅ Destinataire fixe
+    private static final String EMAIL_DESTINATAIRE_FIXE = "elmootezbellah.elbedoui@isimg.tn";
+
+    // ✅ Envoi simple texte dans un thread séparé
     public void envoyerEmail(String destinataire, String sujet, String contenu) {
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", SMTP_HOST);
-        props.put("mail.smtp.port", SMTP_PORT);
-        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
-        props.put("mail.smtp.ssl.trust", SMTP_HOST);
+        new Thread(() -> {
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", SMTP_HOST);
+            props.put("mail.smtp.port", SMTP_PORT);
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+            props.put("mail.smtp.ssl.trust", SMTP_HOST);
 
-        Session session = Session.getInstance(props, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(EMAIL_EXPEDITEUR, MOT_DE_PASSE);
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(EMAIL_EXPEDITEUR, MOT_DE_PASSE);
+                }
+            });
+
+            try {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(EMAIL_EXPEDITEUR));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_DESTINATAIRE_FIXE));
+                message.setSubject(sujet);
+                message.setText(contenu);
+
+                Transport.send(message);
+                System.out.println("✅ Email envoyé à " + EMAIL_DESTINATAIRE_FIXE);
+
+                // ✅ Alerte succès sur le thread JavaFX
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Email envoyé");
+                    alert.setHeaderText(null);
+                    alert.setContentText("✅ Email envoyé avec succès à " + EMAIL_DESTINATAIRE_FIXE);
+                    alert.showAndWait();
+                });
+
+            } catch (MessagingException e) {
+                System.err.println("❌ Erreur envoi email : " + e.getMessage());
+                e.printStackTrace();
+
+                // ✅ Alerte erreur sur le thread JavaFX
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("❌ Échec de l'envoi : " + e.getMessage());
+                    alert.showAndWait();
+                });
             }
-        });
-
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(EMAIL_EXPEDITEUR));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinataire));
-            message.setSubject(sujet);
-            // Utiliser setText au lieu de setContent pour éviter les problèmes MIME
-            message.setText(contenu);
-
-            Transport.send(message);
-            System.out.println("✅ Email envoyé à " + destinataire);
-
-        } catch (MessagingException e) {
-            System.err.println("❌ Erreur envoi email : " + e.getMessage());
-            e.printStackTrace();
-        }
+        }).start();
     }
 
-    // Email spécifique pour la correction d'examen (version texte)
+    // ✅ Email correction examen - version texte
     public void envoyerCorrectionExamen(String emailEtudiant, String nomEtudiant,
                                         String examenTitre, double note,
                                         String commentaire, double moyenne) {
@@ -88,16 +114,16 @@ public class ServiceEmail {
                 commentaire != null && !commentaire.isEmpty() ? commentaire : "Aucun commentaire"
         );
 
-        envoyerEmail(emailEtudiant, sujet, contenu);
+        envoyerEmail(EMAIL_DESTINATAIRE_FIXE, sujet, contenu);
     }
 
-    // Version HTML simplifiée (si vous voulez garder le HTML)
+    // ✅ Email correction examen - version HTML dans un thread séparé
     public void envoyerCorrectionExamenHTML(String emailEtudiant, String nomEtudiant,
                                             String examenTitre, double note,
                                             String commentaire, double moyenne) {
         String sujet = "📝 Correction de votre examen - " + examenTitre;
 
-        String contenu = String.format("""
+        String contenuHTML = String.format("""
             <html>
             <head><style>
                 body { font-family: Arial, sans-serif; }
@@ -144,42 +170,56 @@ public class ServiceEmail {
                 commentaire != null && !commentaire.isEmpty() ? commentaire : "Aucun commentaire"
         );
 
-        envoyerEmailHTML(emailEtudiant, sujet, contenu);
-    }
+        // ✅ Envoi dans un thread séparé
+        new Thread(() -> {
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", SMTP_HOST);
+            props.put("mail.smtp.port", SMTP_PORT);
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+            props.put("mail.smtp.ssl.trust", SMTP_HOST);
 
-    // Méthode pour envoyer du HTML avec gestion correcte du content type
-    private void envoyerEmailHTML(String destinataire, String sujet, String contenuHTML) {
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", SMTP_HOST);
-        props.put("mail.smtp.port", SMTP_PORT);
-        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
-        props.put("mail.smtp.ssl.trust", SMTP_HOST);
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(EMAIL_EXPEDITEUR, MOT_DE_PASSE);
+                }
+            });
 
-        Session session = Session.getInstance(props, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(EMAIL_EXPEDITEUR, MOT_DE_PASSE);
+            try {
+                MimeMessage message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(EMAIL_EXPEDITEUR));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_DESTINATAIRE_FIXE));
+                message.setSubject(sujet, "UTF-8");
+                message.setContent(contenuHTML, "text/html; charset=UTF-8");
+                message.saveChanges();
+
+                Transport.send(message);
+                System.out.println("✅ Email HTML envoyé à " + EMAIL_DESTINATAIRE_FIXE);
+
+                // ✅ Alerte succès sur le thread JavaFX
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Email envoyé");
+                    alert.setHeaderText(null);
+                    alert.setContentText("✅ Email envoyé avec succès !");
+                    alert.showAndWait();
+                });
+
+            } catch (MessagingException e) {
+                System.err.println("❌ Erreur envoi email HTML : " + e.getMessage());
+                e.printStackTrace();
+
+                // ✅ Alerte erreur sur le thread JavaFX
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("❌ Échec de l'envoi : " + e.getMessage());
+                    alert.showAndWait();
+                });
             }
-        });
-
-        try {
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(EMAIL_EXPEDITEUR));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinataire));
-            message.setSubject(sujet, "UTF-8");
-            message.setContent(contenuHTML, "text/html; charset=UTF-8");
-
-            // Sauvegarder les changements avant d'envoyer
-            message.saveChanges();
-
-            Transport.send(message);
-            System.out.println("✅ Email HTML envoyé à " + destinataire);
-
-        } catch (MessagingException e) {
-            System.err.println("❌ Erreur envoi email HTML : " + e.getMessage());
-            e.printStackTrace();
-        }
+        }).start();
     }
 }

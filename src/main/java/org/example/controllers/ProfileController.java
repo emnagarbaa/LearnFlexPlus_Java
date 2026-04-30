@@ -1,10 +1,6 @@
 package org.example.controllers;
 
-import org.example.entities.User;
-import org.example.utils.SessionManager;
-import org.example.Services.ServiceUsers;
 import org.example.utils.MyDatabase;
-import entities.Users;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

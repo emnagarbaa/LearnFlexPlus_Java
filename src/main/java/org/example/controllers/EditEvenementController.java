@@ -8,7 +8,6 @@ import org.example.entities.Evenement;
 import org.example.entities.Organisme;
 import org.example.Services.EvenementService;
 import org.example.Services.OrganismeService;
-import org.example.utils.ValidationUtil;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;

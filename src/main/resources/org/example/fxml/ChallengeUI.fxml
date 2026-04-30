@@ -83,6 +83,12 @@
                        style="-fx-font-size:11px; -fx-text-fill:rgba(255,255,255,0.6);
                               -fx-font-family:'Segoe UI';"/>
             </VBox>
+            <!-- 🔊 Bouton TTS — à ajouter ici -->
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnTTS" text="🔊 Son ON" onAction="#toggleTTS"
+                    style="-fx-background-color:#1D9E75; -fx-text-fill:white;
+               -fx-font-size:12px; -fx-font-weight:bold;
+               -fx-background-radius:8; -fx-padding:6 14; -fx-cursor:hand;"/>
         </HBox>
 
         <!-- Barre de progression -->

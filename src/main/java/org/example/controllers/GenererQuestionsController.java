@@ -54,13 +54,13 @@ public class GenererQuestionsController implements Initializable {
         if (challenge == null) return;
 
         int nbQuestions = spinnerNbQuestions.getValue();
-
+//désactive les boutons, affiche le spinner, efface les anciennes questions
         btnGenerer.setDisable(true);
         btnSauvegarder.setDisable(true);
         progressIndicator.setVisible(true);
         vboxQuestions.getChildren().clear();
         lblStatut.setText("⏳ Génération en cours...");
-
+//Crée un thread séparé pour ne pas bloquer l'interface pendant l'appel API
         new Thread(() -> {
             try {
                 String json = groqService.genererQuestionsJson(
@@ -91,6 +91,7 @@ public class GenererQuestionsController implements Initializable {
     // ── Sauvegarder en BDD ────────────────────────────────────
     @FXML
     private void handleSauvegarder() {
+        //Vérifie qu'un JSON a bien été généré
         if (jsonGenere == null || jsonGenere.isEmpty()) return;
         try {
             serviceChallenge.mettreAJourQuestions(challenge.getId(), jsonGenere);
@@ -110,7 +111,7 @@ public class GenererQuestionsController implements Initializable {
             JSONArray  questions = root.getJSONArray("questions");
 
             int qcm = 0, tf = 0, open = 0;
-
+//Compteurs pour afficher les statistiques par type
             for (int i = 0; i < questions.length(); i++) {
                 JSONObject q    = questions.getJSONObject(i);
                 String     type = q.optString("type", "open");

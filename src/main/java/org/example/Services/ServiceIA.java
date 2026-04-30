@@ -14,8 +14,8 @@ public class ServiceIA {
     // ⚠️ REMPLACE AVEC TA CLÉ API GROQ
     private static final String API_KEY = " ";
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
-    private static final String MODEL = "llama-3.3-70b-versatile";   // Recommandé, très performant
-
+    private static final String MODEL = "llama-3.3-70b-versatile";  // Recommandé, très performant
+//Client HTTP configuré
     private final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
@@ -25,6 +25,7 @@ public class ServiceIA {
     /**
      * Génère un feedback avec analyse
      */
+    //Génère un feedback personnalisé basé sur l'analyse détaillée de l'utilisateur.
     public String genererFeedbackAvecAnalyse(String titreChallenge,
                                              int score,
                                              String badge,
@@ -33,21 +34,22 @@ public class ServiceIA {
                                              int nbQuestions,
                                              Map<String, Object> analyse) throws IOException {
 
-        // Fallback direct si pas de clé API
-        if (API_KEY == null || API_KEY.isEmpty() || API_KEY.equals("gsk_VOTRE_CLE_API_ICI")) {
+//Vérifie si la clé API est présente, sinon utilise une solution locale.
+if (API_KEY == null || API_KEY.isEmpty() || API_KEY.equals("gsk_VOTRE_CLE_API_ICI")) {
             System.out.println("📝 Utilisation du feedback local (pas de clé API)");
             return getLocalFeedback(score, analyse);
         }
 
         try {
+            //Extraction des données d'analyse :
             int reussies = (int) analyse.getOrDefault("reussies", 0);
             int ratees = (int) analyse.getOrDefault("ratees", 0);
 
             @SuppressWarnings("unchecked")
             List<String> categoriesFaibles = (List<String>) analyse.get("categories_faibles");
 
-            // Construction du message utilisateur
-            StringBuilder userContent = new StringBuilder();
+//Construction du prompt (très détaillé) :
+StringBuilder userContent = new StringBuilder();
             userContent.append("Tu es un coach pédagogique. Donne un feedback à un étudiant.\n\n");
             userContent.append("CHALLENGE: ").append(titreChallenge).append("\n");
             userContent.append("SCORE: ").append(score).append("%\n");
@@ -59,7 +61,7 @@ public class ServiceIA {
             if (categoriesFaibles != null && !categoriesFaibles.isEmpty()) {
                 userContent.append("CATÉGORIES FAIBLES: ").append(String.join(", ", categoriesFaibles)).append("\n");
             }
-
+//Format de sortie attendu :
             userContent.append("\nRéponds UNIQUEMENT avec ce JSON, rien d'autre:\n");
             userContent.append("""
                 {
@@ -74,7 +76,7 @@ public class ServiceIA {
                 }
                 """);
 
-            // Construction de la requête
+//Requête avec message système :
             JSONObject body = new JSONObject();
             body.put("model", MODEL);
             body.put("temperature", 0.7);
@@ -113,7 +115,7 @@ public class ServiceIA {
                                 .getJSONObject("message")
                                 .getString("content");
 
-                        // Nettoyer le contenu
+                        // Nettoyage de la réponse :
                         content = content.trim();
                         if (content.startsWith("```json")) {
                             content = content.substring(7);
@@ -149,11 +151,12 @@ public class ServiceIA {
      * Détecte si un texte est généré par IA
      * Retourne un JSONObject avec: probabilite, verdict, indices, explication
      */
+    //Détecte si un texte a été généré par une IA.
     public String detecterIA(String texte) throws IOException {
         if (API_KEY == null || API_KEY.isEmpty()) {
             return "{\"verdict\":\"Inconnu\",\"probabilite\":0,\"explication\":\"Clé API manquante.\",\"indices\":[]}";
         }
-
+//Construction du prompt :
         String prompt = """
         Analyse ce texte et détermine s'il a été généré par une IA.
         Réponds UNIQUEMENT avec ce JSON, rien d'autre :
@@ -168,6 +171,7 @@ public class ServiceIA {
         """ + texte;
 
         JSONObject body = new JSONObject();
+        //Paramètres spécifiques :
         body.put("model", MODEL);
         body.put("temperature", 0.2);
         body.put("max_tokens", 400);

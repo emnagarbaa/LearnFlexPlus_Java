@@ -15,8 +15,6 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.example.Services.ServiceReponseExamen;
 import org.example.entities.Examen;
 import org.example.entities.ReponseExamen;
-import org.example.entities.User;
-import org.example.utils.SessionManager;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

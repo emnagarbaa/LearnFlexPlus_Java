@@ -252,11 +252,17 @@ public class ChallengeController implements Initializable {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/org/example/fxml/GenererQuestions.fxml"));
             Parent root = loader.load();
+            //Extrait l'instance du contrôleur associé au fichier FXML
             GenererQuestionsController ctrl = loader.getController();
+            //Passe l'objet Challenge au contrôleur
             ctrl.setChallenge(c);
+            //Instancie un objet Stage (conteneur de fenêtre JavaFX)
             Stage stage = new Stage();
+            //Définition du titre
             stage.setTitle("✨ Générer des questions — " + c.getTitrec());
+            //bloque toutes les autres fenêtres de l'application
             stage.initModality(Modality.APPLICATION_MODAL);
+            //La scène contient toute l'interface utilisateur
             stage.setScene(new Scene(root));
             stage.setResizable(false);
             stage.showAndWait();

@@ -9,10 +9,10 @@ import java.util.concurrent.TimeUnit;
 
 public class GroqService {
 
-    private static final String API_KEY = "";
+    private static final String API_KEY = " ";
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
     private static final String MODEL   = "llama-3.1-8b-instant";
-
+//Client HTTP configuré
     private final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -22,6 +22,7 @@ public class GroqService {
      * Génère des questions mixtes (QCM + Vrai/Faux + Ouvertes) en JSON pur
      * directement compatible avec ChallengeUIController.
      */
+    //génération des questions
     public String genererQuestionsJson(String titreChallenge,
                                        String descriptionChallenge,
                                        String niveau,
@@ -31,7 +32,7 @@ public class GroqService {
         int nbQcm       = (int) Math.ceil(nbQuestions * 0.5);   // 50% QCM
         int nbTrueFalse = (int) Math.ceil(nbQuestions * 0.3);   // 30% Vrai/Faux
         int nbOpen      = nbQuestions - nbQcm - nbTrueFalse;    // 20% Ouvertes
-
+//Construction du prompt (instruction à l'IA)
         String prompt =
                 "Tu es un expert pédagogique. Génère exactement " + nbQuestions + " questions " +
                         "de niveau " + niveau + " pour le challenge : « " + titreChallenge + " ».\n" +
@@ -77,14 +78,14 @@ public class GroqService {
         body.put("model", MODEL);
         body.put("temperature", 0.7);
         body.put("max_tokens", 4096);
-
+//Construction du message utilisateur
         JSONArray messages = new JSONArray();
         JSONObject userMessage = new JSONObject();
         userMessage.put("role", "user");
         userMessage.put("content", prompt);
         messages.put(userMessage);
         body.put("messages", messages);
-
+        //Exécution de la requête HTTP
         Request request = new Request.Builder()
                 .url(API_URL)
                 .addHeader("Authorization", "Bearer " + API_KEY)
@@ -99,7 +100,7 @@ public class GroqService {
                 throw new IOException("Erreur Groq API : " + response.code()
                         + " - " + response.body().string());
             }
-
+//Parsing de la réponse
             String responseBody = response.body().string();
             JSONObject json     = new JSONObject(responseBody);
             String content      = json.getJSONArray("choices")

@@ -82,21 +82,22 @@ public class LeaderboardController implements Initializable {
 
         podiumContainer.getChildren().add(podiumRow);
     }
-
+//Cette méthode construit un "slot" (emplacement) pour chaque top 3 du podium.
     private VBox buildSlot(LeaderboardEntry entry, int rang) {
         VBox slot = new VBox(0);
         slot.setAlignment(Pos.BOTTOM_CENTER);
 
-        // ── Avatar ────────────────────────────────────────
+//La taille de l'avatar dépend du rang
         StackPane avatarWrap = new StackPane();
         avatarWrap.setPrefSize(rang == 1 ? 70 : rang == 2 ? 60 : 54,
                 rang == 1 ? 70 : rang == 2 ? 60 : 54);
         VBox.setMargin(avatarWrap, new javafx.geometry.Insets(0, 0, 8, 0));
-
+//L'avatar est un simple label avec "U" + ID utilisateur, en forme de cercle
         Label avatar = new Label("U" + entry.getUserId());
         double size = rang == 1 ? 64 : rang == 2 ? 54 : 50;
         avatar.setPrefSize(size, size);
         avatar.setAlignment(Pos.CENTER);
+        //Couleurs différentes selon le rang :
         avatar.setStyle(
                 "-fx-background-radius:99; -fx-font-weight:bold;" +
                         "-fx-font-size:" + (rang == 1 ? 17 : 13) + "px;" +
@@ -107,7 +108,7 @@ public class LeaderboardController implements Initializable {
                             default -> "-fx-background-color:#FAECE7; -fx-text-fill:#712B13; -fx-border-color:#F0997B;";
                         }
         );
-
+//Petit badge avec le numéro placé en bas à droite de l'avatar
         Label medal = new Label(String.valueOf(rang));
         medal.setPrefSize(20, 20);
         medal.setAlignment(Pos.CENTER);
