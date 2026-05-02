@@ -45,6 +45,7 @@ public class PublicationController {
 
         TableColumn<Publication, String> titreCol = new TableColumn<>("Titre");
         titreCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getTitre()));
+<<<<<<< HEAD
         titreCol.setPrefWidth(200);
 
         TableColumn<Publication, String> descriptionCol = new TableColumn<>("Description");
@@ -54,6 +55,17 @@ public class PublicationController {
         TableColumn<Publication, String> dateCol = new TableColumn<>("Date création");
         dateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDateCreation()));
         dateCol.setPrefWidth(150);
+=======
+        titreCol.setPrefWidth(180);
+
+        TableColumn<Publication, String> descriptionCol = new TableColumn<>("Description");
+        descriptionCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDescription()));
+        descriptionCol.setPrefWidth(250);
+
+        TableColumn<Publication, String> dateCol = new TableColumn<>("Date création");
+        dateCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getDateCreation()));
+        dateCol.setPrefWidth(140);
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
 
         TableColumn<Publication, String> categorieCol = new TableColumn<>("Catégorie");
         categorieCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getCategorie()));
@@ -61,6 +73,7 @@ public class PublicationController {
 
         TableColumn<Publication, Integer> vuesCol = new TableColumn<>("Vues");
         vuesCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getNombreVues()).asObject());
+<<<<<<< HEAD
         vuesCol.setPrefWidth(70);
 
         TableColumn<Publication, Integer> likesCol = new TableColumn<>("Likes");
@@ -80,6 +93,37 @@ public class PublicationController {
                 editBtn.setStyle("-fx-background-color:#3498db;-fx-text-fill:white;-fx-cursor:hand;");
                 editBtn.setOnAction(e -> editPublication(getTableView().getItems().get(getIndex())));
                 deleteBtn.setStyle("-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-cursor:hand;");
+=======
+        vuesCol.setPrefWidth(60);
+
+        TableColumn<Publication, Integer> likesCol = new TableColumn<>("👍 Likes");
+        likesCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getNombreLikes()).asObject());
+        likesCol.setPrefWidth(70);
+
+        TableColumn<Publication, Integer> dislikesCol = new TableColumn<>("👎 Dislikes");
+        dislikesCol.setCellValueFactory(c -> new SimpleIntegerProperty(c.getValue().getNombreDislikes()).asObject());
+        dislikesCol.setPrefWidth(80);
+
+        TableColumn<Publication, Void> actionsCol = new TableColumn<>("Actions");
+        actionsCol.setPrefWidth(180);
+        actionsCol.setCellFactory(col -> new TableCell<>() {
+            private final Button likeBtn    = new Button("👍");
+            private final Button dislikeBtn = new Button("👎");
+            private final Button editBtn    = new Button("✏️");
+            private final Button deleteBtn  = new Button("🗑️");
+            private final HBox buttons      = new HBox(5, likeBtn, dislikeBtn, editBtn, deleteBtn);
+            {
+                likeBtn.setStyle("-fx-background-color:#2ecc71; -fx-text-fill:white; -fx-cursor:hand;");
+                likeBtn.setOnAction(e -> incrementLikes(getTableView().getItems().get(getIndex())));
+
+                dislikeBtn.setStyle("-fx-background-color:#e67e22; -fx-text-fill:white; -fx-cursor:hand;");
+                dislikeBtn.setOnAction(e -> incrementDislikes(getTableView().getItems().get(getIndex())));
+
+                editBtn.setStyle("-fx-background-color:#3498db; -fx-text-fill:white; -fx-cursor:hand;");
+                editBtn.setOnAction(e -> editPublication(getTableView().getItems().get(getIndex())));
+
+                deleteBtn.setStyle("-fx-background-color:#e74c3c; -fx-text-fill:white; -fx-cursor:hand;");
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
                 deleteBtn.setOnAction(e -> deletePublication(getTableView().getItems().get(getIndex())));
             }
             @Override
@@ -89,7 +133,13 @@ public class PublicationController {
             }
         });
 
+<<<<<<< HEAD
         publicationTable.getColumns().setAll(idCol, titreCol, descriptionCol, dateCol, categorieCol, vuesCol, likesCol, actionsCol);
+=======
+        publicationTable.getColumns().setAll(
+                idCol, titreCol, descriptionCol, dateCol,
+                categorieCol, vuesCol, likesCol, dislikesCol, actionsCol);
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         publicationTable.setItems(publicationList);
     }
 
@@ -101,9 +151,20 @@ public class PublicationController {
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 publicationList.add(new Publication(
+<<<<<<< HEAD
                         rs.getInt("id"), rs.getString("titre"), rs.getString("description"),
                         rs.getString("date_creation"), rs.getString("categorie"),
                         rs.getInt("nombre_vues"), rs.getInt("nombre_likes")));
+=======
+                        rs.getInt("id"),              // ✅ corrigé : id pas id_publication
+                        rs.getString("titre"),
+                        rs.getString("description"),
+                        rs.getString("date_creation"),
+                        rs.getString("categorie"),
+                        rs.getInt("nombre_vues"),
+                        rs.getInt("nombre_likes"),
+                        rs.getInt("nombre_dislikes")));
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
             }
         } catch (SQLException e) {
             showAlert("Erreur", "Impossible de charger les publications: " + e.getMessage());
@@ -113,6 +174,7 @@ public class PublicationController {
     @FXML
     private void savePublication() {
         if (titreField.getText().trim().isEmpty()) {
+<<<<<<< HEAD
             showAlert("Erreur", "Le titre est obligatoire !");
             titreField.requestFocus();
             return;
@@ -139,14 +201,35 @@ public class PublicationController {
         }
 
         String sql = "INSERT INTO publication (titre, description, date_creation, categorie, nombre_vues, nombre_likes) VALUES (?, ?, ?, ?, ?, ?)";
+=======
+            showAlert("Erreur", "Le titre est obligatoire !"); titreField.requestFocus(); return;
+        }
+        if (titreField.getText().length() < 3) {
+            showAlert("Erreur", "Le titre doit contenir au moins 3 caractères !"); titreField.requestFocus(); return;
+        }
+        if (descriptionArea.getText().trim().isEmpty()) {
+            showAlert("Erreur", "La description est obligatoire !"); descriptionArea.requestFocus(); return;
+        }
+        if (descriptionArea.getText().length() < 10) {
+            showAlert("Erreur", "La description doit contenir au moins 10 caractères !"); descriptionArea.requestFocus(); return;
+        }
+        if (categorieCombo.getValue() == null) {
+            showAlert("Erreur", "Veuillez sélectionner une catégorie !"); categorieCombo.requestFocus(); return;
+        }
+
+        String sql = "INSERT INTO publication (titre, description, date_creation, categorie, nombre_vues, nombre_likes, nombre_dislikes) VALUES (?, ?, ?, ?, 0, 0, 0)";
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, titreField.getText().trim());
             pstmt.setString(2, descriptionArea.getText().trim());
             pstmt.setString(3, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             pstmt.setString(4, categorieCombo.getValue());
+<<<<<<< HEAD
             pstmt.setInt(5, 0);
             pstmt.setInt(6, 0);
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
             pstmt.executeUpdate();
             showAlert("Succès", "Publication ajoutée avec succès !");
             clearForm();
@@ -158,12 +241,20 @@ public class PublicationController {
     }
 
     private void incrementLikes(Publication publication) {
+<<<<<<< HEAD
         String sql = "UPDATE publication SET nombre_likes = nombre_likes + 1 WHERE id = ?";
+=======
+        // ✅ corrigé : id pas id_publication
+        String sql = "UPDATE publication SET nombre_likes=nombre_likes+1, nombre_vues=nombre_vues+1 WHERE id=?";
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, publication.getId());
             pstmt.executeUpdate();
+<<<<<<< HEAD
             incrementView(publication.getId());
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
             loadPublications();
             updateStatistics();
             showAlert("Succès", "Merci pour votre like ! 👍");
@@ -172,8 +263,29 @@ public class PublicationController {
         }
     }
 
+<<<<<<< HEAD
     private void incrementView(int id) {
         String sql = "UPDATE publication SET nombre_vues = nombre_vues + 1 WHERE id = ?";
+=======
+    private void incrementDislikes(Publication publication) {
+        // ✅ corrigé : id pas id_publication
+        String sql = "UPDATE publication SET nombre_dislikes=nombre_dislikes+1 WHERE id=?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, publication.getId());
+            pstmt.executeUpdate();
+            loadPublications();
+            updateStatistics();
+            showAlert("Succès", "Dislike enregistré ! 👎");
+        } catch (SQLException e) {
+            showAlert("Erreur", "Erreur lors du dislike: " + e.getMessage());
+        }
+    }
+
+    private void incrementView(int id) {
+        // ✅ corrigé : id pas id_publication
+        String sql = "UPDATE publication SET nombre_vues=nombre_vues+1 WHERE id=?";
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
@@ -194,6 +306,7 @@ public class PublicationController {
 
     private void updatePublication(int id) {
         if (titreField.getText().trim().isEmpty()) {
+<<<<<<< HEAD
             showAlert("Erreur", "Le titre est obligatoire !");
             titreField.requestFocus();
             return;
@@ -203,6 +316,14 @@ public class PublicationController {
             descriptionArea.requestFocus();
             return;
         }
+=======
+            showAlert("Erreur", "Le titre est obligatoire !"); titreField.requestFocus(); return;
+        }
+        if (descriptionArea.getText().trim().isEmpty()) {
+            showAlert("Erreur", "La description est obligatoire !"); descriptionArea.requestFocus(); return;
+        }
+        // ✅ corrigé : id pas id_publication
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         String sql = "UPDATE publication SET titre=?, description=?, categorie=? WHERE id=?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -227,7 +348,12 @@ public class PublicationController {
         confirm.setHeaderText("Supprimer la publication");
         confirm.setContentText("Êtes-vous sûr de vouloir supprimer : \"" + publication.getTitre() + "\" ?");
         if (confirm.showAndWait().get() == ButtonType.OK) {
+<<<<<<< HEAD
             String sql = "DELETE FROM publication WHERE id = ?";
+=======
+            // ✅ corrigé : id pas id_publication
+            String sql = "DELETE FROM publication WHERE id=?";
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
             try (Connection conn = getConnection();
                  PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, publication.getId());
@@ -259,6 +385,7 @@ public class PublicationController {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 publicationList.add(new Publication(
+<<<<<<< HEAD
                         rs.getInt("id"), rs.getString("titre"), rs.getString("description"),
                         rs.getString("date_creation"), rs.getString("categorie"),
                         rs.getInt("nombre_vues"), rs.getInt("nombre_likes")));
@@ -266,12 +393,29 @@ public class PublicationController {
             if (publicationList.isEmpty()) {
                 showAlert("Information", "Aucune publication trouvée pour : " + keyword);
             }
+=======
+                        rs.getInt("id"),              // ✅ corrigé
+                        rs.getString("titre"),
+                        rs.getString("description"),
+                        rs.getString("date_creation"),
+                        rs.getString("categorie"),
+                        rs.getInt("nombre_vues"),
+                        rs.getInt("nombre_likes"),
+                        rs.getInt("nombre_dislikes")));
+            }
+            if (publicationList.isEmpty())
+                showAlert("Information", "Aucune publication trouvée pour : " + keyword);
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         } catch (SQLException e) {
             showAlert("Erreur", "Erreur lors de la recherche: " + e.getMessage());
         }
     }
 
+<<<<<<< HEAD
     @FXML private void sortByDate() { publicationList.sort((p1, p2) -> p2.getDateCreation().compareTo(p1.getDateCreation())); }
+=======
+    @FXML private void sortByDate()  { publicationList.sort((p1, p2) -> p2.getDateCreation().compareTo(p1.getDateCreation())); }
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
     @FXML private void sortByViews() { publicationList.sort((p1, p2) -> Integer.compare(p2.getNombreVues(), p1.getNombreVues())); }
     @FXML private void sortByLikes() { publicationList.sort((p1, p2) -> Integer.compare(p2.getNombreLikes(), p1.getNombreLikes())); }
 
@@ -279,6 +423,7 @@ public class PublicationController {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
             ResultSet rs1 = stmt.executeQuery("SELECT COUNT(*) as total FROM publication");
+<<<<<<< HEAD
             rs1.next();
             int total = rs1.getInt("total");
             ResultSet rs2 = stmt.executeQuery("SELECT SUM(nombre_vues) as totalVues FROM publication");
@@ -289,13 +434,34 @@ public class PublicationController {
             int totalLikes = rs3.getInt("totalLikes");
             double moyenne = total > 0 ? (double) totalVues / total : 0;
             statsLabel.setText(String.format("📊 Statistiques: %d publications | %d vues | %d likes | %.1f vues/pub", total, totalVues, totalLikes, moyenne));
+=======
+            rs1.next(); int total = rs1.getInt("total");
+            ResultSet rs2 = stmt.executeQuery("SELECT SUM(nombre_vues) as totalVues FROM publication");
+            rs2.next(); int totalVues = rs2.getInt("totalVues");
+            ResultSet rs3 = stmt.executeQuery("SELECT SUM(nombre_likes) as totalLikes FROM publication");
+            rs3.next(); int totalLikes = rs3.getInt("totalLikes");
+            ResultSet rs4 = stmt.executeQuery("SELECT SUM(nombre_dislikes) as totalDislikes FROM publication");
+            rs4.next(); int totalDislikes = rs4.getInt("totalDislikes");
+            double moyenne = total > 0 ? (double) totalVues / total : 0;
+            statsLabel.setText(String.format(
+                    "📊 %d publications | %d vues | 👍 %d | 👎 %d | %.1f vues/pub",
+                    total, totalVues, totalLikes, totalDislikes, moyenne));
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         } catch (SQLException e) {
             statsLabel.setText("📊 Statistiques: erreur de chargement");
         }
     }
 
     @FXML private void exportToPDF() { showAlert("Export PDF", "Fonctionnalité d'export PDF en cours de développement."); }
+<<<<<<< HEAD
     @FXML private void clearForm() { titreField.clear(); descriptionArea.clear(); categorieCombo.setValue(null); titreField.requestFocus(); }
+=======
+
+    @FXML private void clearForm() {
+        titreField.clear(); descriptionArea.clear();
+        categorieCombo.setValue(null); titreField.requestFocus();
+    }
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
 
     private Button findSaveButton() {
         try { return (Button) titreField.getScene().lookup("#saveButton"); } catch (Exception e) { return null; }
@@ -308,6 +474,7 @@ public class PublicationController {
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+<<<<<<< HEAD
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
@@ -322,6 +489,25 @@ public class PublicationController {
             this.dateCreation = dateCreation; this.categorie = categorie;
             this.nombreVues = nombreVues; this.nombreLikes = nombreLikes;
         }
+=======
+        alert.setTitle(title); alert.setHeaderText(null);
+        alert.setContentText(content); alert.showAndWait();
+    }
+
+    // ===== MODÈLE =====
+    public static class Publication {
+        private final int id, nombreVues, nombreLikes, nombreDislikes;
+        private final String titre, description, dateCreation, categorie;
+
+        public Publication(int id, String titre, String description, String dateCreation,
+                           String categorie, int nombreVues, int nombreLikes, int nombreDislikes) {
+            this.id = id; this.titre = titre; this.description = description;
+            this.dateCreation = dateCreation; this.categorie = categorie;
+            this.nombreVues = nombreVues; this.nombreLikes = nombreLikes;
+            this.nombreDislikes = nombreDislikes;
+        }
+
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         public int getId() { return id; }
         public String getTitre() { return titre; }
         public String getDescription() { return description; }
@@ -329,6 +515,13 @@ public class PublicationController {
         public String getCategorie() { return categorie; }
         public int getNombreVues() { return nombreVues; }
         public int getNombreLikes() { return nombreLikes; }
+<<<<<<< HEAD
         @Override public String toString() { return titre; }
     }
 }
+=======
+        public int getNombreDislikes() { return nombreDislikes; }
+        @Override public String toString() { return titre; }
+    }
+}
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))

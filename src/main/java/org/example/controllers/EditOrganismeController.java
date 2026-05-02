@@ -1,4 +1,5 @@
 package org.example.controllers;
+import org.example.utils.ValidationUtil;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -250,3 +251,4 @@ public class EditOrganismeController {
         return ok;
     }
 }
+

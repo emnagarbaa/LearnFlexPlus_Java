@@ -1,0 +1,54 @@
+.root {
+    -fx-font-family: "Segoe UI";
+    -fx-background-color: #f0f4f8;
+}
+
+/* LOGIN CARD */
+.login-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 30;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+/* TITLE */
+.title-label {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f4f65;
+}
+
+/* INPUT */
+.input-field {
+    -fx-background-color: #f0f4f8;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+}
+
+.input-field:focused {
+    -fx-border-color: #97c3a2;
+}
+
+/* BUTTON */
+.neon-button {
+    -fx-background-color: #1f4f65;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.neon-button:hover {
+    -fx-background-color: #97c3a2;
+}
+
+/* LINK */
+.link-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1f4f65;
+    -fx-underline: true;
+}

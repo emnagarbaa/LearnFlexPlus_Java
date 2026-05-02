@@ -1,4 +1,5 @@
 package org.example.controllers;
+import org.example.utils.ValidationUtil;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -211,3 +212,4 @@ public class AddEvenementController {
         return ok;
     }
 }
+

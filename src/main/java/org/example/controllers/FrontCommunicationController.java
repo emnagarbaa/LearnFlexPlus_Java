@@ -14,8 +14,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+<<<<<<< HEAD
 
 import java.sql.*;
+=======
+import javafx.application.Platform;
+
+import javax.mail.*;
+import javax.mail.internet.*;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.sql.*;
+import java.util.Properties;
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
 
 public class FrontCommunicationController {
 
@@ -27,6 +41,18 @@ public class FrontCommunicationController {
     @FXML private TextField searchField;
     @FXML private ImageView logo;
 
+<<<<<<< HEAD
+=======
+    // ===== CONFIG EMAIL =====
+    private static final String EMAIL_UTILISATEUR  = "aouamriamal0000@gmail.com";
+    private static final String EMAIL_MOT_DE_PASSE = "ziwu piqz iync fgvl";
+
+    // ===== CONFIG ONESIGNAL =====
+    private static final String ONESIGNAL_APP_ID = "d122c439-6307-434a-a4e3-c7f3ab78de39";
+    private static final String ONESIGNAL_API_KEY = "bcfhhaq7gu3qmh53mfaclqpgc";
+    private static final String ONESIGNAL_URL     = "https://onesignal.com/api/v1/notifications";
+
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
     private ObservableList<Communication> communicationList = FXCollections.observableArrayList();
 
     // ===== INITIALISATION =====
@@ -107,7 +133,11 @@ public class FrontCommunicationController {
         }
     }
 
+<<<<<<< HEAD
     // ===== CARTE COMMUNICATION (avec boutons CRUD) =====
+=======
+    // ===== CARTE COMMUNICATION =====
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
     private VBox createCommunicationCard(Communication comm) {
         VBox card = new VBox();
         card.setStyle("-fx-background-color: white; -fx-background-radius: 15; "
@@ -116,14 +146,20 @@ public class FrontCommunicationController {
         card.setPadding(new Insets(15));
         card.setSpacing(10);
 
+<<<<<<< HEAD
         // Badge type
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label typeLabel = new Label(comm.getType().toUpperCase());
         String typeColor = comm.getType().equals("live") ? "#3498db" : "#9b59b6";
         typeLabel.setStyle("-fx-background-color: " + typeColor
                 + "; -fx-text-fill: white; -fx-background-radius: 15;"
                 + " -fx-padding: 4 12; -fx-font-size: 11px; -fx-font-weight: bold;");
 
+<<<<<<< HEAD
         // Badge état
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label etatLabel = new Label(comm.getEtat());
         String etatColor = getEtatColor(comm.getEtat());
         etatLabel.setStyle("-fx-background-color: " + etatColor
@@ -134,13 +170,19 @@ public class FrontCommunicationController {
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.getChildren().addAll(typeLabel, etatLabel);
 
+<<<<<<< HEAD
         // Lien
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label lienLabel = new Label(comm.getLien());
         lienLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #3498db; -fx-wrap-text: true;");
         lienLabel.setWrapText(true);
         lienLabel.setMaxWidth(290);
 
+<<<<<<< HEAD
         // Date & durée
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label dateLabel = new Label("📅 " + comm.getDateHeure());
         dateLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #95a5a6;");
 
@@ -150,7 +192,10 @@ public class FrontCommunicationController {
         HBox infoBox = new HBox(15);
         infoBox.getChildren().addAll(dateLabel, dureeLabel);
 
+<<<<<<< HEAD
         // Description (si disponible)
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         if (comm.getDescription() != null && !comm.getDescription().isEmpty()) {
             Label descLabel = new Label(comm.getDescription());
             descLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #7f8c8d; -fx-wrap-text: true;");
@@ -161,7 +206,10 @@ public class FrontCommunicationController {
             card.getChildren().addAll(headerBox, lienLabel, infoBox);
         }
 
+<<<<<<< HEAD
         // Bouton rejoindre
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Button joinBtn = new Button(comm.getType().equals("live")
                 ? "🎥 Rejoindre le live" : "📹 Voir l'enregistrement");
         joinBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;"
@@ -169,11 +217,17 @@ public class FrontCommunicationController {
         joinBtn.setMaxWidth(Double.MAX_VALUE);
         joinBtn.setOnAction(e -> openLink(comm.getLien()));
 
+<<<<<<< HEAD
         // Séparateur
         Separator sep = new Separator();
         sep.setStyle("-fx-opacity: 0.3;");
 
         // Boutons Modifier / Supprimer
+=======
+        Separator sep = new Separator();
+        sep.setStyle("-fx-opacity: 0.3;");
+
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Button editBtn = new Button("✏️ Modifier");
         editBtn.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;"
                 + " -fx-background-radius: 15; -fx-padding: 6 14; -fx-cursor: hand; -fx-font-size: 11px;");
@@ -203,7 +257,11 @@ public class FrontCommunicationController {
         showCommunicationDialog(comm);
     }
 
+<<<<<<< HEAD
     // ===== DIALOG PARTAGÉ CRÉER / MODIFIER =====
+=======
+    // ===== DIALOG PARTAGÉ =====
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
     private void showCommunicationDialog(Communication comm) {
         boolean isEdit = (comm != null);
 
@@ -212,7 +270,10 @@ public class FrontCommunicationController {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setResizable(false);
 
+<<<<<<< HEAD
         // ---- Formulaire ----
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         VBox form = new VBox(12);
         form.setPadding(new Insets(25));
         form.setStyle("-fx-background-color: #f8fafc;");
@@ -224,7 +285,10 @@ public class FrontCommunicationController {
         Separator sep = new Separator();
         sep.setStyle("-fx-opacity: 0.4;");
 
+<<<<<<< HEAD
         // Type
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label typeLabel = new Label("Type *");
         styleFormLabel(typeLabel);
         ComboBox<String> typeCombo = new ComboBox<>();
@@ -234,7 +298,10 @@ public class FrontCommunicationController {
         styleComboBox(typeCombo);
         if (isEdit) typeCombo.setValue(comm.getType());
 
+<<<<<<< HEAD
         // Lien
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label lienLabel = new Label("Lien (URL) *");
         styleFormLabel(lienLabel);
         TextField lienField = new TextField(isEdit ? comm.getLien() : "");
@@ -242,7 +309,10 @@ public class FrontCommunicationController {
         lienField.setPrefWidth(380);
         styleTextField(lienField);
 
+<<<<<<< HEAD
         // Date/Heure
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label dateLabel = new Label("Date et heure * (format : 2025-01-15 14:30:00)");
         styleFormLabel(dateLabel);
         TextField dateField = new TextField(isEdit ? comm.getDateHeure() : "");
@@ -250,7 +320,10 @@ public class FrontCommunicationController {
         dateField.setPrefWidth(380);
         styleTextField(dateField);
 
+<<<<<<< HEAD
         // Durée
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label dureeLabel = new Label("Durée (minutes) *");
         styleFormLabel(dureeLabel);
         TextField dureeField = new TextField(isEdit ? String.valueOf(comm.getDuree()) : "");
@@ -258,7 +331,10 @@ public class FrontCommunicationController {
         dureeField.setPrefWidth(380);
         styleTextField(dureeField);
 
+<<<<<<< HEAD
         // État
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label etatLabel = new Label("État *");
         styleFormLabel(etatLabel);
         ComboBox<String> etatCombo = new ComboBox<>();
@@ -268,7 +344,10 @@ public class FrontCommunicationController {
         styleComboBox(etatCombo);
         if (isEdit) etatCombo.setValue(comm.getEtat());
 
+<<<<<<< HEAD
         // Description
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label descLabel = new Label("Description détaillée");
         styleFormLabel(descLabel);
         TextArea descArea = new TextArea(isEdit ? comm.getDescription() : "");
@@ -279,7 +358,10 @@ public class FrontCommunicationController {
         descArea.setStyle("-fx-background-radius: 8; -fx-border-radius: 8;"
                 + " -fx-border-color: #ddd; -fx-font-size: 13px;");
 
+<<<<<<< HEAD
         // Publication ID
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label pubLabel = new Label("Publication ID (optionnel)");
         styleFormLabel(pubLabel);
         TextField pubField = new TextField(isEdit && comm.getPublicationId() > 0
@@ -288,13 +370,19 @@ public class FrontCommunicationController {
         pubField.setPrefWidth(380);
         styleTextField(pubField);
 
+<<<<<<< HEAD
         // Message d'erreur
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Label errorLabel = new Label();
         errorLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 12px;");
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
 
+<<<<<<< HEAD
         // Boutons
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         Button cancelBtn = new Button("Annuler");
         cancelBtn.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white;"
                 + " -fx-background-radius: 8; -fx-padding: 9 22; -fx-cursor: hand; -fx-font-size: 13px;");
@@ -306,7 +394,10 @@ public class FrontCommunicationController {
                 + " -fx-font-weight: bold; -fx-font-size: 13px;");
 
         saveBtn.setOnAction(e -> {
+<<<<<<< HEAD
             // Validation
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
             if (typeCombo.getValue() == null
                     || lienField.getText().trim().isEmpty()
                     || dateField.getText().trim().isEmpty()
@@ -343,6 +434,7 @@ public class FrontCommunicationController {
 
             if (isEdit) {
                 updateCommunication(
+<<<<<<< HEAD
                         comm.getId(),
                         typeCombo.getValue(),
                         lienField.getText().trim(),
@@ -361,6 +453,17 @@ public class FrontCommunicationController {
                         etatCombo.getValue(),
                         descArea.getText().trim(),
                         pubId
+=======
+                        comm.getId(), typeCombo.getValue(), lienField.getText().trim(),
+                        dateField.getText().trim(), duree, etatCombo.getValue(),
+                        descArea.getText().trim(), pubId
+                );
+            } else {
+                createCommunication(
+                        typeCombo.getValue(), lienField.getText().trim(),
+                        dateField.getText().trim(), duree, etatCombo.getValue(),
+                        descArea.getText().trim(), pubId
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
                 );
             }
             dialog.close();
@@ -379,8 +482,12 @@ public class FrontCommunicationController {
                 etatLabel, etatCombo,
                 descLabel, descArea,
                 pubLabel, pubField,
+<<<<<<< HEAD
                 errorLabel,
                 buttonsBox
+=======
+                errorLabel, buttonsBox
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         );
 
         ScrollPane scrollPane = new ScrollPane(form);
@@ -392,7 +499,11 @@ public class FrontCommunicationController {
         dialog.showAndWait();
     }
 
+<<<<<<< HEAD
     // ===== CRUD - INSERT =====
+=======
+    // ===== CRUD - INSERT + NOTIFICATIONS EMAIL + ONESIGNAL =====
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
     private void createCommunication(String type, String lien, String dateHeure,
                                      int duree, String etat, String description, int publicationId) {
         String sql = "INSERT INTO communication (type, lien, date_heure, duree, etat, description_detaillee, publication_id)"
@@ -407,14 +518,177 @@ public class FrontCommunicationController {
             pstmt.setString(6, description);
             pstmt.setInt(7, publicationId);
             pstmt.executeUpdate();
+<<<<<<< HEAD
             showAlert("Succès", "✅ Communication créée avec succès !");
             loadCommunications();
             updateStatistics();
+=======
+
+            showAlert("Succès", "✅ Communication créée avec succès !");
+            loadCommunications();
+            updateStatistics();
+
+            // ✅ ENVOI EMAIL dans un Thread séparé
+            final String typeF = type;
+            final String lienF = lien;
+            final String dateF = dateHeure;
+            final String descF = description;
+            Thread emailThread = new Thread(() ->
+                    envoyerNotificationEmail(typeF, lienF, dateF, duree, etat, descF)
+            );
+            emailThread.setDaemon(true);
+            emailThread.start();
+
+            // 🔔 ENVOI NOTIFICATION ONESIGNAL
+            String icone = type.equals("live") ? "🎥" : "📹";
+            envoyerNotificationOneSignal(
+                    icone + " Nouveau " + type.toUpperCase() + " sur LearnFlex+",
+                    "Une nouvelle communication a été créée : " + lien
+            );
+
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         } catch (SQLException e) {
             showAlert("Erreur", "Impossible de créer la communication: " + e.getMessage());
         }
     }
 
+<<<<<<< HEAD
+=======
+    // ═══════════════════════════════════════════════════════════════
+    //  🔔 ENVOI NOTIFICATION ONESIGNAL (REST API)
+    // ═══════════════════════════════════════════════════════════════
+    private void envoyerNotificationOneSignal(String titre, String message) {
+        Thread thread = new Thread(() -> {
+            try {
+                String jsonBody = String.format("""
+                    {
+                        "app_id": "%s",
+                        "included_segments": ["All"],
+                        "headings": {"en": "%s"},
+                        "contents": {"en": "%s"}
+                    }
+                    """, ONESIGNAL_APP_ID, titre, message);
+
+                HttpClient client = HttpClient.newHttpClient();
+
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(ONESIGNAL_URL))
+                        .header("Content-Type", "application/json")
+                        .header("Authorization", "Basic " + ONESIGNAL_API_KEY)
+                        .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                        .build();
+
+                HttpResponse<String> response = client.send(
+                        request, HttpResponse.BodyHandlers.ofString()
+                );
+
+                System.out.println("✅ OneSignal réponse : " + response.body());
+
+                Platform.runLater(() ->
+                        showAlert("🔔 Notification envoyée",
+                                "La notification push OneSignal a été envoyée avec succès !")
+                );
+
+            } catch (Exception e) {
+                System.err.println("❌ Erreur OneSignal : " + e.getMessage());
+                Platform.runLater(() ->
+                        showAlert("⚠️ OneSignal échoué",
+                                "Notification non envoyée : " + e.getMessage())
+                );
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    //  📧 ENVOI DE L'EMAIL DE NOTIFICATION (Jakarta Mail)
+    // ═══════════════════════════════════════════════════════════════
+    private void envoyerNotificationEmail(String type, String lien, String dateHeure,
+                                          int duree, String etat, String description) {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth",            "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host",            "smtp.gmail.com");
+        props.put("mail.smtp.port",            "587");
+        props.put("mail.smtp.ssl.trust",       "smtp.gmail.com");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(EMAIL_UTILISATEUR, EMAIL_MOT_DE_PASSE);
+            }
+        });
+
+        try {
+            String icone   = type.equals("live") ? "🎥" : "📹";
+            String typeTxt = type.equals("live") ? "SESSION LIVE" : "ENREGISTREMENT";
+
+            String htmlContent =
+                    "<!DOCTYPE html>" +
+                            "<html><body style='font-family: Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px;'>" +
+                            "<div style='max-width: 550px; margin: auto; background: white; border-radius: 15px;" +
+                            "     box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;'>" +
+                            "<div style='background: linear-gradient(135deg, #1f4f65, #2980b9);" +
+                            "     padding: 30px; text-align: center;'>" +
+                            "<h1 style='color: white; margin: 0; font-size: 26px;'>LearnFlex+ 📚</h1>" +
+                            "<p style='color: rgba(255,255,255,0.85); margin: 8px 0 0;'>Nouvelle communication disponible</p>" +
+                            "</div>" +
+                            "<div style='padding: 25px 30px 10px;'>" +
+                            "<div style='display: inline-block; background-color: " +
+                            (type.equals("live") ? "#3498db" : "#9b59b6") +
+                            "; color: white; border-radius: 20px; padding: 6px 18px;" +
+                            "     font-size: 13px; font-weight: bold; margin-bottom: 15px;'>" +
+                            icone + " " + typeTxt +
+                            "</div>" +
+                            "<table style='width: 100%; border-collapse: collapse;'>" +
+                            ligne("📅 Date", dateHeure) +
+                            ligne("⏱️ Durée", duree + " minutes") +
+                            ligne("📌 État", etat) +
+                            (description != null && !description.isEmpty() ? ligne("📝 Description", description) : "") +
+                            "</table>" +
+                            "<div style='text-align: center; margin: 25px 0;'>" +
+                            "<a href='" + lien + "' style='background-color: #e74c3c; color: white;" +
+                            "   text-decoration: none; padding: 12px 30px; border-radius: 25px;" +
+                            "   font-weight: bold; font-size: 15px;'>" +
+                            icone + " " + (type.equals("live") ? "Rejoindre le live" : "Voir l'enregistrement") +
+                            "</a></div></div>" +
+                            "<div style='background: #f1f3f4; padding: 15px 30px; text-align: center;" +
+                            "     color: #95a5a6; font-size: 11px;'>" +
+                            "Cet email a été envoyé automatiquement par LearnFlex+. Ne pas répondre." +
+                            "</div></div></body></html>";
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(EMAIL_UTILISATEUR, "LearnFlex+"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_UTILISATEUR));
+            message.setSubject(icone + " Nouvelle communication " + typeTxt + " — LearnFlex+");
+            message.setContent(htmlContent, "text/html; charset=utf-8");
+
+            Transport.send(message);
+            System.out.println("✅ Email de notification envoyé à : " + EMAIL_UTILISATEUR);
+
+            Platform.runLater(() ->
+                    showAlert("📧 Email envoyé", "Une notification a été envoyée à " + EMAIL_UTILISATEUR)
+            );
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur envoi email : " + e.getMessage());
+            Platform.runLater(() ->
+                    showAlert("⚠️ Email non envoyé",
+                            "La communication a été créée mais l'email a échoué : " + e.getMessage())
+            );
+        }
+    }
+
+    /** Génère une ligne de tableau HTML pour l'email */
+    private String ligne(String label, String valeur) {
+        return "<tr>" +
+                "<td style='padding: 8px 0; color: #7f8c8d; font-size: 13px; width: 35%;'>" + label + "</td>" +
+                "<td style='padding: 8px 0; color: #2c3e50; font-size: 13px; font-weight: bold;'>" + valeur + "</td>" +
+                "</tr>";
+    }
+
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
     // ===== CRUD - UPDATE =====
     private void updateCommunication(int id, String type, String lien, String dateHeure,
                                      int duree, String etat, String description, int publicationId) {
@@ -431,9 +705,24 @@ public class FrontCommunicationController {
             pstmt.setInt(7, publicationId);
             pstmt.setInt(8, id);
             pstmt.executeUpdate();
+<<<<<<< HEAD
             showAlert("Succès", "✅ Communication modifiée avec succès !");
             loadCommunications();
             updateStatistics();
+=======
+
+            showAlert("Succès", "✅ Communication modifiée avec succès !");
+            loadCommunications();
+            updateStatistics();
+
+            // 🔔 NOTIFICATION ONESIGNAL — modification
+            String icone = type.equals("live") ? "🎥" : "📹";
+            envoyerNotificationOneSignal(
+                    icone + " Communication modifiée — LearnFlex+",
+                    "Une communication " + type.toUpperCase() + " a été mise à jour : " + lien
+            );
+
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
         } catch (SQLException e) {
             showAlert("Erreur", "Impossible de modifier la communication: " + e.getMessage());
         }
@@ -453,9 +742,23 @@ public class FrontCommunicationController {
                              "DELETE FROM communication WHERE id=?")) {
                     pstmt.setInt(1, id);
                     pstmt.executeUpdate();
+<<<<<<< HEAD
                     showAlert("Succès", "🗑️ Communication supprimée avec succès.");
                     loadCommunications();
                     updateStatistics();
+=======
+
+                    showAlert("Succès", "🗑️ Communication supprimée avec succès.");
+                    loadCommunications();
+                    updateStatistics();
+
+                    // 🔔 NOTIFICATION ONESIGNAL — suppression
+                    envoyerNotificationOneSignal(
+                            "🗑️ Communication supprimée — LearnFlex+",
+                            "Une communication a été supprimée de la plateforme."
+                    );
+
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
                 } catch (SQLException e) {
                     showAlert("Erreur", "Impossible de supprimer: " + e.getMessage());
                 }
@@ -467,10 +770,14 @@ public class FrontCommunicationController {
     @FXML
     private void searchCommunications() {
         String keyword = searchField.getText().trim();
+<<<<<<< HEAD
         if (keyword.isEmpty()) {
             loadCommunications();
             return;
         }
+=======
+        if (keyword.isEmpty()) { loadCommunications(); return; }
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
 
         communicationList.clear();
         String sql = "SELECT * FROM communication WHERE type LIKE ? OR lien LIKE ?"
@@ -501,6 +808,7 @@ public class FrontCommunicationController {
     private void updateStatistics() {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
+<<<<<<< HEAD
 
             ResultSet rs1 = stmt.executeQuery("SELECT COUNT(*) AS total FROM communication");
             rs1.next();
@@ -514,6 +822,14 @@ public class FrontCommunicationController {
             rs3.next();
             int record = rs3.getInt("record");
 
+=======
+            ResultSet rs1 = stmt.executeQuery("SELECT COUNT(*) AS total FROM communication");
+            rs1.next(); int total = rs1.getInt("total");
+            ResultSet rs2 = stmt.executeQuery("SELECT COUNT(*) AS live FROM communication WHERE type='live'");
+            rs2.next(); int live = rs2.getInt("live");
+            ResultSet rs3 = stmt.executeQuery("SELECT COUNT(*) AS record FROM communication WHERE type='record'");
+            rs3.next(); int record = rs3.getInt("record");
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
             statsLabel.setText(String.format("📊 %d communications | Live: %d | Record: %d", total, live, record));
         } catch (SQLException e) {
             statsLabel.setText("📊 Statistiques indisponibles");
@@ -593,6 +909,7 @@ public class FrontCommunicationController {
 
         public Communication(int id, String type, String lien, String dateHeure,
                              int duree, String etat, String description, int publicationId) {
+<<<<<<< HEAD
             this.id = id;
             this.type = type;
             this.lien = lien;
@@ -613,3 +930,21 @@ public class FrontCommunicationController {
         public int getPublicationId()  { return publicationId; }
     }
 }
+=======
+            this.id = id; this.type = type; this.lien = lien;
+            this.dateHeure = dateHeure; this.duree = duree;
+            this.etat = etat; this.description = description;
+            this.publicationId = publicationId;
+        }
+
+        public int    getId()             { return id; }
+        public String getType()           { return type; }
+        public String getLien()           { return lien; }
+        public String getDateHeure()      { return dateHeure; }
+        public int    getDuree()          { return duree; }
+        public String getEtat()           { return etat; }
+        public String getDescription()    { return description; }
+        public int    getPublicationId()  { return publicationId; }
+    }
+}
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))

@@ -1,4 +1,6 @@
 package org.example.controllers;
+import org.example.Models.User;
+import org.example.utils.SessionManager;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -325,3 +327,4 @@ public class ExamenFrontController implements Initializable {
         alert.showAndWait();
     }
 }
+

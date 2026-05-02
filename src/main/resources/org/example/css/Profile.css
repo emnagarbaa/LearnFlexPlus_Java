@@ -1,0 +1,93 @@
+.root {
+    -fx-background-color: #1E2125;
+}
+
+.view-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #EAEAEA;
+    -fx-padding: 0 0 10 0;
+}
+
+.profile-picture-circle {
+    -fx-fill: #0078D7;
+}
+
+.profile-initials-label {
+    -fx-font-size: 48px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #A6B2C0;
+    -fx-font-weight: bold;
+}
+
+.form-input {
+    -fx-background-color: #292C31;
+    -fx-text-fill: white;
+    -fx-border-color: #4A4E55;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 14px;
+    -fx-padding: 8;
+}
+
+.form-input:focused {
+    -fx-border-color: #0078D7;
+}
+
+.role-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #EAEAEA;
+    -fx-padding: 8 0 0 0;
+}
+
+.save-button {
+    -fx-background-color: #0078D7;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.save-button:hover {
+    -fx-background-color: #005A9E;
+}
+
+.cancel-button {
+    -fx-background-color: #4A4E55;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #5A5E65;
+}
+.profile-image-view {
+    -fx-background-color: #292C31;
+    -fx-border-color: #4A4E55;
+    -fx-border-width: 2;
+    -fx-border-radius: 60;
+    -fx-background-radius: 60;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0, 0, 2);
+}
+
+.change-pic-button {
+    -fx-background-color: #3A3D44;
+    -fx-text-fill: #EAEAEA;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 6 16;
+    -fx-cursor: hand;
+}
+
+.change-pic-button:hover {
+    -fx-background-color: #5A5E65;
+}

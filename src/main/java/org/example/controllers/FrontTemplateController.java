@@ -74,4 +74,8 @@ public class FrontTemplateController {
             e.printStackTrace();
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))

@@ -14,7 +14,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.Services.ServiceChallenge;
 import org.example.entities.Challenge;
-
+import org.example.Models.User;
+import org.example.utils.SessionManager;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -22,7 +23,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import org.example.Services.ServiceReponseChallenge;
 import org.example.entities.ReponseChallenge;
-
+import javafx.application.Platform;
+import org.example.Models.User;
+import org.example.utils.SessionManager;
 public class EvaluationFrontController implements Initializable {
     @FXML private Label lblTotalChallenges;
 
@@ -34,6 +37,12 @@ public class EvaluationFrontController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        User currentUser = SessionManager.getCurrentUser();
+        if (currentUser != null && isEnseignant(currentUser.getRole())) {
+            Platform.runLater(() -> naviguer("/org/example/fxml/enseignant_examen.fxml"));
+            return;
+        }
+
         try {
             allChallenges = service.recuperer()
                     .stream()
@@ -244,7 +253,14 @@ public class EvaluationFrontController implements Initializable {
 
     @FXML private void goToAccueil()       { naviguer("/org/example/fxml/front.fxml"); }
     @FXML private void goToCours()         { pageEnDeveloppement("Cours"); }           // cours.fxml n'existe pas
-    @FXML private void goToEvaluation()    { naviguer("/org/example/fxml/EvaluationFront.fxml"); }
+    @FXML private void goToEvaluation() {
+        User currentUser = SessionManager.getCurrentUser();
+        if (currentUser != null && isEnseignant(currentUser.getRole())) {
+            naviguer("/org/example/fxml/EnseignantExamen.fxml");
+        } else {
+            naviguer("/org/example/fxml/EvaluationFront.fxml");
+        }
+    }
     @FXML private void goToQuestionnaire() { naviguer("/org/example/fxml/quiz_front.fxml"); }  // ✅ quiz_front.fxml
     @FXML private void goToOrientation()   { pageEnDeveloppement("Orientation"); }     // orientation.fxml n'existe pas
     @FXML private void goToForum()         { pageEnDeveloppement("Forum"); }            // forum.fxml n'existe pas
@@ -275,7 +291,11 @@ public class EvaluationFrontController implements Initializable {
                 "La page « " + nomPage + " » est en cours de développement.",
                 ButtonType.OK).showAndWait();
     }
-
+    private boolean isEnseignant(String role) {
+        return role != null && (role.equalsIgnoreCase("Enseignant") ||
+                role.equalsIgnoreCase("ENSEIGNANT") ||
+                role.equalsIgnoreCase("Teacher"));
+    }
     // ── Helpers ───────────────────────────────────────────────
     private String nvl(String s) { return s != null ? s : "—"; }
 

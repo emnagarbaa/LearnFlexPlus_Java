@@ -18,6 +18,8 @@ import org.example.Services.ServiceExamen;
 import org.example.Services.ServiceReponseExamen;
 import org.example.entities.Examen;
 import org.example.entities.ReponseExamen;
+import org.example.entities.Users;
+import org.example.Models.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.awt.image.BufferedImage;
@@ -27,6 +29,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import org.example.utils.SessionManager;
 
 public class EnseignantExamenController implements Initializable {
 

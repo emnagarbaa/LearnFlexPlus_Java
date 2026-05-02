@@ -166,14 +166,20 @@
     -fx-border-color: transparent;
     -fx-font-size: 13px;
     -fx-pref-width: 180;
+<<<<<<< HEAD
     -fx-text-fill: #333;
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
 }
 
 .search-btn {
     -fx-background-color: transparent;
     -fx-cursor: hand;
     -fx-font-size: 13px;
+<<<<<<< HEAD
     -fx-text-fill: #aaa;
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
 }
 
 .notif-btn {
@@ -224,6 +230,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
 }
 
+<<<<<<< HEAD
 .stat-icon-green   { -fx-font-size: 32px; -fx-text-fill: #27ae60; }
 .stat-icon-amber   { -fx-font-size: 32px; -fx-text-fill: #f39c12; }
 .stat-icon-red     { -fx-font-size: 32px; -fx-text-fill: #e74c3c; }
@@ -233,6 +240,12 @@
 .stat-icon-courses { -fx-font-size: 32px; }
 .stat-icon-eval    { -fx-font-size: 32px; }
 .stat-icon-quiz    { -fx-font-size: 32px; }
+=======
+.stat-icon-users  { -fx-font-size: 32px; }
+.stat-icon-courses { -fx-font-size: 32px; }
+.stat-icon-eval   { -fx-font-size: 32px; }
+.stat-icon-quiz   { -fx-font-size: 32px; }
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
 
 .stat-number {
     -fx-font-size: 26px;
@@ -262,9 +275,12 @@
     -fx-background-color: white;
     -fx-background-radius: 12;
     -fx-padding: 20;
+<<<<<<< HEAD
     -fx-border-color: #e8ecf0;
     -fx-border-width: 1;
     -fx-border-radius: 12;
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
 }
 
@@ -285,6 +301,7 @@
 .view-all {
     -fx-text-fill: #97c3a2;
     -fx-font-size: 13px;
+<<<<<<< HEAD
     -fx-cursor: hand;
 }
 
@@ -445,6 +462,8 @@
     -fx-font-weight: bold;
     -fx-background-radius: 20;
     -fx-padding: 3 10 3 10;
+=======
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
 }
 
 /* ===== ACTIVITY ===== */
@@ -476,6 +495,7 @@
     -fx-text-fill: #aaa;
 }
 
+<<<<<<< HEAD
 /* ===== MATIÈRE & COURS CARDS ===== */
 .matiere-card {
     -fx-background-color: white;
@@ -511,3 +531,37 @@
 .dialog-pane .button-bar {
     -fx-padding: 15 25 20 25;
 }
+=======
+/* ===== TABLE ===== */
+/* ===== TableView Styling ===== */
+.parcels-table {
+    -fx-background-color: #ffffff; /* fond du tableau */
+    -fx-border-color: #ccc;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 5px;
+}
+
+/* Header (barre des colonnes) */
+.parcels-table .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #4A90E2, #357ABD); /* bleu dégradé */
+    -fx-border-color: #357ABD;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Texte des headers */
+.parcels-table .column-header, .parcels-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+}
+
+/* Cellules */
+.parcels-table .table-cell {
+    -fx-border-color: #e0e0e0;
+}
+
+/* Ligne sélectionnée */
+.parcels-table .table-row-cell:selected {
+    -fx-background-color: #D0E4FF;
+}
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))

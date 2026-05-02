@@ -235,6 +235,7 @@
 .btn-outline-dark:hover {
     -fx-background-color: rgba(26,61,79,0.1);
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 /* Force la couleur du texte dans la zone question */
 #questionContainer .label {
@@ -258,4 +259,56 @@
     -fx-background-color: #f4f8f7;
 =======
 >>>>>>> origin/gestionContenu
+=======
+    .dropdown-menu {
+        -fx-background-color: white;
+        -fx-background-radius: 8;
+        -fx-border-color: #ddd;
+        -fx-border-radius: 8;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+        -fx-padding: 5;
+        -fx-min-width: 160;
+    }
+
+    .dropdown-item {
+        -fx-background-color: transparent;
+        -fx-text-fill: #1f4f65;
+        -fx-font-size: 13px;
+        -fx-cursor: hand;
+        -fx-min-width: 150;
+        -fx-alignment: CENTER_LEFT;
+        -fx-padding: 8 15 8 15;
+        -fx-background-radius: 5;
+    }
+
+    .dropdown-item:hover {
+        -fx-background-color: #e8f4f8;
+        -fx-text-fill: #0e7490;
+    }
+    .dropdown-menu {
+        -fx-background-color: white;
+        -fx-background-radius: 8;
+        -fx-border-color: #ddd;
+        -fx-border-radius: 8;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 4);
+        -fx-padding: 5;
+        -fx-min-width: 160;
+    }
+
+    .dropdown-item {
+        -fx-background-color: transparent;
+        -fx-text-fill: #1f4f65;
+        -fx-font-size: 13px;
+        -fx-cursor: hand;
+        -fx-min-width: 150;
+        -fx-alignment: CENTER_LEFT;
+        -fx-padding: 8 15 8 15;
+        -fx-background-radius: 5;
+    }
+
+    .dropdown-item:hover {
+        -fx-background-color: #e8f4f8;
+        -fx-text-fill: #0e7490;
+    }
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
 }

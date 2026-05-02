@@ -1,4 +1,6 @@
 package org.example.controllers;
+import org.example.utils.SessionManager;
+import org.example.Models.User;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -757,3 +759,5 @@ public class ChallengeUIController implements Initializable {
     private void updateScore() { lblScore.setText(String.valueOf(Math.min(totalScore, 100))); }
     private String nvl(String s) { return s != null ? s : ""; }
 }
+
+

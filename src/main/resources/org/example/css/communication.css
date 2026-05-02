@@ -1,0 +1,198 @@
+/* communication.css - Style moderne pour la page des communications */
+
+.communication-container {
+    -fx-background-color: linear-gradient(to bottom right, #fef9e7, #fdebd0);
+}
+
+.page-title {
+    -fx-text-fill: #c0392b;
+    -fx-font-weight: bold;
+}
+
+.stats-label {
+    -fx-background-color: #e74c3c;
+    -fx-background-radius: 20;
+    -fx-padding: 8 15;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.form-section {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);
+    -fx-border-color: #f0c0a0;
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+}
+
+.section-title {
+    -fx-text-fill: #c0392b;
+}
+
+.input-field {
+    -fx-background-color: #fef9e7;
+    -fx-background-radius: 10;
+    -fx-border-color: #f0c0a0;
+    -fx-border-radius: 10;
+    -fx-padding: 12;
+    -fx-font-size: 13px;
+    -fx-prompt-text-fill: #95a5a6;
+}
+
+.input-field:focused {
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 2;
+}
+
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #e74c3c, #c0392b);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 25;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(231,76,60,0.3), 5, 0, 0, 1);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #c0392b, #a93226);
+}
+
+.btn-secondary {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 25;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+.btn-search {
+    -fx-background-color: #f39c12;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.btn-search:hover {
+    -fx-background-color: #e67e22;
+}
+
+.btn-filter-live {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-background-radius: 20;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+}
+
+.btn-filter-live:hover {
+    -fx-background-color: #2980b9;
+}
+
+.btn-filter-record {
+    -fx-background-color: #9b59b6;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-background-radius: 20;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+}
+
+.btn-filter-record:hover {
+    -fx-background-color: #8e44ad;
+}
+
+.btn-filter-active {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-background-radius: 20;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+}
+
+.btn-filter-active:hover {
+    -fx-background-color: #27ae60;
+}
+
+.btn-export {
+    -fx-background-color: #1abc9c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 20;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+}
+
+.btn-export:hover {
+    -fx-background-color: #16a085;
+}
+
+.search-field {
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+    -fx-padding: 8 15;
+    -fx-border-color: #f0c0a0;
+    -fx-border-radius: 25;
+}
+
+.search-field:focused {
+    -fx-border-color: #e74c3c;
+    -fx-border-width: 2;
+}
+
+.communication-table {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);
+}
+
+.communication-table .column-header-background {
+    -fx-background-color: #c0392b;
+    -fx-background-radius: 15 15 0 0;
+}
+
+.communication-table .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 45;
+}
+
+.communication-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.communication-table .table-row-cell:odd {
+    -fx-background-color: #fef9e7;
+}
+
+.communication-table .table-row-cell:even {
+    -fx-background-color: white;
+}
+
+.communication-table .table-row-cell:hover {
+    -fx-background-color: #fdebd0;
+}
+
+.communication-table .table-row-cell:selected {
+    -fx-background-color: #e74c3c;
+}
+
+.communication-table .table-row-cell:selected .text {
+    -fx-fill: white;
+}

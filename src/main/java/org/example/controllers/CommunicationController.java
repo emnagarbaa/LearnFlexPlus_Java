@@ -412,4 +412,8 @@ public class CommunicationController {
         public String getTitre() { return titre; }
         @Override public String toString() { return titre; }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 27ea260 (Ajout des fonctionnalités LearnFlexPlus (génération IA, photos Base64, FYP, traduction, audio))
