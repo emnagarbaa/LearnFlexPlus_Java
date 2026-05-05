@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceCours implements Iservice<Cours> {
-
+//Sert à récupérer les infos de la Matière liée au cours
     private final ServiceMatiere serviceMatiere = new ServiceMatiere();
 
     // ══════════════════════════════════════════════
@@ -51,7 +51,7 @@ public class ServiceCours implements Iservice<Cours> {
     @Override
     public void ajouter(Cours cours) throws SQLException {
         valider(cours);
-
+//Singleton qui donne la connexion à la base de données.
         Connection connection = MyDatabase.getInstance().getConnection();
         String sql = "INSERT INTO cours (titre, description, date_creation, section, duree_totale, langue, image, pdf_file, matiere_id, prix) " +
                 "VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?)";

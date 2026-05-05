@@ -25,7 +25,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+//un controller JavaFX qui affiche et gère les cours (CRUD + UI + filtres + navigation)
 public class CoursController {
 
     @FXML private FlowPane coursGrid;
@@ -94,6 +94,7 @@ public class CoursController {
     private void loadCours() {
         if (coursGrid == null) return;
         try {
+            //filre de pmatire
             if (currentMatiere != null) {
                 allCoursList = serviceCours.recupererParMatiere(currentMatiere.getId());
             } else {

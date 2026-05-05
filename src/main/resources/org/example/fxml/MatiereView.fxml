@@ -13,7 +13,7 @@
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" spacing="15">
         <VBox spacing="4" HBox.hgrow="ALWAYS">
-            <Label fx:id="headerTitle" text="Espace Enseignant — Matières"
+            <Label fx:id="headerTitle" text=" Matières"
                    style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1f4f65;"/>
             <Label fx:id="headerSubtitle" text="Sélectionnez une matière pour gérer ses cours"
                    style="-fx-font-size: 13px; -fx-text-fill: #94a3b8;"/>

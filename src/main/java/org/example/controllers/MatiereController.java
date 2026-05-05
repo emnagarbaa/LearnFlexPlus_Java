@@ -60,7 +60,7 @@ public class MatiereController {
         // Ensure upload directory exists
         new File(UPLOAD_DIR).mkdirs();
         if (cbNiveau != null) {
-            cbNiveau.getItems().addAll("Bac 1ère année", "Bac 2ème année", "Bac 3ème année", "Licence", "Master");
+            cbNiveau.getItems().addAll("Bac 1ère année\", \"Bac 2ème année\", \"Bac 3ème année\", \"Licence\", \"Master ");
         }
         loadMatieres();
     }

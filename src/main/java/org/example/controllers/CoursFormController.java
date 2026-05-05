@@ -41,6 +41,7 @@ public class CoursFormController {
     @FXML private Label errMatiere;
 
     private Cours editingCours = null;
+    //matière actuelle sélectionnée
     private Matiere currentMatiere = null;
     private String selectedImagePath = null;
     private String selectedPdfPath = null;

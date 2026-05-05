@@ -42,7 +42,7 @@ public class MatiereFormController {
     // Initialise le menu des niveaux et s'assure que le dossier d'images existe
     @FXML
     public void initialize() {
-        cbNiveau.getItems().addAll("Bac 1ère année", "Bac 2ème année", "Bac 3ème année", "Licence", "Master");
+        cbNiveau.getItems().addAll("Bac ");
         new File(UPLOAD_DIR).mkdirs();
     }
 

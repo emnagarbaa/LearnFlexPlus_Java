@@ -36,13 +36,13 @@ public class EtudiantCoursController {
     private final ServiceCours serviceCours = new ServiceCours();
 
     private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/images/";
-
+//Cette méthode s’exécute automatiquement au lancement
     @FXML
     public void initialize() {
         try {
             logo.setImage(new Image(getClass().getResourceAsStream("/org/example/images/logo1.png")));
         } catch (Exception ignored) {}
-        loadMatiereCatalog();
+        loadMatiereCatalog(); //Affiche les matières dès le début
     }
 
     @FXML
