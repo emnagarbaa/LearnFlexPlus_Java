@@ -15,7 +15,11 @@ public class EvenementBot extends TelegramLongPollingBot {
     private final EvenementService evenementService = new EvenementService();
     private final GroqAgent        agent            = new GroqAgent();
 
-    
+    @Override
+    public String getBotUsername() { return "learnflexxxbot"; }
+
+    @Override
+    public String getBotToken()    { return ""; }
 
     @Override
     public void onUpdateReceived(Update update) {

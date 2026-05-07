@@ -9,7 +9,7 @@ import java.util.Properties;
 public class EmailService {
 
     private static final String FROM_EMAIL = "moetezbedoui816@gmail.com";
-    private static final String PASSWORD   = "xqto qdpk hura gheh";
+    private static final String PASSWORD   = "";
 
     public static void sendNewEvenementEmail(String titre, String dateDebut, String lieu) {
         String toEmail = "moetezbedoui816@gmail.com";
